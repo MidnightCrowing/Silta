@@ -1,10 +1,13 @@
 import {
+  Button,
+  createDOMRenderer,
   createPresenceComponent,
   Divider,
   DrawerBody,
   DrawerHeader,
   DrawerHeaderNavigation,
   DrawerHeaderTitle,
+  FluentProvider,
   InlineDrawer,
   Menu,
   MenuButton,
@@ -13,11 +16,13 @@ import {
   MenuPopover,
   MenuTrigger,
   motionTokens,
+  RendererProvider,
   ToggleButton,
   Toolbar,
   ToolbarButton,
   ToolbarGroup,
   Tooltip,
+  webDarkTheme,
 } from '@fluentui/react-components'
 import {
   bundleIcon,
@@ -28,8 +33,11 @@ import {
 } from '@fluentui/react-icons'
 import clsx from 'clsx'
 import type { FC } from 'react'
-import { Component, createElement, createRef, Fragment, memo, Suspense } from 'react'
-import KeepAlive from 'react-activation'
+import { Component, createElement, createRef, Fragment, memo, Suspense, useMemo, useState } from 'react'
+import KeepAlive, { AliveScope } from 'react-activation'
+import Frame, { FrameContextConsumer } from 'react-frame-component'
+
+import { useTheme } from '~/theme/useTheme'
 
 import type {
   ResizeComponentProps,
@@ -45,6 +53,23 @@ import type {
   SidebarPanelState,
   SidebarPosition,
 } from './SidebarLayout.types'
+
+function MyComponent(props) {
+  const { children, targetDocument } = props
+  const { theme } = useTheme()
+
+  const renderer = useMemo(() => createDOMRenderer(targetDocument), [
+    targetDocument,
+  ])
+
+  return (
+    <RendererProvider renderer={renderer} targetDocument={targetDocument}>
+      <FluentProvider targetDocument={targetDocument} theme={theme}>
+        {children}
+      </FluentProvider>
+    </RendererProvider>
+  )
+}
 
 const DefaultIcon = bundleIcon(GridFilled, GridRegular)
 
@@ -352,11 +377,21 @@ class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState> {
           </DrawerHeader>
 
           <DrawerBody className="p-(x-10px! b-11px!)">
-            <KeepAlive cacheKey={activeItem?.id.toString() ?? ''}>
-              <Suspense>
-                {children}
-              </Suspense>
-            </KeepAlive>
+            <Frame>
+              <FrameContextConsumer>
+                {({ document }) => (
+                  <AliveScope>
+                    <MyComponent targetDocument={document}>
+                      <KeepAlive cacheKey={activeItem?.id.toString() ?? ''}>
+                        <Suspense>
+                          {children}
+                        </Suspense>
+                      </KeepAlive>
+                    </MyComponent>
+                  </AliveScope>
+                )}
+              </FrameContextConsumer>
+            </Frame>
           </DrawerBody>
         </InlineDrawer>
 
