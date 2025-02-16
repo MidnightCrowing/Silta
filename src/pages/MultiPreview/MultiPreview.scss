@@ -1,0 +1,40 @@
+.MultiPreview {
+  &-top-bar {
+    &:hover,
+    &:has(.pin-button[aria-pressed="true"]) {
+      @apply max-h-360px rounded-b-5px;
+
+      .pin-button {
+        @apply block!;
+      }
+
+      .chevron-down-wrapper {
+        @apply rotate-180;
+      }
+    }
+  }
+
+  &-top-bar-effect {
+    @apply bg-$colorNeutralBackground1-60! backdrop-(blur-20px saturate-180% brightness-120%) transform-gpu;
+
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2),
+    0 4px 6px -4px rgb(0 0 0 / 0.16),
+    inset 1px 1px 1px -0.5px rgb(255 255 255 / 0.12),
+    inset -1px -1px 1px -0.5px rgb(255 255 255 / 0.04),
+    inset 0 0 10px rgb(255 255 255 / 0.04);
+  }
+
+  &-serial-number {
+    &.overlay {
+      @container (max-width: 90px) {
+        @apply hidden;
+      }
+    }
+
+    &.footer {
+      @container (min-width: 90px) {
+        @apply hidden;
+      }
+    }
+  }
+}

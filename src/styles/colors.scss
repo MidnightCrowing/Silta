@@ -1,0 +1,27 @@
+// 使用数组来管理颜色和透明度
+$colors: (
+  "colorNeutralBackground1": (
+    60,
+  ),
+  "colorCompoundBrandForeground1": (
+    30,
+    40,
+    80,
+  ),
+);
+
+// 定义一个 mixin 用来生成 `color-mix` 颜色
+@mixin color-mix($base-color, $opacity) {
+  --#{$base-color}-#{$opacity}: color-mix(in oklab, var(--#{$base-color}), transparent #{$opacity + "%"});
+}
+
+// .fui-FluentProviderr0: This class name is used in the build version
+// .fui-FluentProviderr1: This class name is used in the dev version
+.fui-FluentProviderr0,
+.fui-FluentProviderr1 {
+  @each $base-color, $opacities in $colors {
+    @each $opacity in $opacities {
+      @include color-mix($base-color, $opacity);
+    }
+  }
+}

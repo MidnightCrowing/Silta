@@ -1,0 +1,12 @@
+html,
+body,
+#root,
+.fui-FluentProvider:first-of-type {
+  @apply m-0 p-0 size-full box-border overflow-hidden;
+}
+
+// react-activation
+.ka-wrapper,
+.ka-content {
+  @apply size-full;
+}

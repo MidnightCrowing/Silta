@@ -1,0 +1,14 @@
+.SearchPage {
+  &-logo-glowing {
+    filter: drop-shadow(0 0 2px var(--colorCompoundBrandForeground1-40))
+      drop-shadow(0 0 8px var(--colorCompoundBrandForeground1-80))
+      drop-shadow(0 0 34px var(--colorCompoundBrandForeground1));
+  }
+
+  &-input-focus-effect {
+    box-shadow:
+      0 0 0 2px var(--colorCompoundBrandForeground1),
+      0 2px 6px var(--colorCompoundBrandForeground1-40),
+      inset 0 0 2px var(--colorCompoundBrandForeground1-30);
+  }
+}

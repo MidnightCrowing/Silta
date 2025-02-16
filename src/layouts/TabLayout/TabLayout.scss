@@ -1,0 +1,21 @@
+.TabLayout {
+  &-close-button {
+    @container (max-width: 100px) {
+      @apply hidden! group-hover:flex!;
+
+      &[data-selected="true"] {
+        @apply flex!;
+      }
+    }
+  }
+
+  .fui-InteractiveTab {
+    &__content {
+      @apply truncate;
+    }
+
+    &__contentAfter {
+      @apply flex items-center;
+    }
+  }
+}
