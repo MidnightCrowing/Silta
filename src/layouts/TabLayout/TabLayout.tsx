@@ -37,7 +37,7 @@ const TabDivider: FC<{ groupId: string }> = ({ groupId }) => {
 
 class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   state: Readonly<TabLayoutState> = {
-    activeItem: this.props.items?.[1] || null,
+    activeItem: this.props.items?.[0] || null,
     items: this.props.items || [],
   }
 

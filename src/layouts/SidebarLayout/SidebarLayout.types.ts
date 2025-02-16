@@ -12,17 +12,18 @@ export type SidebarPosition = 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBott
 interface SidebarItemBase {
   id: SidebarItemId
   label: string
-  component: ComponentType<any>
   position: SidebarPosition
 }
 
 export interface SidebarNavItem extends SidebarItemBase {
   type?: 'item'
   icon?: FluentIcon
+  componentUrl: string
 }
 
 export interface SidebarButton extends SidebarItemBase {
   type: 'button'
+  icon: FluentIcon | ComponentType<any>
 }
 
 export interface SidebarItemDivider {
@@ -48,7 +49,6 @@ export interface SidebarNavigationProps extends HTMLAttributes<HTMLDivElement> {
 
 /* SidebarPanel */
 export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
   position: 'start' | 'end' | 'bottom'
   activeItem: SidebarActiveItem
   open: boolean

@@ -100,7 +100,7 @@ class SidebarNavigation extends Component<SidebarNavigationProps> {
         return <Divider />
 
       case 'button': {
-        const { component: Component = Fragment } = item as SidebarButton
+        const { icon: Component = Fragment } = item as SidebarButton
 
         return <Component />
       }
@@ -284,7 +284,7 @@ class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState> {
   )
 
   render() {
-    const { children, className, position, activeItem, open, setDrawerIsResizing, hidePanel, ...props } = this.props
+    const { className, position, activeItem, open, setDrawerIsResizing, hidePanel, ...props } = this.props
     const { drawerWidth, drawerHeight, drawerIsResizing, toolbarVisible } = this.state
     const { MoreOptionsButton, HideButton } = this
     const isBottom = position === 'bottom'
@@ -352,11 +352,11 @@ class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState> {
           </DrawerHeader>
 
           <DrawerBody className="p-(x-10px! b-11px!)">
-            <KeepAlive cacheKey={activeItem?.id.toString() ?? ''}>
-              <Suspense>
-                {children}
-              </Suspense>
-            </KeepAlive>
+            {/* <KeepAlive cacheKey={activeItem?.id.toString() ?? ''}> */}
+            <iframe
+              src={activeItem?.componentUrl}
+            />
+            {/* </KeepAlive> */}
           </DrawerBody>
         </InlineDrawer>
 
@@ -521,7 +521,7 @@ class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftTopPanel}
             >
-              {createElement(leftTopActiveItem?.component ?? Fragment)}
+              {/* {createElement(leftTopActiveItem?.component ?? Fragment)} */}
             </SidebarPanel>
 
             {children}
@@ -534,7 +534,7 @@ class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightTopPanel}
             >
-              {createElement(rightTopActiveItem?.component ?? Fragment)}
+              {/* {createElement(rightTopActiveItem?.component ?? Fragment)} */}
             </SidebarPanel>
           </div>
 
@@ -548,7 +548,7 @@ class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftBottomPanel}
             >
-              {createElement(leftBottomActiveItem?.component ?? Fragment)}
+              {/* {createElement(leftBottomActiveItem?.component ?? Fragment)} */}
             </SidebarPanel>
 
             {leftBottomPanelOpen && rightBottomPanelOpen && (
@@ -570,7 +570,7 @@ class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightBottomPanel}
             >
-              {createElement(rightBottomActiveItem?.component ?? Fragment)}
+              {/* {createElement(rightBottomActiveItem?.component ?? Fragment)} */}
             </SidebarPanel>
           </div>
         </div>

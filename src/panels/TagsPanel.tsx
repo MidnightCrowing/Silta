@@ -4,7 +4,7 @@ function AsideContent({ count }: { count: number }) {
   return <CounterBadge count={count} appearance="ghost" size="small" />
 }
 
-export default function TagsPanel() {
+export function TagsPanel() {
   return (
     <Tree aria-label="Default">
       <TreeItem itemType="branch">
