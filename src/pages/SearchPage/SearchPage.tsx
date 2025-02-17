@@ -6,7 +6,7 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import clsx from 'clsx'
 import { useRef, useState } from 'react'
 
-const searchBg: boolean = false // 是否显示搜索标签页背景图片
+const searchBg: boolean = true // 是否显示搜索标签页背景图片
 const bgUrl = convertFileSrc('assets/background.jpg')
 const logoUrl = convertFileSrc('assets/logo.svg')
 
@@ -23,15 +23,16 @@ export default function SearchPage({ className }: { className: string }) {
   }
 
   return (
-    <div className={className} relative>
+    <div className={`SearchPage ${className}`} relative>
       {/* Background image */}
       {searchBg && (
         <div absolute inset-0 select-none>
           <img absolute size-full object="center cover" src={bgUrl} alt="background image" />
+          <div absolute inset-0 bg="$homepage-bg-mask" />
           <div
             className={clsx(
-              'absolute inset-0 bg-$colorNeutralBackground1 transition-(all duration-300)',
-              isFocused ? 'opacity-55' : 'opacity-10',
+              'absolute inset-0 bg-black transition-(bg duration-300)',
+              isFocused ? 'bg-opacity-60' : 'bg-opacity-0',
             )}
           />
         </div>
