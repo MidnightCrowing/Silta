@@ -30,10 +30,9 @@ export default function SearchPage({ className }: { className: string }) {
           <img absolute size-full object="center cover" src={bgUrl} alt="background image" />
           <div absolute inset-0 bg="$homepage-bg-mask" />
           <div
-            className={clsx(
-              'absolute inset-0 bg-black transition-(bg duration-300)',
-              isFocused ? 'bg-opacity-60' : 'bg-opacity-0',
-            )}
+            className={`absolute inset-0 bg-black transition-(bg duration-300) ${
+              isFocused ? 'bg-opacity-60' : 'bg-opacity-0'
+            }`}
           />
         </div>
       )}
@@ -64,20 +63,19 @@ export default function SearchPage({ className }: { className: string }) {
           onBlur={() => setIsFocused(false)}
         >
           <Search24Regular
-            className={clsx(
-              'm-(l-15px r-10px) transition-(color duration-200)',
-              !isFocused && 'color-$colorCompoundBrandForeground1',
-            )}
+            className={`m-(l-15px r-10px) transition-(color duration-200) ${
+              !isFocused && 'color-$colorCompoundBrandForeground1'
+            }`}
           />
           {inputValue && (
             <Dismiss16Regular
-              className={clsx(
-                'absolute top-1/2 right-115px translate-y--1/2',
-                'group-hover:hover:color-$colorCompoundBrandForeground1',
-                'group-hover:(bg-$colorNeutralBackgroundStatic active:bg-$colorNeutralBackground6)',
-                'rounded-1/2 p-3px outline-0',
-                'cursor-pointer',
-              )}
+              className={
+                'absolute top-1/2 right-115px translate-y--1/2 '
+                + 'group-hover:hover:color-$colorCompoundBrandForeground1 '
+                + 'group-hover:(bg-$colorNeutralBackgroundStatic active:bg-$colorNeutralBackground6) '
+                + 'rounded-1/2 p-3px outline-0 '
+                + 'cursor-pointer'
+              }
               tabIndex={0}
               onClick={clearInputAndFocus}
             />

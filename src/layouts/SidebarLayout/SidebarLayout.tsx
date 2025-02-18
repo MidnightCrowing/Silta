@@ -592,4 +592,4 @@ class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
   }
 }
 
-export { SidebarLayout, SidebarNavigation, SidebarPanel }
+export default SidebarLayout

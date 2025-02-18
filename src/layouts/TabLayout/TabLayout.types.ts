@@ -6,6 +6,18 @@ export interface TabItem {
   label: string
   icon?: FluentIcon
   component: ComponentType<{ className: string }>
+  new?: boolean // 是否显示添加动画, false时不显示
+}
+
+/* Tab */
+export interface TabProps extends HTMLAttributes<HTMLDivElement> {
+  item: TabItem
+  isSelect: boolean
+  removeItem: () => void
+}
+
+export interface TabState {
+  open: boolean
 }
 
 /* TabLayout */

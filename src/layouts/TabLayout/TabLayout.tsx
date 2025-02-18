@@ -11,7 +11,7 @@ import { KeepAlive } from 'react-activation'
 import { SearchPage } from '~/pages'
 import { generateItemId } from '~/utils/common'
 
-import type { TabItem, TabLayoutProps, TabLayoutState } from './TabLayout.types'
+import type { TabItem, TabLayoutProps, TabLayoutState, TabProps, TabState } from './TabLayout.types'
 
 const DefaultIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
 function newTabTemplate(): TabItem {
@@ -35,10 +35,66 @@ const TabDivider: FC<{ groupId: string }> = ({ groupId }) => {
   )
 }
 
+class Tab extends Component<TabProps, TabState> {
+  state: Readonly<TabState> = {
+    open: this.props.item.new === false,
+  }
+
+  componentDidMount() {
+    requestAnimationFrame(() => {
+      this.setState({ open: true })
+    })
+  }
+
+  private removeItem = () => {
+    this.setState({ open: false })
+
+    setTimeout(() => {
+      this.props.removeItem()
+    }, 100)
+  }
+
+  render() {
+    const { item, isSelect } = this.props
+    const { open } = this.state
+    const { id, label, icon: Icon = DefaultIcon } = item
+
+    return (
+      <InteractiveTab
+        className={
+          `@container group `
+          + `max-w-0 duration-100 `
+          + `flex-1 flex! justify-between `
+          + `p-(l-15px! r-10px!) `
+          + `${open && 'max-w-150px'}`
+        }
+        button={{
+          className: 'px-0! shrink! grow justify-start!',
+        }}
+        icon={<Icon />}
+        value={id}
+        contentAfter={(
+          <Button
+            role="tab"
+            className="TabLayout-close-button size-20px min-w-20px!"
+            size="small"
+            appearance="subtle"
+            icon={<Dismiss16Regular />}
+            data-selected={isSelect}
+            onClick={this.removeItem}
+          />
+        )}
+      >
+        {label}
+      </InteractiveTab>
+    )
+  }
+}
+
 class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   state: Readonly<TabLayoutState> = {
     activeItem: this.props.items?.[0] || null,
-    items: this.props.items || [],
+    items: this.props.items?.map(item => ({ ...item, new: false })) || [],
   }
 
   private onTabSelect = (itemId: string) => {
@@ -71,35 +127,6 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
     })
   }
 
-  private Tab: FC<{ item: TabItem }> = ({ item }) => {
-    const { id, label, icon: Icon = DefaultIcon } = item
-    const { activeItem } = this.state
-
-    return (
-      <InteractiveTab
-        className="@container group max-w-150px flex-1 flex! justify-between p-(l-15px! r-10px!)"
-        button={{
-          className: 'px-0! shrink! grow justify-start!',
-        }}
-        icon={<Icon />}
-        value={id}
-        contentAfter={(
-          <Button
-            role="tab"
-            className="TabLayout-close-button size-20px min-w-20px!"
-            size="small"
-            appearance="subtle"
-            icon={<Dismiss16Regular />}
-            data-selected={activeItem?.id === id}
-            onClick={() => this.removeItem(id)}
-          />
-        )}
-      >
-        {label}
-      </InteractiveTab>
-    )
-  }
-
   private AddNewTab: FC = () => {
     return (
       <div flex="~ items-center" p="x-5px">
@@ -116,7 +143,7 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   render() {
     const { className, items: _, ...props } = this.props
     const { activeItem, items } = this.state
-    const { Tab, AddNewTab } = this
+    const { AddNewTab } = this
 
     return (
       <div className={`TabLayout flex-(~ col items-start) align-start ${className}`} {...props}>
@@ -131,7 +158,11 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
             items && items.map((item) => {
               return (
                 <Fragment key={item.id}>
-                  <Tab item={item} />
+                  <Tab
+                    item={item}
+                    isSelect={activeItem === item}
+                    removeItem={() => { this.removeItem(item.id) }}
+                  />
                   <TabDivider groupId={item.id} />
                 </Fragment>
               )
@@ -156,4 +187,4 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   }
 }
 
-export { TabLayout }
+export default TabLayout

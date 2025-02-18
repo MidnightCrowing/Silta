@@ -15,10 +15,7 @@ $colors: (
   --#{$base-color}-#{$opacity}: color-mix(in oklab, var(--#{$base-color}), transparent #{$opacity + "%"});
 }
 
-// .fui-FluentProviderr0: This class name is used in the build version
-// .fui-FluentProviderr1: This class name is used in the dev version
-.fui-FluentProviderr0,
-.fui-FluentProviderr1 {
+.fui-FluentProvider {
   @each $base-color, $opacities in $colors {
     @each $opacity in $opacities {
       @include color-mix($base-color, $opacity);
