@@ -5,7 +5,9 @@ import { PhotoView } from 'react-photo-view'
 
 import ThumbnailWorker from '~/workers/thumbnailWorker?worker'
 
-export default function ImageCard({ index, imagePath }: { index: number, imagePath: string }) {
+import type { ImageCardProps } from './ImageCard.types'
+
+export default function ImageCard({ index, imagePath }: ImageCardProps) {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true)
   const [thumbnail, setThumbnail] = useState<string>('')
 

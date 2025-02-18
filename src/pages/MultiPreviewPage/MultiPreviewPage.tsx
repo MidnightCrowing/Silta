@@ -1,5 +1,5 @@
 // 多图预览页
-import './MultiPreview.scss'
+import './MultiPreviewPage.scss'
 
 import type { OverflowItemProps } from '@fluentui/react-components'
 import {
@@ -28,10 +28,13 @@ import {
 } from '@fluentui/react-icons'
 import { invoke } from '@tauri-apps/api/core'
 import type { FC } from 'react'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { PhotoProvider } from 'react-photo-view'
 
-const ImageCard = lazy(() => import('./ImageCard'))
+import { ImageCard } from '~/components/ImageCard'
+
+import type { TopBarProps } from './MultiPreviewPage.types'
+
 const PinIcon = bundleIcon(Pin20Filled, Pin20Regular)
 
 const path = 'assets/demo-test'
@@ -80,16 +83,7 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
   )
 }
 
-const TopBar: FC<{
-  imageTitle: string
-  imageLink: string
-  publishTime: string
-  sourceUrl: string
-  authorName: string
-  imageCount: number
-  description: string
-  tags: string[]
-}> = ({ imageTitle, imageLink, publishTime, sourceUrl, authorName, imageCount, description, tags }) => {
+const TopBar: FC<TopBarProps> = ({ imageTitle, imageLink, publishTime, sourceUrl, authorName, imageCount, description, tags }) => {
   return (
     <div
       absolute
@@ -160,7 +154,7 @@ const TopBar: FC<{
   )
 }
 
-export default function MultiPreview({ className }: { className: string }) {
+export default function MultiPreviewPage({ className }: { className: string }) {
   const [imagePaths, setImagePaths] = useState<string[]>([])
   const [loadError, setLoadError] = useState<string>('')
 

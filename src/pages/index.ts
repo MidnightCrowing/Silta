@@ -1,3 +1,3 @@
-export { MultiPreview } from './MultiPreview'
+export { MultiPreviewPage } from './MultiPreviewPage'
 export { SearchPage } from './SearchPage'
-export { SinglePreview } from './SinglePreview'
+export { SinglePreviewPage } from './SinglePreviewPage'

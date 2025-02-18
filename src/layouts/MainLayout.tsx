@@ -9,7 +9,7 @@ import {
 } from '@fluentui/react-icons'
 
 import Settings from '~/components/Settings'
-import { MultiPreview, SearchPage, SinglePreview } from '~/pages'
+import { MultiPreviewPage, SearchPage, SinglePreviewPage } from '~/pages'
 import { FolderPanel, TagsPanel } from '~/panels'
 import { generateItemId } from '~/utils/common'
 
@@ -68,12 +68,12 @@ const TabItems: TabItem[] = [
   {
     id: generateItemId(),
     label: '“黑豹”速度超过10米秒！中国造出世界最快四足机器人',
-    component: MultiPreview,
+    component: MultiPreviewPage,
   },
   {
     id: generateItemId(),
     label: '<UNK1>',
-    component: SinglePreview,
+    component: SinglePreviewPage,
   },
 ]
 
