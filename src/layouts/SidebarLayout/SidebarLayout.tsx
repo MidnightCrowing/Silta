@@ -252,7 +252,7 @@ class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState> {
     }
   }
 
-  private MoreOptionsButton = () => (
+  private MoreOptionsButton: FC = () => (
     <Menu>
       <MenuTrigger disableButtonEnhancement>
         <Tooltip content="选项" relationship="label">
@@ -272,7 +272,7 @@ class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState> {
     </Menu>
   )
 
-  private HideButton = () => (
+  private HideButton: FC = () => (
     <Tooltip content="隐藏" relationship="label">
       <ToolbarButton
         aria-label="Close panel"
@@ -434,7 +434,7 @@ class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
   private hideRightTopPanel = () => this.setActiveItem('rightTop', null)
   private hideRightBottomPanel = () => this.setActiveItem('rightBottom', null)
 
-  private isPanelOpen(activeItem: SidebarActiveItem) {
+  private isPanelOpen(activeItem: SidebarActiveItem): boolean {
     return activeItem !== null
   };
 

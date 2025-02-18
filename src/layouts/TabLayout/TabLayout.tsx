@@ -1,19 +1,26 @@
 import './TabLayout.scss'
 
+import type { DragEndEvent } from '@dnd-kit/core'
+import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { restrictToHorizontalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import type { SelectTabData, SelectTabEvent } from '@fluentui/react-components'
 import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/react-components'
 import { AddRegular, bundleIcon, Dismiss16Regular, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import { InteractiveTab } from '@fluentui-contrib/react-interactive-tab'
-import type { FC } from 'react'
-import { Component, createElement, Fragment, Suspense } from 'react'
+import clsx from 'clsx'
+import type { FC, ReactNode } from 'react'
+import { Component, createElement, Fragment, Suspense, useEffect, useState } from 'react'
 import { KeepAlive } from 'react-activation'
 
 import { SearchPage } from '~/pages'
 import { generateItemId } from '~/utils/common'
 
-import type { TabItem, TabLayoutProps, TabLayoutState, TabProps, TabState } from './TabLayout.types'
+import type { SortableTabProps, TabDividerProps, TabItem, TabLayoutProps, TabLayoutState } from './TabLayout.types'
 
 const DefaultIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
+
 function newTabTemplate(): TabItem {
   return {
     id: generateItemId(),
@@ -23,7 +30,7 @@ function newTabTemplate(): TabItem {
   }
 }
 
-const TabDivider: FC<{ groupId: string }> = ({ groupId }) => {
+const TabDivider: FC<TabDividerProps> = ({ groupId }) => {
   const isGroupVisible = useIsOverflowGroupVisible(groupId)
 
   if (isGroupVisible === 'hidden') {
@@ -35,41 +42,42 @@ const TabDivider: FC<{ groupId: string }> = ({ groupId }) => {
   )
 }
 
-class Tab extends Component<TabProps, TabState> {
-  state: Readonly<TabState> = {
-    open: this.props.item.new === false,
-  }
+const SortableTab: FC<SortableTabProps> = ({ item, isSelect, removeItem }) => {
+  const [open, setOpen] = useState<boolean>(item.new === false)
+  const { id, label, icon: Icon = DefaultIcon } = item
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
-  componentDidMount() {
+  useEffect(() => {
     requestAnimationFrame(() => {
-      this.setState({ open: true })
+      setOpen(true)
     })
-  }
+  }, [])
 
-  private removeItem = () => {
-    this.setState({ open: false })
+  const closeTab = () => {
+    setOpen(false)
 
     setTimeout(() => {
-      this.props.removeItem()
+      removeItem()
     }, 100)
   }
 
-  render() {
-    const { item, isSelect } = this.props
-    const { open } = this.state
-    const { id, label, icon: Icon = DefaultIcon } = item
-
-    return (
+  return (
+    <div
+      ref={setNodeRef}
+      className={clsx(
+        '@container group',
+        'flex-1 max-w-0 transition-(max-width duration-100 ease-in-out) transform-gpu',
+        open && 'max-w-150px',
+        isDragging && 'bg-$colorNeutralBackground1Hover rounded-5px z-1000 cursor-move',
+      )}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      {...attributes}
+      {...listeners}
+    >
       <InteractiveTab
-        className={
-          `@container group `
-          + `max-w-0 duration-100 `
-          + `flex-1 flex! justify-between `
-          + `p-(l-15px! r-10px!) `
-          + `${open && 'max-w-150px'}`
-        }
+        className="flex! justify-between p-(l-15px! r-10px!) h-full"
         button={{
-          className: 'px-0! shrink! grow justify-start!',
+          className: `px-0! shrink! grow justify-start! ${transform && 'cursor-move!'}`,
         }}
         icon={<Icon />}
         value={id}
@@ -81,14 +89,14 @@ class Tab extends Component<TabProps, TabState> {
             appearance="subtle"
             icon={<Dismiss16Regular />}
             data-selected={isSelect}
-            onClick={this.removeItem}
+            onClick={closeTab}
           />
         )}
       >
         {label}
       </InteractiveTab>
-    )
-  }
+    </div>
+  )
 }
 
 class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
@@ -127,6 +135,45 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
     })
   }
 
+  private handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      this.setState((prevState) => {
+        const oldIndex = prevState.items.findIndex(item => item.id === active.id)
+        const newIndex = prevState.items.findIndex(item => item.id === over.id)
+
+        return {
+          items: arrayMove(prevState.items, oldIndex, newIndex),
+        }
+      })
+    }
+  }
+
+  private DndContextWrapper: FC<{ children: ReactNode }> = ({ children }) => {
+    const sensors = useSensors(
+      useSensor(MouseSensor, {
+        activationConstraint: {
+          distance: 5, // 按住不动移动5px 时 才进行拖拽, 这样就可以触发点击事件
+        },
+      }),
+    )
+
+    return (
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={this.handleDragEnd}
+        sensors={sensors}
+        modifiers={[
+          restrictToHorizontalAxis, // 限制只能在水平方向上移动
+          restrictToParentElement, // 不能超出父组件
+        ]}
+      >
+        {children}
+      </DndContext>
+    )
+  }
+
   private AddNewTab: FC = () => {
     return (
       <div flex="~ items-center" p="x-5px">
@@ -143,34 +190,38 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   render() {
     const { className, items: _, ...props } = this.props
     const { activeItem, items } = this.state
-    const { AddNewTab } = this
+    const { DndContextWrapper, AddNewTab } = this
 
     return (
       <div className={`TabLayout flex-(~ col items-start) align-start ${className}`} {...props}>
 
         {/* Tabs */}
-        <TabList
-          className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
-          selectedValue={activeItem?.id}
-          onTabSelect={(_event: SelectTabEvent, data: SelectTabData) => this.onTabSelect(data.value as string)}
-        >
-          {
-            items && items.map((item) => {
-              return (
-                <Fragment key={item.id}>
-                  <Tab
-                    item={item}
-                    isSelect={activeItem === item}
-                    removeItem={() => { this.removeItem(item.id) }}
-                  />
-                  <TabDivider groupId={item.id} />
-                </Fragment>
-              )
-            })
-          }
+        <DndContextWrapper>
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            <TabList
+              className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
+              selectedValue={activeItem?.id}
+              onTabSelect={(_event: SelectTabEvent, data: SelectTabData) => this.onTabSelect(data.value as string)}
+            >
+              {
+                items && items.map((item) => {
+                  return (
+                    <Fragment key={item.id}>
+                      <SortableTab
+                        item={item}
+                        isSelect={activeItem === item}
+                        removeItem={() => { this.removeItem(item.id) }}
+                      />
+                      <TabDivider groupId={item.id} />
+                    </Fragment>
+                  )
+                })
+              }
 
-          <AddNewTab />
-        </TabList>
+              <AddNewTab />
+            </TabList>
+          </SortableContext>
+        </DndContextWrapper>
 
         {/* Pages */}
         <div grow w-full overflow-hidden>

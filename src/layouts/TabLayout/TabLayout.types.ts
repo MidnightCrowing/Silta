@@ -9,15 +9,16 @@ export interface TabItem {
   new?: boolean // 是否显示添加动画, false时不显示
 }
 
-/* Tab */
-export interface TabProps extends HTMLAttributes<HTMLDivElement> {
+/* TabDivider */
+export interface TabDividerProps extends HTMLAttributes<HTMLDivElement> {
+  groupId: string
+}
+
+/* SortableTab */
+export interface SortableTabProps extends HTMLAttributes<HTMLDivElement> {
   item: TabItem
   isSelect: boolean
   removeItem: () => void
-}
-
-export interface TabState {
-  open: boolean
 }
 
 /* TabLayout */

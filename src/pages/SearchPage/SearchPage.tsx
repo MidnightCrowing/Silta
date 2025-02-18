@@ -11,8 +11,8 @@ const bgUrl = convertFileSrc('assets/background.jpg')
 const logoUrl = convertFileSrc('assets/logo.svg')
 
 export default function SearchPage({ className }: { className: string }) {
-  const [isFocused, setIsFocused] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [isFocused, setIsFocused] = useState<boolean>(false)
+  const [inputValue, setInputValue] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   const clearInputAndFocus = () => {

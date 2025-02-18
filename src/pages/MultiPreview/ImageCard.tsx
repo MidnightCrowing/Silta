@@ -3,46 +3,35 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import { useEffect, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 
-function generateThumbnail(src: string, width: number, height: number): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new window.Image()
-    img.crossOrigin = 'Anonymous'
-    img.src = src
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/png'))
-      }
-      else {
-        reject(new Error('Canvas context is null'))
-      }
-    }
-    img.onerror = reject
-  })
-}
+import ThumbnailWorker from '~/workers/thumbnailWorker?worker'
 
 export default function ImageCard({ index, imagePath }: { index: number, imagePath: string }) {
-  const [isImageLoading, setIsImageLoading] = useState(true)
+  const [isImageLoading, setIsImageLoading] = useState<boolean>(true)
   const [thumbnail, setThumbnail] = useState<string>('')
 
   const rawImage = convertFileSrc(imagePath)
 
   useEffect(() => {
-    const loadThumbnail = async () => {
-      try {
-        const url = await generateThumbnail(rawImage, 320, 480)
-        setThumbnail(url)
+    const worker = new ThumbnailWorker()
+
+    worker.onmessage = (e) => {
+      const { thumbnail, error } = e.data
+      if (thumbnail) {
+        setThumbnail(thumbnail)
       }
-      catch (error) {
+      else if (error) {
         console.error('Error generating thumbnail:', imagePath, error)
-        setIsImageLoading(false)
       }
+      setIsImageLoading(false)
+
+      worker.terminate()
     }
-    loadThumbnail()
+
+    worker.postMessage({ src: rawImage, width: 320, height: 480 })
+
+    return () => {
+      worker.terminate()
+    }
   }, [imagePath, rawImage])
 
   return (
