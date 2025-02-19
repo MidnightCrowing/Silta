@@ -512,7 +512,7 @@ class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
         )}
 
         <div flex="~ col" grow overflow-hidden>
-          <div flex="~ row" grow>
+          <div flex="~ row" grow overflow-hidden>
             {/* Left Sidebar Panel */}
             <SidebarPanel
               position="start"

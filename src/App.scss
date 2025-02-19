@@ -8,5 +8,5 @@ body,
 // react-activation
 .ka-wrapper,
 .ka-content {
-  @apply size-full;
+  @apply size-full overflow-auto;
 }

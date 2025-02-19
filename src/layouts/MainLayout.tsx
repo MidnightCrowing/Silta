@@ -9,7 +9,7 @@ import {
 } from '@fluentui/react-icons'
 
 import Settings from '~/components/Settings'
-import { MultiPreviewPage, SearchPage, SinglePreviewPage } from '~/pages'
+import { MultiPreviewPage, SearchPage, SinglePreviewPage, VideoPage } from '~/pages'
 import { FolderPanel, TagsPanel } from '~/panels'
 import { generateItemId } from '~/utils/common'
 
@@ -75,13 +75,17 @@ const TabItems: TabItem[] = [
     label: '<UNK1>',
     component: SinglePreviewPage,
   },
+  {
+    id: generateItemId(),
+    label: '<UNK1>',
+    component: VideoPage,
+  },
 ]
 
 function MainLayout() {
   return (
     <SidebarLayout
       items={SidebarItems}
-      leftTopActiveItemId="folder"
       size-full
       overflow-hidden
     >
