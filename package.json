@@ -18,9 +18,10 @@
     "react": "^18.3.1",
     "react-activation": "^0.13.0",
     "react-dom": "^18.3.1",
+    "react-frame-component": "^5.2.7",
     "react-lazyload": "^3.2.1",
     "react-photo-view": "^1.2.7",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "^7.2.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.1.1",
