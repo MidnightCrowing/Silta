@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -42,6 +43,18 @@ export default defineConfig({
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
+    },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    setupFiles: ['./src/test/setup.tsx'],
+    coverage: {
+      enabled: true,
+      provider: 'v8',
+      reporter: ['html'],
+      include: ['src/**/*.{js,jsx,ts,tsx}'],
     },
   },
   build: {

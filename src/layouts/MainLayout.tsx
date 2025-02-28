@@ -9,14 +9,13 @@ import {
 } from '@fluentui/react-icons'
 
 import Settings from '~/components/Settings'
-import { MultiPreviewPage, SearchPage, SinglePreviewPage, VideoPage } from '~/pages'
 import { FolderPanel, TagsPanel } from '~/panels'
 import { generateItemId } from '~/utils/common'
 
 import type { SidebarItem } from './SidebarLayout'
 import { SidebarLayout } from './SidebarLayout'
 import type { TabItem } from './TabLayout'
-import { TabLayout } from './TabLayout'
+import { TabComponentNameEnum, TabLayout } from './TabLayout'
 
 const SidebarItems: SidebarItem[] = [
   {
@@ -61,24 +60,20 @@ const SidebarItems: SidebarItem[] = [
 ]
 const TabItems: TabItem[] = [
   {
-    id: generateItemId(),
     label: '新建标签页',
-    component: SearchPage,
+    componentName: TabComponentNameEnum.SearchPage,
   },
   {
-    id: generateItemId(),
     label: '“黑豹”速度超过10米秒！中国造出世界最快四足机器人',
-    component: MultiPreviewPage,
+    componentName: TabComponentNameEnum.MultiPreviewPage,
   },
   {
-    id: generateItemId(),
     label: '<UNK1>',
-    component: SinglePreviewPage,
+    componentName: TabComponentNameEnum.SinglePreviewPage,
   },
   {
-    id: generateItemId(),
     label: '<UNK1>',
-    component: VideoPage,
+    componentName: TabComponentNameEnum.VideoPage,
   },
 ]
 

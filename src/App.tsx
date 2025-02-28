@@ -7,8 +7,8 @@ import '~/styles/colors.scss'
 import { FluentProvider } from '@fluentui/react-components'
 import { AliveScope } from 'react-activation'
 
+import { useTheme } from '~/contexts/theme'
 import { MainLayout } from '~/layouts'
-import { useTheme } from '~/theme/useTheme'
 
 function App() {
   const { theme } = useTheme()

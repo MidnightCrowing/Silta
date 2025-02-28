@@ -1,69 +1,7 @@
-import type { FluentIcon } from '@fluentui/react-icons'
-import type { ComponentType, HTMLAttributes, ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
-export interface ResizeComponentProps extends HTMLAttributes<HTMLDivElement> {
-  onMouseDown: () => void
-  isResizing: boolean
-}
+import type { SidebarActiveItem, SidebarActiveItemId, SidebarItem } from './shared/SidebarItem.types'
 
-type SidebarItemId = string | number
-export type SidebarPosition = 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom'
-
-interface SidebarItemBase {
-  id: SidebarItemId
-  label: string
-  component: ComponentType<any>
-  position: SidebarPosition
-}
-
-export interface SidebarNavItem extends SidebarItemBase {
-  type?: 'item'
-  icon?: FluentIcon
-}
-
-export interface SidebarButton extends SidebarItemBase {
-  type: 'button'
-}
-
-export interface SidebarItemDivider {
-  id: string | number
-  type: 'divider'
-  position: SidebarPosition
-}
-
-export type SidebarItem = SidebarNavItem | SidebarButton | SidebarItemDivider
-export type SidebarActiveItem = SidebarNavItem | null
-export type SidebarActiveItemId = SidebarItemId | null
-
-/* SidebarNavigation */
-export interface SidebarNavigationProps extends HTMLAttributes<HTMLDivElement> {
-  position: 'left' | 'right'
-  topItems?: SidebarItem[]
-  bottomItems?: SidebarItem[]
-  topActiveItemId: SidebarActiveItemId
-  bottomActiveItemId: SidebarActiveItemId
-  setTopActiveItemId: (topItem: SidebarActiveItemId) => void
-  setBottomActiveItemId: (bottomItem: SidebarActiveItemId) => void
-}
-
-/* SidebarPanel */
-export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
-  position: 'start' | 'end' | 'bottom'
-  activeItem: SidebarActiveItem
-  open: boolean
-  setDrawerIsResizing: (state: boolean) => void
-  hidePanel: () => void
-}
-
-export interface SidebarPanelState {
-  drawerWidth: number
-  drawerHeight: number
-  drawerIsResizing: boolean
-  toolbarVisible: boolean
-}
-
-/* SidebarLayout */
 export interface SidebarLayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'items'> {
   children: ReactNode
   items?: SidebarItem[]

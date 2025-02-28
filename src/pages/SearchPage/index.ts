@@ -1,3 +1,1 @@
-import { lazy } from 'react'
-
-export const SearchPage = lazy(() => import('./SearchPage'))
+export { SearchPage } from './SearchPage.lazy'

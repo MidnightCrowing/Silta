@@ -1,4 +1,7 @@
-import { lazy } from 'react'
+// TabItem
+export type { TabItem } from './shared/TabItem.types'
+export { TabComponentNameEnum } from './shared/TabItem.types'
 
-export const TabLayout = lazy(() => import('./TabLayout'))
-export type { TabItem } from './TabLayout.types'
+// TabLayout
+export { TabLayout } from './TabLayout.lazy'
+export type { TabLayoutProps } from './TabLayout.types'

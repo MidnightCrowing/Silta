@@ -1,4 +1,13 @@
-import { lazy } from 'react'
+// SidebarItem
+export type {
+  SidebarButton,
+  SidebarItem,
+  SidebarItemDivider,
+  SidebarItemId,
+  SidebarNavItem,
+  SidebarPosition,
+} from './shared/SidebarItem.types'
 
-export const SidebarLayout = lazy(() => import('./SidebarLayout'))
-export type { SidebarItem } from './SidebarLayout.types'
+// SidebarLayout
+export { SidebarLayout } from './SidebarLayout.lazy'
+export type { SidebarLayoutProps } from './SidebarLayout.types'

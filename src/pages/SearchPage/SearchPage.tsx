@@ -1,4 +1,6 @@
 import './SearchPage.scss'
+import 'virtual:uno.css'
+import '~/styles/colors.scss'
 
 import { Button } from '@fluentui/react-components'
 import { Dismiss16Regular, Search24Regular } from '@fluentui/react-icons'
@@ -6,14 +8,20 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import clsx from 'clsx'
 import { useRef, useState } from 'react'
 
+import { useLocation } from '~/contexts/location'
+import { TabComponentNameEnum } from '~/layouts/TabLayout'
+
+import type { SearchPageProps } from './SearchPage.types'
+
 const searchBg: boolean = true // 是否显示搜索标签页背景图片
 const bgUrl = convertFileSrc('assets/background.jpg')
 const logoUrl = convertFileSrc('assets/logo.svg')
 
-export default function SearchPage({ className }: { className: string }) {
+export default function SearchPage({ className }: SearchPageProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const { setLocation } = useLocation()
 
   const clearInputAndFocus = () => {
     setInputValue('')
@@ -69,6 +77,7 @@ export default function SearchPage({ className }: { className: string }) {
           />
           {inputValue && (
             <Dismiss16Regular
+              data-testid="clear-button"
               className={
                 'absolute top-1/2 right-115px translate-y--1/2 '
                 + 'group-hover:hover:color-$colorCompoundBrandForeground1 '
@@ -95,7 +104,17 @@ export default function SearchPage({ className }: { className: string }) {
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
           />
-          <Button className="w-100px h-38px select-none" appearance="primary">搜索</Button>
+          <Button
+            className="w-100px h-38px select-none"
+            appearance="primary"
+            onClick={() => setLocation({
+              pageLabel: 'Video',
+              pageComponentName: TabComponentNameEnum.VideoPage,
+              pageComponentProps: { keyword: inputValue },
+            })}
+          >
+            搜索
+          </Button>
         </div>
       </div>
     </div>

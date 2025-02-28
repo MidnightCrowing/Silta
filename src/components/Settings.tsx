@@ -10,7 +10,7 @@ import {
 } from '@fluentui/react-components'
 import { SettingsRegular } from '@fluentui/react-icons'
 
-import { useTheme } from '~/theme/useTheme.ts'
+import { useTheme } from '~/contexts/theme'
 
 function SettingsDialog() {
   const { themeName, setTheme } = useTheme()

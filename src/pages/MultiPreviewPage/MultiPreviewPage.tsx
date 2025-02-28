@@ -88,7 +88,7 @@ const TopBar: FC<TopBarProps> = ({ imageTitle, imageLink, publishTime, sourceUrl
     <div
       absolute
       className="MultiPreview-top-bar MultiPreview-top-bar-effect"
-      w-full
+      w="[calc(100%-15px)]"
       max-h="40px"
       p="x-10px"
       flex="~ col"
@@ -211,7 +211,7 @@ export default function MultiPreviewPage({ className }: { className: string }) {
         tags={tags}
       />
 
-      <div absolute size-full>
+      <div absolute size-full overflow-y-auto>
         <Skeleton animation="pulse" aria-label="Loading Images">
           <PhotoProvider maskOpacity={0.85}>
             <div flex="~ col" gap="20px" m="t-40px" p="15px" box-border>

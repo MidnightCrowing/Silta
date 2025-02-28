@@ -1,138 +1,111 @@
-import './TabLayout.scss'
-
 import type { DragEndEvent } from '@dnd-kit/core'
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToHorizontalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import type { SelectTabData, SelectTabEvent } from '@fluentui/react-components'
 import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/react-components'
-import { AddRegular, bundleIcon, Dismiss16Regular, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
-import { InteractiveTab } from '@fluentui-contrib/react-interactive-tab'
-import clsx from 'clsx'
+import { AddRegular, bundleIcon, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import type { FC, ReactNode } from 'react'
-import { Component, createElement, Fragment, Suspense, useEffect, useState } from 'react'
-import { KeepAlive } from 'react-activation'
+import { Component, Fragment } from 'react'
 
-import { SearchPage } from '~/pages'
 import { generateItemId } from '~/utils/common'
 
-import type { SortableTabProps, TabDividerProps, TabItem, TabLayoutProps, TabLayoutState } from './TabLayout.types'
+import { SortableTab, TabPage, Toolbar } from './components'
+import type { TabItem } from './shared/TabItem.types'
+import { TabComponentNameEnum } from './shared/TabItem.types'
+import type { TabLayoutProps, TabLayoutState } from './TabLayout.types'
 
 const DefaultIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
 
 function newTabTemplate(): TabItem {
   return {
-    id: generateItemId(),
     label: '新建标签页',
     icon: DefaultIcon,
-    component: SearchPage,
+    componentName: TabComponentNameEnum.NewPage,
   }
-}
-
-const TabDivider: FC<TabDividerProps> = ({ groupId }) => {
-  const isGroupVisible = useIsOverflowGroupVisible(groupId)
-
-  if (isGroupVisible === 'hidden') {
-    return null
-  }
-
-  return (
-    <Divider className="grow-0! p-(x-0 py-12px)" vertical />
-  )
-}
-
-const SortableTab: FC<SortableTabProps> = ({ item, isSelect, removeItem }) => {
-  const [open, setOpen] = useState<boolean>(item.new === false)
-  const { id, label, icon: Icon = DefaultIcon } = item
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      setOpen(true)
-    })
-  }, [])
-
-  const closeTab = () => {
-    setOpen(false)
-
-    setTimeout(() => {
-      removeItem()
-    }, 100)
-  }
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={clsx(
-        '@container group',
-        'flex-1 max-w-0 transition-(max-width duration-100 ease-in-out) transform-gpu',
-        open && 'max-w-150px',
-        isDragging && 'bg-$colorNeutralBackground1Hover rounded-5px z-1000 cursor-move',
-      )}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
-      {...attributes}
-      {...listeners}
-    >
-      <InteractiveTab
-        className="flex! justify-between p-(l-15px! r-10px!) h-full"
-        button={{
-          className: `px-0! shrink! grow justify-start! ${transform && 'cursor-move!'}`,
-        }}
-        icon={<Icon />}
-        value={id}
-        contentAfter={(
-          <Button
-            role="tab"
-            className="TabLayout-close-button size-20px min-w-20px!"
-            size="small"
-            appearance="subtle"
-            icon={<Dismiss16Regular />}
-            data-selected={isSelect}
-            onClick={closeTab}
-          />
-        )}
-      >
-        {label}
-      </InteractiveTab>
-    </div>
-  )
 }
 
 class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
-  state: Readonly<TabLayoutState> = {
-    activeItem: this.props.items?.[0] || null,
-    items: this.props.items?.map(item => ({ ...item, new: false })) || [],
+  constructor(props: TabLayoutProps) {
+    super(props)
+
+    this.state = this.initializeState(props.items)
+  }
+
+  private initializeState(items: TabItem[] = []): TabLayoutState {
+    const itemsWithId = items.reduce((acc, item) => {
+      const id = generateItemId()
+      acc[id] = item
+      return acc
+    }, {} as { [id: string]: TabItem })
+
+    return {
+      activeItemId: items.length > 0 ? Object.keys(itemsWithId)[0] : null,
+      items: itemsWithId,
+    }
+  }
+
+  private get activeItem(): TabItem | null {
+    const { activeItemId, items } = this.state
+    return activeItemId ? items[activeItemId] : null
   }
 
   private onTabSelect = (itemId: string) => {
-    this.setState(prevState => ({
-      activeItem: prevState.items?.find(item => item.id === itemId) ?? null,
-    }))
+    this.setState({ activeItemId: itemId })
   }
 
   private addItem = (newItem: TabItem = newTabTemplate(), active: boolean = true) => {
+    const id = generateItemId()
     this.setState(prevState => ({
-      items: prevState.items.concat(newItem),
-      activeItem: active ? newItem : prevState.activeItem,
+      items: { ...prevState.items, [id]: newItem },
+      activeItemId: active ? id : prevState.activeItemId,
     }))
   }
 
   private removeItem = (itemId: string) => {
     this.setState((prevState) => {
-      const newItems = prevState.items.filter(i => i.id !== itemId)
-      let newActiveItem = prevState.activeItem
+      const { [itemId]: _, ...newItems } = prevState.items
+      let newActiveItemId = prevState.activeItemId
 
-      if (prevState.activeItem?.id === itemId) {
-        const currentIndex = prevState.items.findIndex(i => i.id === itemId)
-        newActiveItem = newItems[currentIndex] || newItems[currentIndex - 1] || null
+      if (prevState.activeItemId === itemId) {
+        const itemIds = Object.keys(newItems)
+        const currentIndex = itemIds.indexOf(itemId)
+        newActiveItemId = itemIds[currentIndex] || itemIds[currentIndex - 1] || null
       }
 
       return {
         items: newItems,
-        activeItem: newActiveItem,
+        activeItemId: newActiveItemId,
       }
     })
+  }
+
+  private updatePageItem = (pageId: string, updatedFields: Partial<TabItem>) => {
+    this.setState(prevState => ({
+      items: {
+        ...prevState.items,
+        [pageId]: {
+          ...prevState.items[pageId],
+          ...updatedFields,
+        },
+      },
+    }))
+  }
+
+  private updatePageTitle = (pageId: string, newTitle: string) => {
+    this.updatePageItem(pageId, { label: newTitle })
+  }
+
+  private updatePageIcon = (pageId: string, newIcon: typeof DefaultIcon) => {
+    this.updatePageItem(pageId, { icon: newIcon })
+  }
+
+  private updatePageComponentName = (pageId: string, newComponentName: TabComponentNameEnum) => {
+    this.updatePageItem(pageId, { componentName: newComponentName })
+  }
+
+  private updatePageComponentProps = (pageId: string, newComponentProps: Record<string, any>) => {
+    this.updatePageItem(pageId, { componentProps: newComponentProps })
   }
 
   private handleDragEnd = (event: DragEndEvent) => {
@@ -140,11 +113,16 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
 
     if (over && active.id !== over.id) {
       this.setState((prevState) => {
-        const oldIndex = prevState.items.findIndex(item => item.id === active.id)
-        const newIndex = prevState.items.findIndex(item => item.id === over.id)
+        const oldIndex = Object.keys(prevState.items).indexOf(active.id as string)
+        const newIndex = Object.keys(prevState.items).indexOf(over.id as string)
+        const newItems = arrayMove(Object.entries(prevState.items), oldIndex, newIndex)
+          .reduce((acc, [id, item]) => {
+            acc[id] = item
+            return acc
+          }, {} as { [id: string]: TabItem })
 
         return {
-          items: arrayMove(prevState.items, oldIndex, newIndex),
+          items: newItems,
         }
       })
     }
@@ -154,7 +132,7 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
     const sensors = useSensors(
       useSensor(MouseSensor, {
         activationConstraint: {
-          distance: 5, // 按住不动移动5px 时 才进行拖拽, 这样就可以触发点击事件
+          distance: 5, // 按住不动移动5px时才进行拖拽, 这样就可以触发点击事件
         },
       }),
     )
@@ -174,6 +152,18 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
     )
   }
 
+  private TabDivider: FC<{ groupId: string }> = ({ groupId }) => {
+    const isGroupVisible = useIsOverflowGroupVisible(groupId)
+
+    if (isGroupVisible === 'hidden') {
+      return null
+    }
+
+    return (
+      <Divider className="grow-0! p-(x-0 py-12px)" vertical />
+    )
+  }
+
   private AddNewTab: FC = () => {
     return (
       <div flex="~ items-center" p="x-5px">
@@ -188,49 +178,54 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   }
 
   render() {
-    const { className, items: _, ...props } = this.props
-    const { activeItem, items } = this.state
-    const { DndContextWrapper, AddNewTab } = this
+    const { className, items: propItems, ...props } = this.props
+    const { activeItemId, items } = this.state
+    const { activeItem, DndContextWrapper, AddNewTab, TabDivider } = this
 
     return (
       <div className={`TabLayout flex-(~ col items-start) align-start ${className}`} {...props}>
 
         {/* Tabs */}
         <DndContextWrapper>
-          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+          <SortableContext items={Object.keys(items)} strategy={verticalListSortingStrategy}>
             <TabList
               className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
-              selectedValue={activeItem?.id}
+              selectedValue={activeItemId}
               onTabSelect={(_event: SelectTabEvent, data: SelectTabData) => this.onTabSelect(data.value as string)}
             >
               {
-                items && items.map((item) => {
+                Object.entries(items).map(([id, item]) => {
                   return (
-                    <Fragment key={item.id}>
+                    <Fragment key={id}>
                       <SortableTab
+                        id={id}
                         item={item}
-                        isSelect={activeItem === item}
-                        removeItem={() => { this.removeItem(item.id) }}
+                        isSelect={activeItemId === id}
+                        removeItem={() => { this.removeItem(id) }}
                       />
-                      <TabDivider groupId={item.id} />
+                      <TabDivider groupId={id} />
                     </Fragment>
                   )
                 })
               }
-
               <AddNewTab />
             </TabList>
           </SortableContext>
         </DndContextWrapper>
 
+        <Toolbar activeItem={activeItem} />
+
         {/* Pages */}
         <div grow w-full overflow-hidden>
-          {activeItem && (
-            <KeepAlive key={activeItem.id} cacheKey={activeItem.id}>
-              <Suspense>
-                {createElement(activeItem.component, { className: 'size-full box-border' })}
-              </Suspense>
-            </KeepAlive>
+          {activeItemId && activeItem && (
+            <TabPage
+              activeItemId={activeItemId}
+              activeItem={activeItem}
+              setPageTitle={this.updatePageTitle}
+              setPageIcon={this.updatePageIcon}
+              setPageComponentName={this.updatePageComponentName}
+              setPageComponentProps={this.updatePageComponentProps}
+            />
           )}
         </div>
       </div>

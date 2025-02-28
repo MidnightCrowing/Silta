@@ -1,0 +1,45 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`sidebarResize > renders a default state 1`] = `
+<div>
+  <div
+    aria-label="resize panel"
+    class=""
+    role="button"
+    z="3"
+  />
+</div>
+`;
+
+exports[`sidebarResize > renders with resizing state 1`] = `
+<div>
+  <div
+    aria-label="resize panel"
+    class="b-r-3px b-r-$colorNeutralBackground5Pressed"
+    role="button"
+    z="3"
+  />
+</div>
+`;
+
+exports[`sidebarResize > 渲染调整大小状态 1`] = `
+<div>
+  <div
+    aria-label="resize panel"
+    class="b-r-3px b-r-$colorNeutralBackground5Pressed"
+    role="button"
+    z="3"
+  />
+</div>
+`;
+
+exports[`sidebarResize > 渲染默认状态 1`] = `
+<div>
+  <div
+    aria-label="resize panel"
+    class=""
+    role="button"
+    z="3"
+  />
+</div>
+`;
