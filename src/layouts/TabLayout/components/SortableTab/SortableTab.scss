@@ -1,7 +1,7 @@
 .TabLayout.SortableTab {
   .close-button {
     @container (max-width: 100px) {
-      @apply hidden! group-hover:flex!;
+      @apply hidden;
 
       &[data-selected="true"] {
         @apply flex!;

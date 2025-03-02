@@ -71,7 +71,7 @@ export default function SearchPage({ className }: SearchPageProps) {
           onBlur={() => setIsFocused(false)}
         >
           <Search24Regular
-            className={`m-(l-15px r-10px) transition-(color duration-200) ${
+            className={`m-(l-15px r-10px) transition-(colors duration-200) ${
               !isFocused && 'color-$colorCompoundBrandForeground1'
             }`}
           />
@@ -81,7 +81,7 @@ export default function SearchPage({ className }: SearchPageProps) {
               className={
                 'absolute top-1/2 right-115px translate-y--1/2 '
                 + 'group-hover:hover:color-$colorCompoundBrandForeground1 '
-                + 'group-hover:(bg-$colorNeutralBackgroundStatic active:bg-$colorNeutralBackground6) '
+                + 'group-hover:(bg-$colorNeutralBackground3 hover:bg-$colorNeutralBackground3Hover) '
                 + 'rounded-1/2 p-3px outline-0 '
                 + 'cursor-pointer'
               }
@@ -94,7 +94,7 @@ export default function SearchPage({ className }: SearchPageProps) {
             w="[calc(100%-160px)]"
             h="36px"
             text="18px"
-            mr="40px"
+            m="r-40px"
             b-0
             outline-0
             color="$colorneutralforeground1"

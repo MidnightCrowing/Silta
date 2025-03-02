@@ -1,49 +1,44 @@
-import { createElement, Suspense, useEffect } from 'react'
+import { createElement, forwardRef, Suspense, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import KeepAlive from 'react-activation'
 
 import { LocationProvider, useLocation } from '~/contexts/location'
-import { MultiPreviewPage, SearchPage, SinglePreviewPage, VideoPage } from '~/pages'
 
-import { TabComponentNameEnum } from '../../shared/TabItem.types'
-import { DefaultTabIcon } from '../SortableTab'
-import type { ComponentMapType, PageWrapperProps, TabPageProps } from './TabPage.types'
+import { componentMap } from '../../shared/componentMap'
+import { DefaultTabIcon } from '../../shared/DefaultTabIcon'
+import { TabToolbar } from '../TabToolbar'
+import type { LocationState, PageWrapperProps, PageWrapperRef, TabPageProps } from './TabPage.types'
 
-const componentMap: ComponentMapType = {
-  [TabComponentNameEnum.NewPage]: SearchPage,
-  [TabComponentNameEnum.SearchPage]: SearchPage,
-  [TabComponentNameEnum.MultiPreviewPage]: MultiPreviewPage,
-  [TabComponentNameEnum.SinglePreviewPage]: SinglePreviewPage,
-  [TabComponentNameEnum.VideoPage]: VideoPage,
-}
-
-function PageWrapper({
+const PageWrapper = forwardRef<PageWrapperRef, PageWrapperProps>(({
   activeItemId,
   setPageTitle,
   setPageIcon,
   setPageComponentName,
   setPageComponentProps,
-}: PageWrapperProps) {
-  const { location } = useLocation()
+  setLocationState,
+}, ref) => {
+  const { location, isBack, isForward, locationBack, locationForward } = useLocation()
 
   useEffect(() => {
     setPageTitle(activeItemId, location.pageLabel)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pageLabel])
-
-  useEffect(() => {
     setPageIcon(activeItemId, location.pageIcon ?? DefaultTabIcon)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pageIcon])
-
-  useEffect(() => {
     setPageComponentName(activeItemId, location.pageComponentName)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pageComponentName])
+    setPageComponentProps(activeItemId, location.pageComponentProps)
+  }, [
+    activeItemId,
+    location,
+    setPageTitle,
+    setPageIcon,
+    setPageComponentName,
+    setPageComponentProps,
+  ])
 
   useEffect(() => {
-    setPageComponentProps(activeItemId, location.pageComponentProps)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pageComponentProps])
+    setLocationState({ isBack, isForward, locationBack, locationForward })
+  }, [setLocationState, isBack, isForward, locationBack, locationForward])
+
+  useImperativeHandle(ref, () => ({
+    getLocationState: () => ({ isBack, isForward, locationBack, locationForward }),
+  }))
 
   const Component = componentMap[location.pageComponentName]
 
@@ -52,7 +47,7 @@ function PageWrapper({
       {createElement(Component, { className: 'size-full box-border' })}
     </Suspense>
   )
-}
+})
 
 export function TabPage({
   activeItemId,
@@ -62,22 +57,64 @@ export function TabPage({
   setPageComponentName,
   setPageComponentProps,
 }: TabPageProps) {
+  const pageWrapperRef = useRef<PageWrapperRef | null>(null)
+  const [showPageWrapper, setShowPageWrapper] = useState<boolean>(true)
+  const [locationState, setLocationState] = useState<LocationState>({
+    isBack: false,
+    isForward: false,
+    locationBack: () => {},
+    locationForward: () => {},
+  })
+
+  const refreshPage = () => {
+    setShowPageWrapper(false) // 先卸载组件
+    setTimeout(() => setShowPageWrapper(true), 10) // 等待一段时间后重新加载组件
+  }
+
+  const updateLocationState = () => {
+    const newState = pageWrapperRef.current?.getLocationState()
+    if (newState) {
+      setLocationState(newState)
+    }
+  }
+
+  useEffect(() => {
+    updateLocationState()
+  }, [activeItemId])
+
   return (
-    <KeepAlive cacheKey={activeItemId}>
-      <LocationProvider
-        pageLabel={activeItem.label}
-        pageIcon={activeItem.icon}
-        pageComponentName={activeItem.componentName}
-        pageComponentProps={activeItem.componentProps}
-      >
-        <PageWrapper
-          activeItemId={activeItemId}
-          setPageTitle={setPageTitle}
-          setPageIcon={setPageIcon}
-          setPageComponentName={setPageComponentName}
-          setPageComponentProps={setPageComponentProps}
-        />
-      </LocationProvider>
-    </KeepAlive>
+    <div size-full flex="~ col">
+      <TabToolbar
+        activeItem={activeItem}
+        refreshPage={refreshPage}
+        isBack={locationState.isBack}
+        isForward={locationState.isForward}
+        locationBack={locationState.locationBack}
+        locationForward={locationState.locationForward}
+      />
+
+      <div grow overflow-auto>
+        <KeepAlive cacheKey={activeItemId}>
+          <LocationProvider
+            pageLabel={activeItem.label}
+            pageIcon={activeItem.icon}
+            pageComponentName={activeItem.componentName}
+            pageComponentProps={activeItem.componentProps}
+          >
+            {showPageWrapper && (
+              <PageWrapper
+                ref={pageWrapperRef}
+                activeItemId={activeItemId}
+                setPageTitle={setPageTitle}
+                setPageIcon={setPageIcon}
+                setPageComponentName={setPageComponentName}
+                setPageComponentProps={setPageComponentProps}
+                setLocationState={setLocationState}
+              />
+            )}
+          </LocationProvider>
+        </KeepAlive>
+      </div>
+    </div>
   )
 }

@@ -3,15 +3,14 @@ import './SortableTab.scss'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Button } from '@fluentui/react-components'
-import { bundleIcon, Dismiss16Regular, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
+import { Dismiss16Regular } from '@fluentui/react-icons'
 import { InteractiveTab } from '@fluentui-contrib/react-interactive-tab'
 import clsx from 'clsx'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 
+import { DefaultTabIcon } from '../../shared/DefaultTabIcon'
 import type { SortableTabProps } from './SortableTab.types'
-
-export const DefaultTabIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
 
 export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeItem }) => {
   const { label, icon: Icon = DefaultTabIcon, showAddAnimation = true } = item
@@ -19,9 +18,10 @@ export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeIt
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
   useEffect(() => {
-    requestAnimationFrame(() => {
+    const id = setTimeout(() => {
       setOpen(true)
-    })
+    }, 0)
+    return () => clearTimeout(id)
   }, [])
 
   const closeTab = () => {
@@ -37,8 +37,9 @@ export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeIt
       ref={setNodeRef}
       className={clsx(
         'TabLayout SortableTab @container group',
-        'flex-1 max-w-0 transition-(max-width duration-100 ease-in-out) transform-gpu',
-        open && 'max-w-150px',
+        'flex-1 overflow-hidden max-w-0 opacity-0',
+        'transition-([max-width,opacity] duration-100 ease-in-out) transform-gpu',
+        open && 'max-w-150px opacity-100',
         isDragging && 'bg-$colorNeutralBackground1Hover rounded-5px z-1000 cursor-move',
       )}
       style={{ transform: CSS.Transform.toString(transform), transition }}
@@ -55,7 +56,7 @@ export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeIt
         contentAfter={(
           <Button
             role="tab"
-            className="close-button size-20px min-w-20px!"
+            className="close-button size-20px min-w-20px! group-hover:flex!"
             size="small"
             appearance="subtle"
             icon={<Dismiss16Regular />}

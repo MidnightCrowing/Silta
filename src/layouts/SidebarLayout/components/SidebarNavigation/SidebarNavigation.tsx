@@ -7,7 +7,7 @@ import { Component, Fragment } from 'react'
 import type { SidebarActiveItemId, SidebarButton, SidebarItem, SidebarNavItem } from '../../shared/SidebarItem.types'
 import type { SidebarNavigationProps } from './SidebarNavigation.types'
 
-const DefaultIcon = bundleIcon(GridFilled, GridRegular)
+const DefaultSidebarIcon = bundleIcon(GridFilled, GridRegular)
 
 export class SidebarNavigation extends Component<SidebarNavigationProps> {
   private changeActiveItem(position: 'top' | 'bottom', id: SidebarActiveItemId) {
@@ -21,7 +21,7 @@ export class SidebarNavigation extends Component<SidebarNavigationProps> {
 
     switch (type) {
       case 'item': {
-        const { label, icon: Icon = DefaultIcon } = item as SidebarNavItem
+        const { label, icon: Icon = DefaultSidebarIcon } = item as SidebarNavItem
 
         return (
           <Tooltip content={label} relationship="label" positioning="after" withArrow>

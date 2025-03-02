@@ -10,7 +10,6 @@ import {
 
 import Settings from '~/components/Settings'
 import { FolderPanel, TagsPanel } from '~/panels'
-import { generateItemId } from '~/utils/common'
 
 import type { SidebarItem } from './SidebarLayout'
 import { SidebarLayout } from './SidebarLayout'

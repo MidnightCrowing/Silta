@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { TabComponentNameEnum } from '~/layouts'
 
-import type { LocationState } from './Location.types'
+import type { LocationContextType, LocationState } from './Location.types'
 import { LocationContext } from './LocationContext'
 
 export function LocationProvider({ children, pageLabel, pageIcon, pageComponentName, pageComponentProps }: {
@@ -21,15 +21,50 @@ export function LocationProvider({ children, pageLabel, pageIcon, pageComponentN
     pageComponentProps: pageComponentProps || {},
   })
 
-  const setLocation = useCallback((newState: Partial<LocationState>) => {
-    setLocationState(prevState => ({ ...prevState, ...newState }))
-  }, [])
+  const [locationHistory, setLocationHistory] = useState<LocationState[]>([location])
+  const [historyIndex, setHistoryIndex] = useState<number>(0)
 
-  const value = useMemo(() => ({ location, setLocation }), [location, setLocation])
+  const setLocation = useCallback((newState: Partial<LocationState>) => {
+    setLocationState((prevState) => {
+      const updatedLocation = { ...prevState, ...newState }
+      const newHistory = locationHistory.slice(0, historyIndex + 1)
+      newHistory.push(updatedLocation)
+      setLocationHistory(newHistory)
+      setHistoryIndex(newHistory.length - 1)
+      return updatedLocation
+    })
+  }, [locationHistory, historyIndex])
+
+  const locationBack = useCallback(() => {
+    if (historyIndex > 0) {
+      setHistoryIndex(prevIndex => prevIndex - 1)
+      setLocationState(locationHistory[historyIndex - 1])
+    }
+  }, [historyIndex, locationHistory])
+
+  const locationForward = useCallback(() => {
+    if (historyIndex < locationHistory.length - 1) {
+      setHistoryIndex(prevIndex => prevIndex + 1)
+      setLocationState(locationHistory[historyIndex + 1])
+    }
+  }, [historyIndex, locationHistory])
+
+  const isBack = historyIndex > 0
+  const isForward = historyIndex < locationHistory.length - 1
+
+  const value = useMemo<LocationContextType>(() => ({
+    location,
+    locationHistory,
+    isBack,
+    isForward,
+    locationBack,
+    locationForward,
+    setLocation,
+  }), [location, locationHistory, isBack, isForward, locationBack, locationForward, setLocation])
 
   return (
     <LocationContext.Provider value={value}>
       {children}
     </LocationContext.Provider>
   )
-};
+}

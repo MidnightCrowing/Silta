@@ -1,2 +1,2 @@
 export { TabPage } from './TabPage'
-export type { ComponentMapType, PageWrapperProps, TabPageProps } from './TabPage.types'
+export type { PageWrapperProps, TabPageProps } from './TabPage.types'

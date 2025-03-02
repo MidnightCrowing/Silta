@@ -4,28 +4,24 @@ import { restrictToHorizontalAxis, restrictToParentElement } from '@dnd-kit/modi
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import type { SelectTabData, SelectTabEvent } from '@fluentui/react-components'
 import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/react-components'
-import { AddRegular, bundleIcon, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
+import { AddRegular } from '@fluentui/react-icons'
 import type { FC, ReactNode } from 'react'
 import { Component, Fragment } from 'react'
 
 import { generateItemId } from '~/utils/common'
 
-import { SortableTab, TabPage, Toolbar } from './components'
+import { SortableTab, TabPage } from './components'
+import type { DefaultTabIcon } from './shared/DefaultTabIcon'
 import type { TabItem } from './shared/TabItem.types'
 import { TabComponentNameEnum } from './shared/TabItem.types'
 import type { TabLayoutProps, TabLayoutState } from './TabLayout.types'
 
-const DefaultIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
-
-function newTabTemplate(): TabItem {
-  return {
-    label: '新建标签页',
-    icon: DefaultIcon,
-    componentName: TabComponentNameEnum.NewPage,
-  }
+const newTabTemplate: TabItem = {
+  label: '新建标签页',
+  componentName: TabComponentNameEnum.NewPage,
 }
 
-class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
+export default class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   constructor(props: TabLayoutProps) {
     super(props)
 
@@ -54,7 +50,7 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
     this.setState({ activeItemId: itemId })
   }
 
-  private addItem = (newItem: TabItem = newTabTemplate(), active: boolean = true) => {
+  private addItem = (newItem: TabItem = newTabTemplate, active: boolean = true) => {
     const id = generateItemId()
     this.setState(prevState => ({
       items: { ...prevState.items, [id]: newItem },
@@ -68,9 +64,9 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
       let newActiveItemId = prevState.activeItemId
 
       if (prevState.activeItemId === itemId) {
-        const itemIds = Object.keys(newItems)
+        const itemIds = Object.keys(prevState.items)
         const currentIndex = itemIds.indexOf(itemId)
-        newActiveItemId = itemIds[currentIndex] || itemIds[currentIndex - 1] || null
+        newActiveItemId = itemIds[currentIndex + 1] || itemIds[currentIndex - 1] || null
       }
 
       return {
@@ -96,7 +92,7 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
     this.updatePageItem(pageId, { label: newTitle })
   }
 
-  private updatePageIcon = (pageId: string, newIcon: typeof DefaultIcon) => {
+  private updatePageIcon = (pageId: string, newIcon: typeof DefaultTabIcon) => {
     this.updatePageItem(pageId, { icon: newIcon })
   }
 
@@ -213,8 +209,6 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
           </SortableContext>
         </DndContextWrapper>
 
-        <Toolbar activeItem={activeItem} />
-
         {/* Pages */}
         <div grow w-full overflow-hidden>
           {activeItemId && activeItem && (
@@ -232,5 +226,3 @@ class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
     )
   }
 }
-
-export default TabLayout

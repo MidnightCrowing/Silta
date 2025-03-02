@@ -11,5 +11,10 @@ export interface LocationState {
 
 export interface LocationContextType {
   location: LocationState
+  locationHistory: LocationState[]
+  isBack: boolean
+  isForward: boolean
+  locationBack: () => void
+  locationForward: () => void
   setLocation: ({ pageLabel, pageIcon, pageComponentName, pageComponentProps }: Partial<LocationState>) => void
 }
