@@ -36,7 +36,7 @@ export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeIt
     <div
       ref={setNodeRef}
       className={clsx(
-        'TabLayout SortableTab @container group',
+        'tab-layout sortable-tab @container group',
         'flex-1 overflow-hidden max-w-0 opacity-0',
         'transition-([max-width,opacity] duration-100 ease-in-out) transform-gpu',
         open && 'max-w-150px opacity-100',

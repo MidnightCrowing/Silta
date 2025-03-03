@@ -27,10 +27,15 @@ export function LocationProvider({ children, pageLabel, pageIcon, pageComponentN
   const setLocation = useCallback((newState: Partial<LocationState>) => {
     setLocationState((prevState) => {
       const updatedLocation = { ...prevState, ...newState }
+      if (newState.pageComponentName && !newState.pageComponentProps) {
+        updatedLocation.pageComponentProps = {}
+      }
+
       const newHistory = locationHistory.slice(0, historyIndex + 1)
       newHistory.push(updatedLocation)
       setLocationHistory(newHistory)
       setHistoryIndex(newHistory.length - 1)
+
       return updatedLocation
     })
   }, [locationHistory, historyIndex])

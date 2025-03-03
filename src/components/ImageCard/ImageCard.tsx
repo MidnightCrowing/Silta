@@ -1,3 +1,5 @@
+import './ImageCard.scss'
+
 import { Image, SkeletonItem } from '@fluentui/react-components'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { useEffect, useState } from 'react'
@@ -38,7 +40,7 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
 
   return (
     <div
-      className="group @container"
+      className="image-card group @container"
       relative
       flex="~ col"
       bg="hover:8 hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
@@ -70,7 +72,7 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
 
       {/* 序号 */}
       <div
-        className="MultiPreview-serial-number overlay"
+        className="serial-number overlay"
         group-hover:opacity-0
         pos="absolute top-1 left-1"
         w="[min(30px,30%)]"
@@ -86,7 +88,7 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
         {index + 1}
       </div>
       <div
-        className="MultiPreview-serial-number footer"
+        className="serial-number footer"
         color="$colorNeutralForeground1"
         m="t-3px r-5px"
         text-right

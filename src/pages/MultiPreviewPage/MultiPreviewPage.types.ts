@@ -1,10 +1,4 @@
-export interface TopBarProps {
-  imageTitle: string
-  imageLink: string
-  publishTime: string
-  sourceUrl: string
-  authorName: string
-  imageCount: number
-  description: string
-  tags: string[]
+import type { PageBaseProps } from '../shared/sharedProps.types'
+
+export interface MultiPreviewPageProps extends PageBaseProps {
 }

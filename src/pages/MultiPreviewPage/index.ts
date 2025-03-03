@@ -1,3 +1,2 @@
-import { lazy } from 'react'
-
-export const MultiPreviewPage = lazy(() => import('./MultiPreviewPage'))
+export { MultiPreviewPage } from './MultiPreviewPage.lazy'
+export type { MultiPreviewPageProps } from './MultiPreviewPage.types'

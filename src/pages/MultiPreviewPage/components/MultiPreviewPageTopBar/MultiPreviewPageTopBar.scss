@@ -1,5 +1,5 @@
-.MultiPreview {
-  &-top-bar {
+.multi-preview {
+  &.top-bar {
     &:hover,
     &:has(.pin-button[aria-pressed="true"]) {
       @apply max-h-[min(100%,360px)] rounded-b-5px;
@@ -9,12 +9,12 @@
       }
 
       .chevron-down-wrapper {
-        @apply rotate-180;
+        @apply rotate-180 transform-gpu;
       }
     }
   }
 
-  &-top-bar-effect {
+  &.top-bar-effect {
     @apply bg-$colorNeutralBackground1-60! backdrop-(blur-20px saturate-180% brightness-120%) transform-gpu;
 
     box-shadow:
@@ -23,19 +23,5 @@
       inset 1px 1px 1px -0.5px rgb(255 255 255 / 0.12),
       inset -1px -1px 1px -0.5px rgb(255 255 255 / 0.04),
       inset 0 0 10px rgb(255 255 255 / 0.04);
-  }
-
-  &-serial-number {
-    &.overlay {
-      @container (max-width: 90px) {
-        @apply hidden;
-      }
-    }
-
-    &.footer {
-      @container (min-width: 90px) {
-        @apply hidden;
-      }
-    }
   }
 }

@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@fluentui/react-components'
+import { Button, Text, Tooltip } from '@fluentui/react-components'
 import {
   ArrowClockwise20Regular,
   ArrowClockwiseDashes20Regular,
@@ -7,7 +7,9 @@ import {
   History20Regular,
   LockOpen16Regular,
 } from '@fluentui/react-icons'
+import type { ClipboardEvent, KeyboardEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
+import type { createRoot } from 'react-dom/client'
 
 import { generateUrlFromTabItem, parseUrl } from '~/utils/common'
 
@@ -80,6 +82,7 @@ function UrlInputLockButton() {
 
 function UrlInput({ activeItem }: UrlInputProps) {
   const [url, setUrl] = useState<string>('')
+  const [parsedUrl, setParsedUrl] = useState<React.ReactNode>('')
   const divRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -90,22 +93,25 @@ function UrlInput({ activeItem }: UrlInputProps) {
   }, [activeItem])
 
   // 解析 URL，并返回带颜色的 HTML
-  const parseUrlToHtml = (url: string) => {
+  const parseUrlToHtml = (url: string): React.ReactNode => {
     try {
       const { origin, search } = parseUrl(url)
-      return `<span text="$colorNeutralForeground1">${origin}</span><span text="$colorNeutralForeground3">${search}</span>`
+      return (
+        <>
+          <span className="text-$colorNeutralForeground1 flex-shrink-0">{origin}</span>
+          <span className="text-$colorNeutralForeground3 truncate">{search}</span>
+        </>
+      )
     }
     catch {
-      return `<span text="$colorNeutralForeground3">${url}</span>` // 非法 URL 显示灰色
+      return (
+        <Text className="text-$colorNeutralForeground3 line-clamp-1!">{url}</Text>
+      ) // 非法 URL 显示灰色
     }
   }
 
   useEffect(() => {
-    if (!divRef.current)
-      return
-
-    // 更新内容
-    divRef.current.innerHTML = parseUrlToHtml(url)
+    setParsedUrl(parseUrlToHtml(url))
   }, [url]) // 监听 URL 变化
 
   // 处理输入
@@ -117,7 +123,7 @@ function UrlInput({ activeItem }: UrlInputProps) {
   }
 
   // 处理按下Enter事件，阻止换行
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault() // 阻止默认换行行为
       if (!divRef.current)
@@ -141,7 +147,7 @@ function UrlInput({ activeItem }: UrlInputProps) {
   // }
 
   // 处理粘贴事件，防止插入 HTML
-  const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+  const handlePaste = (event: ClipboardEvent<HTMLDivElement>) => {
     event.preventDefault()
     const pastedText = event.clipboardData.getData('text/plain') // 仅获取纯文本
     document.execCommand('insertText', false, pastedText) // 插入纯文本
@@ -151,7 +157,7 @@ function UrlInput({ activeItem }: UrlInputProps) {
     <div
       grow
       h-full
-      p="l-6px y-2px"
+      p="l-6px r-3px y-2px"
       box-border
       border="solid 0.5px $colorNeutralStroke2 hover:$colorNeutralStroke1Hover"
       rounded-full
@@ -159,6 +165,7 @@ function UrlInput({ activeItem }: UrlInputProps) {
       transition="colors duration-100 ease-in"
       flex="~ row items-center nowrap"
       gap="3px"
+      overflow-hidden
     >
       <UrlInputLockButton />
       <div
@@ -166,13 +173,17 @@ function UrlInput({ activeItem }: UrlInputProps) {
         contentEditable
         grow
         inline-flex="~ items-center justify-start"
+        truncate
         outline-0
         whitespace-nowrap
         onBlur={handleBlur} // 在失去焦点时更新
         onKeyDown={handleKeyDown} // 按下 Enter 时更新
         // onFocus={handleFocus} // 获取焦点时选中所有文本
         onPaste={handlePaste} // 处理粘贴事件
-      />
+        suppressContentEditableWarning
+      >
+        {parsedUrl}
+      </div>
     </div>
   )
 }

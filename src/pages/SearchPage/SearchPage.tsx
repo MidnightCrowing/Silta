@@ -1,6 +1,4 @@
 import './SearchPage.scss'
-import 'virtual:uno.css'
-import '~/styles/colors.scss'
 
 import { Button } from '@fluentui/react-components'
 import { Dismiss16Regular, Search24Regular } from '@fluentui/react-icons'
@@ -9,7 +7,7 @@ import clsx from 'clsx'
 import { useRef, useState } from 'react'
 
 import { useLocation } from '~/contexts/location'
-import { TabComponentNameEnum } from '~/layouts/TabLayout'
+import { TabComponentNameEnum } from '~/layouts'
 
 import type { SearchPageProps } from './SearchPage.types'
 
@@ -31,7 +29,7 @@ export default function SearchPage({ className }: SearchPageProps) {
   }
 
   return (
-    <div className={`SearchPage ${className}`} relative>
+    <div className={`search-page ${className}`} relative>
       {/* Background image */}
       {searchBg && (
         <div absolute inset-0 select-none>
@@ -47,7 +45,7 @@ export default function SearchPage({ className }: SearchPageProps) {
 
       <div flex="~ col items-center justify-end" gap="42px" absolute inset-0 translate-y="-45%">
         {/* logo */}
-        <div className="SearchPage-logo-glowing" select-none>
+        <div className="logo-glowing" select-none>
           <img src={logoUrl} alt="logo" />
         </div>
 
@@ -55,7 +53,7 @@ export default function SearchPage({ className }: SearchPageProps) {
           className={clsx(
             'group',
             isFocused ? 'b-$colorCompoundBrandForeground1' : 'b-$colorNeutralBackground1Selected',
-            isFocused && 'SearchPage-input-focus-effect',
+            isFocused && 'input-focus-effect',
           )}
           relative
           flex="~ justify-between items-center"
@@ -63,9 +61,11 @@ export default function SearchPage({ className }: SearchPageProps) {
           min-w="315px"
           max-w="640px"
           p="5px"
-          border="1px solid"
           rounded="6px"
-          bg="$colorNeutralBackground6 hover:$colorNeutralBackground1"
+          shadow="lg"
+          light:bg="$colorNeutralBackground6-60 hover:$colorNeutralBackground1-60"
+          dark:bg="$colorNeutralBackground6-20 hover:$colorNeutralBackground1-20"
+          backdrop="blur-20px saturate-180% brightness-120%"
           transition="all duration-200"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -81,7 +81,6 @@ export default function SearchPage({ className }: SearchPageProps) {
               className={
                 'absolute top-1/2 right-115px translate-y--1/2 '
                 + 'group-hover:hover:color-$colorCompoundBrandForeground1 '
-                + 'group-hover:(bg-$colorNeutralBackground3 hover:bg-$colorNeutralBackground3Hover) '
                 + 'rounded-1/2 p-3px outline-0 '
                 + 'cursor-pointer'
               }
@@ -105,7 +104,7 @@ export default function SearchPage({ className }: SearchPageProps) {
             onChange={e => setInputValue(e.target.value)}
           />
           <Button
-            className="w-100px h-38px select-none"
+            className="w-100px h-38px select-none bg-$colorBrandBackground-20!"
             appearance="primary"
             onClick={() => setLocation({
               pageLabel: 'Video',

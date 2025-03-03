@@ -179,7 +179,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     const { activeItem, DndContextWrapper, AddNewTab, TabDivider } = this
 
     return (
-      <div className={`TabLayout flex-(~ col items-start) align-start ${className}`} {...props}>
+      <div className={`tab-layout flex-(~ col items-start) align-start ${className}`} {...props}>
 
         {/* Tabs */}
         <DndContextWrapper>

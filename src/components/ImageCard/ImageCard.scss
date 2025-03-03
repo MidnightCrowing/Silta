@@ -1,0 +1,15 @@
+.image-card {
+  .serial-number {
+    &.overlay {
+      @container (max-width: 90px) {
+        @apply hidden;
+      }
+    }
+
+    &.footer {
+      @container (min-width: 90px) {
+        @apply hidden;
+      }
+    }
+  }
+}
