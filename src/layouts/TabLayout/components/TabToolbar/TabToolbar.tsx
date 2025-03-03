@@ -9,7 +9,6 @@ import {
 } from '@fluentui/react-icons'
 import type { ClipboardEvent, KeyboardEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
-import type { createRoot } from 'react-dom/client'
 
 import { generateUrlFromTabItem, parseUrl } from '~/utils/common'
 
