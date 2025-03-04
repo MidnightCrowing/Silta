@@ -52,6 +52,8 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
 
     const { clientY } = useWindowClient();
 
+    const originalPlaybackRate = useRef<number>(controlsState.multiple);
+
     clientYdistance.current = clientY;
 
     revicePropsData.current = reviceProps;
@@ -83,6 +85,87 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
         dispatch({ type: 'volume', data: controlsState.isMuted ? 0 : Math.floor(volume * 100) });
       }
     }, [controlsState.isMuted]);
+
+    /**
+     * @description 上下左右键控制
+     */
+    useEffect(() => {
+      let isRightArrowPressed = false;
+      let pressStartTime: number | null = null;
+      let longPressTimeout: NodeJS.Timeout | null = null;
+
+      const handleKeyDown = (event: KeyboardEvent) => {
+        const videoRef = reviceProps.videoRef!;
+        switch (event.key) {
+          case 'ArrowUp':
+            event.preventDefault();
+            const newVolumeUp = Math.min(videoRef.volume + 0.1, 1);
+            videoRef.volume = newVolumeUp;
+            dispatch({ type: 'volume', data: newVolumeUp * 100 });
+            break;
+          case 'ArrowDown':
+            event.preventDefault();
+            const newVolumeDown = Math.max(videoRef.volume - 0.1, 0);
+            videoRef.volume = newVolumeDown;
+            dispatch({ type: 'volume', data: newVolumeDown * 100 });
+            break;
+          case 'ArrowRight':
+            event.preventDefault();
+            if (!isRightArrowPressed) {
+              isRightArrowPressed = true;
+              pressStartTime = Date.now();
+
+              // 设置定时器，100ms 后视为长按
+              longPressTimeout = setTimeout(() => {
+                originalPlaybackRate.current = videoRef.playbackRate;
+                videoRef.playbackRate = 3.0;
+                dispatch({ type: 'multiple', data: 3.0 });
+              }, 100);
+            }
+            break;
+          case 'ArrowLeft':
+            event.preventDefault();
+            const newTimeBackward = Math.max(videoRef.currentTime - 5, 0);
+            videoRef.currentTime = newTimeBackward;
+            break;
+          default:
+            break;
+        }
+      };
+
+      const handleKeyUp = (event: KeyboardEvent) => {
+        const videoRef = reviceProps.videoRef!;
+        if (event.key === 'ArrowRight' && isRightArrowPressed) {
+          const pressDuration = Date.now() - (pressStartTime ?? 0);
+          if (longPressTimeout) {
+            clearTimeout(longPressTimeout); // 清除长按定时器
+          }
+
+          if (pressDuration < 100) {
+            // 短按：进度 +5s
+            const newTimeForward = Math.min(videoRef.currentTime + 5, videoRef.duration);
+            videoRef.currentTime = newTimeForward;
+          } else {
+            // 长按：恢复原倍速
+            const originalRate = originalPlaybackRate.current;
+            videoRef.playbackRate = originalRate;
+            dispatch({ type: 'multiple', data: originalRate });
+          }
+
+          isRightArrowPressed = false;
+          pressStartTime = null;
+        }
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keyup', handleKeyUp);
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('keyup', handleKeyUp);
+      };
+    }, [duration, dispatch, reviceProps.videoRef]);
+
     /**
      * @description 更新当前音量控制条
      */
@@ -184,6 +267,8 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
     const multipleText = useMemo(() => {
       if (controlsState.multiple === 1.0) {
         return il8n(propsAttributes!.language || defaultLanguage, 'multiple');
+      } else if (controlsState.multiple === 3.0) {
+        return '3.0x';
       } else {
         return multipleList.filter((item) => item.id === controlsState.multiple)[0].name;
       }
@@ -348,22 +433,24 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
               }
             />
           )}
-          <Tooltip
-            styleCss={{ padding: `0 ${space}` }}
-            title={il8n(
-              propsAttributes!.language || defaultLanguage,
-              controlsState.isScreentFull ? 'closefullScreen' : 'fullScreen',
-            )}
-            icon={
-              <Broadcast
-                iconClass={!controlsState.isScreentFull ? 'fullScreen' : 'closeFullScreen'}
-                fill="#fff"
-                fontSize={'19px'}
-                onClick={requestFullScreen}
-                className="hover-icon-animate"
-              />
-            }
-          />
+          {filterDefaults(propsAttributes!.isShowFullScreen) && (
+            <Tooltip
+              styleCss={{ padding: `0 ${space}` }}
+              title={il8n(
+                propsAttributes!.language || defaultLanguage,
+                controlsState.isScreentFull ? 'closefullScreen' : 'fullScreen',
+              )}
+              icon={
+                <Broadcast
+                  iconClass={!controlsState.isScreentFull ? 'fullScreen' : 'closeFullScreen'}
+                  fill="#fff"
+                  fontSize={'19px'}
+                  onClick={requestFullScreen}
+                  className="hover-icon-animate"
+                />
+              }
+            />
+          )}
         </div>
       </div>
     );

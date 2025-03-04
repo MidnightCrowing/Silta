@@ -103,6 +103,11 @@ export interface videoOption<T = string, K = boolean, U = number> {
    * @description 是否显示网页全屏
    */
   isShowWebFullScreen?: K;
+  isShowPicture?: K;
+  /**
+   * @description 是否显示全屏
+   */
+  isShowFullScreen ?: K;
   /**
    * @description  语言,默认中文
    */
@@ -157,6 +162,10 @@ export interface videoAttributes<T = number, K = boolean> {
    * @description 是否开启画中画
    */
   isPictureinpicture: K;
+  /**
+   * @description 是否全屏
+   */
+  isFullscreen: boolean;
   /**
    * @description 音量
    */
@@ -242,6 +251,14 @@ export interface videoCallback<T = callBackType, U = callBackType<qualityKey>> {
    * @description 视频清晰度改变时的回调
    */
   onQualityChange: U;
+  /**
+   * @description 进入全屏时的回调
+   */
+  onEnterFullScreen: noParVoid;
+  /**
+   * @description 退出全屏时的回调
+   */
+  onExitFullScreen: noParVoid;
 }
 export interface videoparameter extends Partial<videoCallback> {
   style?: React.CSSProperties;

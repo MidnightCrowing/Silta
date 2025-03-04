@@ -7,7 +7,7 @@ const useVideoCallback = (
   videoFlow: VideoStateType,
   handle: Partial<videoCallback>,
 ) => {
-  const { isPlay, currentTime, isEndEd, error, volume } = videoPr;
+  const { isPlay, currentTime, isEndEd, error, volume, isFullscreen } = videoPr;
   const { progressSliderChangeVal, progressMouseUpChangeVal, quality } = videoFlow;
   const {
     onProgressMouseDown,
@@ -19,6 +19,8 @@ const useVideoCallback = (
     onError,
     onvolumechange,
     onQualityChange,
+    onEnterFullScreen,
+    onExitFullScreen,
   } = handle;
 
   useEffect(() => {
@@ -70,6 +72,14 @@ const useVideoCallback = (
       onQualityChange && onQualityChange(quality);
     }
   }, [quality]);
+
+  useEffect(() => {
+    if (isFullscreen) {
+      onEnterFullScreen && onEnterFullScreen();
+    } else {
+      onExitFullScreen && onExitFullScreen();
+    }
+  }, [isFullscreen]);
 };
 
 export default useVideoCallback;

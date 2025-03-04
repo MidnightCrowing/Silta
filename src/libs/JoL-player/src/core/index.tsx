@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useImperativeHandle,
   useCallback,
+  Suspense,
 } from 'react';
 import Controller from './controller';
 // import { videoparameter, JoLPlayerRef } from '@/interface';
@@ -34,6 +35,8 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
     onError,
     onvolumechange,
     onQualityChange,
+    onEnterFullScreen,
+    onExitFullScreen,
   } = props;
   const {
     videoSrc,
@@ -136,6 +139,8 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
     onError,
     onvolumechange,
     onQualityChange,
+    onEnterFullScreen,
+    onExitFullScreen,
   });
 
   useEffect(() => {
@@ -256,15 +261,19 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
         (setBufferContent ? (
           setBufferContent
         ) : (
-          <BufferComponent
-            iconClass="loading"
-            fill={theme ? theme : defaultTheme}
-            className="player-loading"
-            fontSize="55px"
-          />
+          <Suspense>
+            <BufferComponent
+              iconClass="loading"
+              fill={theme ? theme : defaultTheme}
+              className="player-loading"
+              fontSize="55px"
+            />
+          </Suspense>
         ))}
       <FlowContext.Provider value={contextProps}>
-        <Controller />
+        <Suspense>
+          <Controller />
+        </Suspense>
       </FlowContext.Provider>
     </div>
   );

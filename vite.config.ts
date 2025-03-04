@@ -42,13 +42,14 @@ export default defineConfig({
       : undefined,
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
-      ignored: ['**/src-tauri/**'],
+      ignored: ['**/src-tauri/**', '**/src/libs/**'],
     },
   },
   test: {
     globals: true,
     environment: 'jsdom',
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    exclude: ['src/libs/**'],
     setupFiles: ['./src/test/setup.tsx'],
     coverage: {
       enabled: true,

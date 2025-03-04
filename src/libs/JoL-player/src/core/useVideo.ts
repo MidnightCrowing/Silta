@@ -2,6 +2,7 @@ import { useRef, useMemo, useEffect, DependencyList } from 'react';
 import useMandatoryUpdate from '@/utils/useMandatoryUpdate';
 import { defaultVolume } from '@/core/config';
 import { parVoid, videoAttributes, videoMethod } from 'types';
+import screenfull from 'screenfull';
 export interface useVideoType extends videoAttributes {
   handleChangePlayState: () => void;
   videoAttributes: videoAttributes;
@@ -19,6 +20,7 @@ export const useVideo = (props: any, dep: DependencyList = []) => {
     duration: 0,
     bufferedTime: 0,
     isPictureinpicture: false,
+    isFullscreen: false,
     volume: 0,
     multiple: 1.0,
     isEndEd: false,
@@ -80,9 +82,21 @@ export const useVideo = (props: any, dep: DependencyList = []) => {
       videoRef.current.addEventListener('timeupdate', timeupdate);
       videoRef.current.addEventListener('ended', endedChange);
       videoRef.current.addEventListener('error', errorChange);
+
+      // 监听全屏状态变化
+      if (screenfull.isEnabled) {
+        screenfull.on('change', () => {
+          torture({ isFullscreen: screenfull.isFullscreen });
+        });
+      }
     }
     return () => {
       interval.current && clearInterval(interval.current);
+      if (screenfull.isEnabled) {
+        screenfull.off('change', () => {
+          torture({ isFullscreen: screenfull.isFullscreen });
+        });
+      }
     };
   }, dep);
 

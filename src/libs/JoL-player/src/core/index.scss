@@ -12,8 +12,8 @@
   .JoL-player {
     @include wh(100%, 100%);
     background-color: #000;
-    // 去除视频黑边
-    object-fit: cover;
+    // 保留视频黑边
+    object-fit: contain;
     @include position(absolute, 0, auto, auto, 0);
     z-index: 1;
   }

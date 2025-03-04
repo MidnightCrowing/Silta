@@ -2,7 +2,7 @@
     "name": "jol-player",
     "version": "4.0.0",
     "description": "简洁，美观，功能强大的react播放器，simple and beautiful, powerful react player",
-    "main": "index.js",
+    "main": "jol-player.js",
     "scripts": {
         "build": "npm run clear && webpack --config ./build/webpack.prod.config.js",
         "start": "webpack-dev-server  --inline --config ./build/webpack.dev.config.js",
