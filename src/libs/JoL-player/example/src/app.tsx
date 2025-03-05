@@ -14,7 +14,7 @@ function App() {
         height: 420,
         isShowFullScreen: true,
 
-        // isToast: true, //  Warning: You are importing createRoot from "react-dom" which is not supported. You should instead import it from "react-dom/client".
+        isToast: true, //  Warning: You are importing createRoot from "react-dom" which is not supported. You should instead import it from "react-dom/client".
       }}
     />
   );

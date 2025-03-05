@@ -87,7 +87,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
     }, [controlsState.isMuted]);
 
     /**
-     * @description 上下左右键控制
+     * @description 按键、滚轮控制
      */
     useEffect(() => {
       let isRightArrowPressed = false;
@@ -128,6 +128,23 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
             const newTimeBackward = Math.max(videoRef.currentTime - 5, 0);
             videoRef.currentTime = newTimeBackward;
             break;
+          case 'Escape':
+            event.preventDefault();
+            if (screenfull.isFullscreen) {
+              screenfull.exit();
+            } else if (reviceProps.videoContainerRef!.classList.contains('clientFullScreen')) {
+              reviceProps.videoContainerRef!.classList.remove('clientFullScreen');
+              dispatch({ type: 'isWebPageFullScreen', data: false });
+            }
+            break;
+          case ' ':
+            event.preventDefault();
+            if (videoRef.paused) {
+              videoRef.play();
+            } else {
+              videoRef.pause();
+            }
+            break;
           default:
             break;
         }
@@ -157,12 +174,33 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
         }
       };
 
+      const handleWheel = (event: WheelEvent) => {
+        const videoRef = reviceProps.videoRef!;
+        event.preventDefault();
+        if (event.deltaY < 0) {
+          // 向上滚动，增加音量
+          const newVolumeUp = Math.min(videoRef.volume + 0.02, 1);
+          videoRef.volume = newVolumeUp;
+          dispatch({ type: 'volume', data: newVolumeUp * 100 });
+        } else {
+          // 向下滚动，减少音量
+          const newVolumeDown = Math.max(videoRef.volume - 0.02, 0);
+          videoRef.volume = newVolumeDown;
+          dispatch({ type: 'volume', data: newVolumeDown * 100 });
+        }
+      };
+
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('keyup', handleKeyUp);
-
+      if (reviceProps.videoContainerRef) {
+        reviceProps.videoContainerRef.addEventListener('wheel', handleWheel);
+      }
       return () => {
         window.removeEventListener('keydown', handleKeyDown);
         window.removeEventListener('keyup', handleKeyUp);
+        if (reviceProps.videoContainerRef) {
+          reviceProps.videoContainerRef.removeEventListener('wheel', handleWheel);
+        }
       };
     }, [duration, dispatch, reviceProps.videoRef]);
 
