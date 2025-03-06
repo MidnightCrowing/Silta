@@ -59,6 +59,10 @@ const SidebarItems: SidebarItem[] = [
 ]
 const TabItems: TabItem[] = [
   {
+    label: '<UNK1>',
+    componentName: TabComponentNameEnum.VideoPage,
+  },
+  {
     label: '新建标签页',
     componentName: TabComponentNameEnum.SearchPage,
   },
@@ -69,10 +73,6 @@ const TabItems: TabItem[] = [
   {
     label: '<UNK1>',
     componentName: TabComponentNameEnum.SinglePreviewPage,
-  },
-  {
-    label: '<UNK1>',
-    componentName: TabComponentNameEnum.VideoPage,
   },
 ]
 

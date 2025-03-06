@@ -63,15 +63,15 @@ describe('searchPage', () => {
     const searchContainer = input.parentElement
 
     // 初始状态
-    expect(searchContainer).not.toHaveClass('SearchPage-input-focus-effect')
+    expect(searchContainer).not.toHaveClass('input-focus-effect')
 
     // 获得焦点后
     fireEvent.focus(input)
-    expect(searchContainer).toHaveClass('SearchPage-input-focus-effect')
+    expect(searchContainer).toHaveClass('input-focus-effect')
 
     // 失去焦点后
     fireEvent.blur(input)
-    expect(searchContainer).not.toHaveClass('SearchPage-input-focus-effect')
+    expect(searchContainer).not.toHaveClass('input-focus-effect')
   })
 
   it('应该正确应用传入的className', () => {

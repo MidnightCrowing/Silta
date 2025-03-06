@@ -154,6 +154,7 @@ function UrlInput({ activeItem }: UrlInputProps) {
 
   return (
     <div
+      className="@[128px]:flex hidden"
       grow
       h-full
       p="l-6px r-3px y-2px"
@@ -162,7 +163,7 @@ function UrlInput({ activeItem }: UrlInputProps) {
       rounded-full
       bg="$colorNeutralBackground3 hover:$colorNeutralBackground3Hover"
       transition="colors duration-100 ease-in"
-      flex="~ row items-center nowrap"
+      flex="row items-center nowrap"
       gap="3px"
       overflow-hidden
     >
@@ -204,7 +205,14 @@ export function TabToolbar({
   locationForward,
 }: TabToolbarProps) {
   return (
-    <div className="TabLayout TabToolbar" w-full flex="~ items-center" gap="5px" p="x-5px y-3px" box-border>
+    <div
+      className="TabLayout TabToolbar @container"
+      w-full
+      flex="~ items-center"
+      gap="5px"
+      p="x-5px y-3px"
+      box-border
+    >
       <BackButton isBack={isBack} setBack={locationBack} />
       <ForwardButton isForward={isForward} setForward={locationForward} />
       <RefreshButton refreshPage={refreshPage} />

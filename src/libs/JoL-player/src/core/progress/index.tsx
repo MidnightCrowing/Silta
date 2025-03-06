@@ -81,9 +81,14 @@ const Index = memo(function Index(props) {
 
   const hoverShowStyle = (parameter: hoverShowStyleType) => {
     const { height, opacity, animationName, progressBgRefEle, progressScrubberRefEle } = parameter;
-    progressBgRefEle.style.height = `${height}px`;
-    progressScrubberRefEle.style.opacity = `${opacity}`;
-    progressScrubberRefEle.style.animation = `${animationName} 0.5s`;
+    // 防止热更新时报错
+    if (progressBgRefEle) {
+      progressBgRefEle.style.height = `${height}px`;
+    }
+    if (progressScrubberRefEle) {
+      progressScrubberRefEle.style.opacity = `${opacity}`;
+      progressScrubberRefEle.style.animation = `${animationName} 0.5s`;
+    }
   };
 
   const calculateProcessPercent = useMemo(() => {

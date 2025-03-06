@@ -68,7 +68,11 @@ const Index = memo(function Index() {
             /**
              * @note 当鼠标移动在控制器Controls上时，这个时候，鼠标不能隐藏
              */
-            if (!userActivity.current && !isControlsContainerMove.current) {
+            if (
+              !userActivity.current &&
+              !isControlsContainerMove.current &&
+              controllerRef.current
+            ) {
               dispatch!({ type: 'isControl', data: false });
               controllerRef.current.style.cursor = 'none';
             }
@@ -132,7 +136,7 @@ const Index = memo(function Index() {
           fill="#fff"
           fontSize="55px"
           className="play-icon"
-          style={pausePosition}
+          style={{ ...pausePosition, width: 'min(1em,50%)', height: 'min(1em,50%)' }}
         />
       );
     }

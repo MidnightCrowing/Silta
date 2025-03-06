@@ -92,21 +92,24 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
     const videoWidth = event.videoWidth;
     const videoHeight = event.videoHeight;
 
-    if (width && height) {
-      videoContainerRef.current.style.width = `${width}px`;
-      videoContainerRef.current.style.height = `${height}px`;
-    } else {
-      if (mode === 'widthFix' && width) {
-        const scaleH = (width * videoHeight) / videoWidth;
-        videoContainerRef.current.style.height = `${scaleH}px`;
+    // 防止热更新时报错
+    if (videoContainerRef.current) {
+      if (width && height) {
         videoContainerRef.current.style.width = `${width}px`;
-      } else if (mode === 'heightFix' && height) {
-        const scaleW = (videoWidth * height) / videoHeight;
-        videoContainerRef.current.style.width = `${scaleW}px`;
         videoContainerRef.current.style.height = `${height}px`;
       } else {
-        videoContainerRef.current.style.width = `${width ? width : videoWidth}px`;
-        videoContainerRef.current.style.height = `${height ? height : videoHeight}px`;
+        if (mode === 'widthFix' && width) {
+          const scaleH = (width * videoHeight) / videoWidth;
+          videoContainerRef.current.style.height = `${scaleH}px`;
+          videoContainerRef.current.style.width = `${width}px`;
+        } else if (mode === 'heightFix' && height) {
+          const scaleW = (videoWidth * height) / videoHeight;
+          videoContainerRef.current.style.width = `${scaleW}px`;
+          videoContainerRef.current.style.height = `${height}px`;
+        } else {
+          videoContainerRef.current.style.width = `${width ? width : videoWidth}px`;
+          videoContainerRef.current.style.height = `${height ? height : videoHeight}px`;
+        }
       }
     }
   };

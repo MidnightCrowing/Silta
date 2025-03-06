@@ -15,6 +15,7 @@ import MonitorComponent from './monitor';
 import QualityComponent, { qualityToggleType } from './quality';
 import { il8n } from '@/language';
 import './index.scss';
+import toast from '@/components/toast';
 
 const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> = memo(
   function Index({ setIsscreenshot, setScreenshotLoading }) {
@@ -102,12 +103,22 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
             const newVolumeUp = Math.min(videoRef.volume + 0.1, 1);
             videoRef.volume = newVolumeUp;
             dispatch({ type: 'volume', data: newVolumeUp * 100 });
+
+            toast({
+              message: `音量: ${Math.floor(newVolumeUp * 100)}%`,
+              duration: 2000,
+            })
             break;
           case 'ArrowDown':
             event.preventDefault();
             const newVolumeDown = Math.max(videoRef.volume - 0.1, 0);
             videoRef.volume = newVolumeDown;
             dispatch({ type: 'volume', data: newVolumeDown * 100 });
+
+            toast({
+              message: `音量: ${Math.floor(newVolumeDown * 100)}%`,
+              duration: 2000,
+            })
             break;
           case 'ArrowRight':
             event.preventDefault();
@@ -115,18 +126,28 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
               isRightArrowPressed = true;
               pressStartTime = Date.now();
 
-              // 设置定时器，100ms 后视为长按
+              // 设置定时器，150ms 后视为长按
               longPressTimeout = setTimeout(() => {
                 originalPlaybackRate.current = videoRef.playbackRate;
                 videoRef.playbackRate = 3.0;
                 dispatch({ type: 'multiple', data: 3.0 });
-              }, 100);
+              }, 150);
+            } else {
+              toast({
+                message: '倍速: 3.0x',
+                duration: 50,
+              })
             }
             break;
           case 'ArrowLeft':
             event.preventDefault();
             const newTimeBackward = Math.max(videoRef.currentTime - 5, 0);
             videoRef.currentTime = newTimeBackward;
+
+            toast({
+              message: `进度: ${secondsToMinutesAndSecondes(newTimeBackward)}`,
+              duration: 2000,
+            })
             break;
           case 'Escape':
             event.preventDefault();
@@ -158,10 +179,14 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
             clearTimeout(longPressTimeout); // 清除长按定时器
           }
 
-          if (pressDuration < 100) {
+          if (pressDuration < 150) {
             // 短按：进度 +5s
             const newTimeForward = Math.min(videoRef.currentTime + 5, videoRef.duration);
             videoRef.currentTime = newTimeForward;
+            toast({
+              message: `进度: ${secondsToMinutesAndSecondes(newTimeForward)}`,
+              duration: 2000,
+            })
           } else {
             // 长按：恢复原倍速
             const originalRate = originalPlaybackRate.current;
@@ -182,11 +207,21 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
           const newVolumeUp = Math.min(videoRef.volume + 0.02, 1);
           videoRef.volume = newVolumeUp;
           dispatch({ type: 'volume', data: newVolumeUp * 100 });
+
+          toast({
+            message: `音量: ${Math.floor(newVolumeUp * 100)}%`,
+            duration: 2000,
+          })
         } else {
           // 向下滚动，减少音量
           const newVolumeDown = Math.max(videoRef.volume - 0.02, 0);
           videoRef.volume = newVolumeDown;
           dispatch({ type: 'volume', data: newVolumeDown * 100 });
+
+          toast({
+            message: `音量: ${Math.floor(newVolumeDown * 100)}%`,
+            duration: 2000,
+          })
         }
       };
 
@@ -259,7 +294,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
         const volumePercent =
           1 -
           (clientYdistance.current - volumeSliderMirrorElement.getBoundingClientRect().top) /
-            volumeAreaHeight;
+          volumeAreaHeight;
         // 修改当前音量大小
         updateCurrentVolume(volumePercent);
         dispatch({ type: 'isSlideVolume', data: true });

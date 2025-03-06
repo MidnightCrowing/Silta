@@ -64,18 +64,21 @@ export const useVideo = (props: any, dep: DependencyList = []) => {
       });
       // 定时器用于更新当前视频时间
       interval.current = setInterval(() => {
-        /**
-         * 强制更新
-         */
-        forceUpdate();
-        torture({
-          // duration: videoRef.current.duration,
-          currentTime: videoRef.current.currentTime,
-          isPlay: videoRef.current.paused ? false : true,
-          volume: videoRef.current.volume,
-          multiple: videoRef.current.playbackRate,
-          isEndEd: videoRef.current.ended ? true : false,
-        });
+        // 防止热更新时报错
+        if (videoRef.current) {
+          /**
+           * 强制更新
+           */
+          forceUpdate();
+          torture({
+            // duration: videoRef.current.duration,
+            currentTime: videoRef.current.currentTime,
+            isPlay: videoRef.current.paused ? false : true,
+            volume: videoRef.current.volume,
+            multiple: videoRef.current.playbackRate,
+            isEndEd: videoRef.current.ended ? true : false,
+          });
+        }
       }, 1);
       videoRef.current.addEventListener('pause', pauseChange);
       videoRef.current.addEventListener('play', playChange);

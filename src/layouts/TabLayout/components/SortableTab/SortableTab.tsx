@@ -43,6 +43,7 @@ export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeIt
         isDragging && 'bg-$colorNeutralBackground1Hover rounded-5px z-1000 cursor-move',
       )}
       style={{ transform: CSS.Transform.toString(transform), transition }}
+      onDoubleClick={closeTab}
       {...attributes}
       {...listeners}
     >

@@ -5,6 +5,7 @@ import './App.scss'
 import '~/styles/colors.scss'
 
 import { FluentProvider } from '@fluentui/react-components'
+import { Suspense } from 'react'
 import { AliveScope } from 'react-activation'
 
 import { useTheme } from '~/contexts/theme'
@@ -16,7 +17,9 @@ function App() {
   return (
     <FluentProvider theme={theme}>
       <AliveScope>
-        <MainLayout />
+        <Suspense>
+          <MainLayout />
+        </Suspense>
       </AliveScope>
     </FluentProvider>
   )

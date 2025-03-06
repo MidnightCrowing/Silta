@@ -88,7 +88,7 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
 
               {/* Images */}
               <div
-                grid="~ @7xl:cols-7 @5xl:cols-6 @3xl:cols-5 @xl:cols-4 @lg:cols-3 @md:cols-2 @sm:cols-1"
+                grid="~ @[1200px]:cols-7 @[1000px]:cols-6 @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
                 gap="20px"
               >
                 {imagePaths.map((imagePath, index) => (
