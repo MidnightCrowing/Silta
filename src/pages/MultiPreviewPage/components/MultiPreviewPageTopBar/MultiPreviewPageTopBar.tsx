@@ -126,7 +126,7 @@ export function MultiPreviewPageTopBar({
           {description}
         </Text>
         <Text>标签：</Text>
-        <Overflow>
+        <Overflow padding={25}>
           <div flex="~ row items-center" gap="5px" overflow-hidden>
             {tags.map(tag => (
               <OverflowItem key={tag} id={tag}>

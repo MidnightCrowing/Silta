@@ -2,7 +2,6 @@
 import 'virtual:uno.css'
 import 'react-photo-view/dist/react-photo-view.css'
 import './App.scss'
-import '~/styles/colors.scss'
 
 import { FluentProvider } from '@fluentui/react-components'
 import { Suspense } from 'react'

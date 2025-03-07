@@ -72,38 +72,40 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
         tags={tags}
       />
 
-      <div absolute size-full overflow-y-auto>
-        <Skeleton animation="pulse" aria-label="Loading Images">
-          <PhotoProvider maskOpacity={0.85}>
-            <div flex="~ col" gap="20px" m="t-40px" p="15px" box-border>
-              {/* Error message */}
-              {loadError && (
-                <MessageBar intent="error">
-                  <MessageBarBody>
-                    <MessageBarTitle>Loading Error</MessageBarTitle>
-                    {loadError}
-                  </MessageBarBody>
-                </MessageBar>
-              )}
+      <Skeleton
+        className="absolute size-full overflow-y-auto"
+        animation="pulse"
+        aria-label="Loading Images"
+      >
+        <PhotoProvider maskOpacity={0.85}>
+          <div max-w="1150px" flex="~ col" gap="20px" m="t-40px x-auto" p="15px" box-border>
+            {/* Error message */}
+            {loadError && (
+              <MessageBar intent="error">
+                <MessageBarBody>
+                  <MessageBarTitle>Loading Error</MessageBarTitle>
+                  {loadError}
+                </MessageBarBody>
+              </MessageBar>
+            )}
 
-              {/* Images */}
-              <div
-                grid="~ @[1200px]:cols-7 @[1000px]:cols-6 @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
-                gap="20px"
-              >
-                {imagePaths.map((imagePath, index) => (
-                  <Suspense key={imagePath}>
-                    <ImageCard
-                      index={index}
-                      imagePath={imagePath}
-                    />
-                  </Suspense>
-                ))}
-              </div>
+            {/* Images */}
+            <div
+              grid="~ @[1200px]:cols-7 @[1000px]:cols-6 @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
+              gap="20px"
+            >
+              {imagePaths.map((imagePath, index) => (
+                <Suspense key={imagePath}>
+                  <ImageCard
+                    index={index}
+                    imagePath={imagePath}
+                  />
+                </Suspense>
+              ))}
             </div>
-          </PhotoProvider>
-        </Skeleton>
-      </div>
+          </div>
+        </PhotoProvider>
+      </Skeleton>
     </div>
   )
 }

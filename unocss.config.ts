@@ -8,6 +8,8 @@ import {
   transformerVariantGroup,
 } from 'unocss'
 
+import { generatePreflightCSS, transformerColorVariable } from './src/styles/transformer-color-variable'
+
 export default defineConfig({
   presets: [
     presetWind3(),
@@ -18,5 +20,11 @@ export default defineConfig({
     transformerDirectives(),
     transformerVariantGroup(),
     transformerAttributifyJsx(),
+    transformerColorVariable(),
+  ],
+  preflights: [
+    {
+      getCSS: generatePreflightCSS,
+    },
   ],
 })

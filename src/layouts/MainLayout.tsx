@@ -59,12 +59,12 @@ const SidebarItems: SidebarItem[] = [
 ]
 const TabItems: TabItem[] = [
   {
-    label: '<UNK1>',
-    componentName: TabComponentNameEnum.VideoPage,
-  },
-  {
     label: '新建标签页',
     componentName: TabComponentNameEnum.SearchPage,
+  },
+  {
+    label: '<UNK1>',
+    componentName: TabComponentNameEnum.VideoPage,
   },
   {
     label: '“黑豹”速度超过10米秒！中国造出世界最快四足机器人',

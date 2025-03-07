@@ -43,7 +43,7 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
       className="image-card group @container"
       relative
       flex="~ col"
-      bg="hover:8 hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
+      bg="hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
       ring="hover:8 hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
       rounded="3px"
       transition="all duration-200 ease-in-out"
@@ -60,9 +60,9 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
       <PhotoView src={rawImage}>
         <Image
           block
-          className="aspect-[2/3]"
+          className="aspect-[2/3] shadow-xl"
           src={thumbnail}
-          alt={`demo image ${index + 1}`}
+          alt={`image ${index + 1}`}
           shape="rounded"
           fit="cover"
           style={{ display: isImageLoading ? 'none' : 'block' }}

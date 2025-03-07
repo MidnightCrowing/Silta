@@ -1,0 +1,10 @@
+/**
+ * 这个文件包含使用 CSS 自定义属性 (var(--colorXXX-<number>)) 的 SCSS 变量定义。
+ * 这些变量作为全局变量放在这里，以便自定义的 UnoCSS Transformer 可以检测到它们并生成相应的代码。
+ */
+
+$colorCompoundBrandForeground1-20: var(--colorCompoundBrandForeground1-20);
+$colorCompoundBrandForeground1-40: var(--colorCompoundBrandForeground1-40);
+$colorCompoundBrandForeground1-60: var(--colorCompoundBrandForeground1-60);
+$colorCompoundBrandForeground1-70: var(--colorCompoundBrandForeground1-70);
+$colorCompoundBrandForeground1-80: var(--colorCompoundBrandForeground1-80);

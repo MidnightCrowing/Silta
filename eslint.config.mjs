@@ -17,6 +17,7 @@ export default antfu({
     'dist',
     'node_modules',
     'public',
+    'src/libs',
     'src-tauri',
   ],
 
