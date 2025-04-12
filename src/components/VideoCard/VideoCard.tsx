@@ -1,9 +1,9 @@
 import { Image, ListItem, SkeletonItem } from '@fluentui/react-components'
 import { useState } from 'react'
 
-import type { VideoRecommendationCardProps } from './VideoRecommendationCard.types'
+import type { VideoCardProps } from './VideoCard.types'
 
-export function VideoRecommendationCard({ cover, title }: VideoRecommendationCardProps) {
+export default function VideoCard({ cover, title }: VideoCardProps) {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true)
 
   return (

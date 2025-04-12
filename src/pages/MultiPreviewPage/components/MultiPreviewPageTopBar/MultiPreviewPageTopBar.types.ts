@@ -1,3 +1,8 @@
+export interface breadcrumbPathItem {
+  title: string
+  link: string
+}
+
 export interface MultiPreviewPageTopBarProps {
   /**
    * @description 图片标题
@@ -7,22 +12,27 @@ export interface MultiPreviewPageTopBarProps {
   /**
    * @description 图片链接
    */
-  imageLink: string
+  imageLink?: string
+
+  /**
+   * @description 路径
+   */
+  breadcrumbPath?: breadcrumbPathItem[]
 
   /**
    * @description 发布时间
    */
-  publishTime: string
+  publishTime?: string
 
   /**
-   * @description 来源URL
+   * @description 来源描述
    */
-  sourceUrl: string
+  source?: string
 
   /**
    * @description 作者名称
    */
-  authorName: string
+  authorName?: string
 
   /**
    * @description 图片数量
@@ -32,10 +42,10 @@ export interface MultiPreviewPageTopBarProps {
   /**
    * @description 描述
    */
-  description: string
+  description?: string
 
   /**
    * @description 标签
    */
-  tags: string[]
+  tags?: string[]
 }

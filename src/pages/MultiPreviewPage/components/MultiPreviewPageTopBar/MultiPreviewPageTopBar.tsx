@@ -2,6 +2,10 @@ import './MultiPreviewPageTopBar.scss'
 
 import type { OverflowItemProps } from '@fluentui/react-components'
 import {
+  Breadcrumb,
+  BreadcrumbButton,
+  BreadcrumbDivider,
+  BreadcrumbItem,
   Link,
   Menu,
   MenuButton,
@@ -18,8 +22,9 @@ import {
 } from '@fluentui/react-components'
 import { bundleIcon, ChevronDown20Regular, Pin20Filled, Pin20Regular } from '@fluentui/react-icons'
 import type { FC } from 'react'
+import { Fragment } from 'react'
 
-import type { MultiPreviewPageTopBarProps } from './MultiPreviewPageTopBar.types'
+import type { breadcrumbPathItem, MultiPreviewPageTopBarProps } from './MultiPreviewPageTopBar.types'
 
 const PinIcon = bundleIcon(Pin20Filled, Pin20Regular)
 
@@ -66,8 +71,9 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
 export function MultiPreviewPageTopBar({
   imageTitle,
   imageLink,
+  breadcrumbPath,
   publishTime,
-  sourceUrl,
+  source,
   authorName,
   imageCount,
   description,
@@ -107,37 +113,103 @@ export function MultiPreviewPageTopBar({
         overflow-y="auto!"
         box-border
       >
-        <Text>链接：</Text>
-        <Link className="w-fit" href={imageLink}>
-          {imageLink}
-        </Link>
-        <Text>发布时间：</Text>
-        <Text className="w-fit">{publishTime}</Text>
-        <Text>来源：</Text>
-        <Link className="w-fit" href={sourceUrl}>
-          {sourceUrl}
-        </Link>
-        <Text>作者：</Text>
-        <Text className="w-fit">{authorName}</Text>
+        {/* 链接 */}
+        {imageLink && (
+          <>
+            <Text>链接：</Text>
+            <Link className="w-fit" href={imageLink}>
+              {imageLink}
+            </Link>
+          </>
+        )}
+
+        {/* 路径 */}
+        {breadcrumbPath && (
+          <>
+            <Text>路径：</Text>
+            <Breadcrumb aria-label="Image Breadcrumb">
+              {
+                breadcrumbPath.map(({ title, link }: breadcrumbPathItem, index: number) => {
+                  const isLastItem = index === breadcrumbPath.length - 1
+                  return (
+                    <Fragment key={title + link}>
+                      <BreadcrumbItem>
+                        <BreadcrumbButton
+                          appearance="transparent"
+                          onClick={() => console.log(title)}
+                          current={isLastItem}
+                          className="py-0! h-unset!"
+                        >
+                          {title}
+                        </BreadcrumbButton>
+                      </BreadcrumbItem>
+                      {!isLastItem && <BreadcrumbDivider />}
+                    </Fragment>
+                  )
+                })
+              }
+            </Breadcrumb>
+          </>
+        )}
+
+        {/* 发布时间 */}
+        {publishTime && (
+          <>
+            <Text>发布时间：</Text>
+            <Text className="w-fit">{publishTime}</Text>
+          </>
+        )}
+
+        {/* 来源 */}
+        {source && (
+          <>
+            <Text>来源：</Text>
+            <Text className="w-fit">
+              {source}
+            </Text>
+          </>
+        )}
+
+        {/* 作者 */}
+        {authorName && (
+          <>
+            <Text>作者：</Text>
+            <Text className="w-fit">{authorName}</Text>
+          </>
+        )}
+
+        {/* 数量 */}
         <Text>数量：</Text>
         <Text className="w-fit">{imageCount}</Text>
-        <Text className="self-start">描述：</Text>
-        <Text className="whitespace-pre-wrap!">
-          {description}
-        </Text>
-        <Text>标签：</Text>
-        <Overflow padding={25}>
-          <div flex="~ row items-center" gap="5px" overflow-hidden>
-            {tags.map(tag => (
-              <OverflowItem key={tag} id={tag}>
-                <Tag key={tag} appearance="brand" size="small" shape="circular">
-                  {tag}
-                </Tag>
-              </OverflowItem>
-            ))}
-            <OverflowMenu itemIds={tags} />
-          </div>
-        </Overflow>
+
+        {/* 描述 */}
+        {description && (
+          <>
+            <Text className="self-start">描述：</Text>
+            <Text className="whitespace-pre-wrap!">
+              {description}
+            </Text>
+          </>
+        )}
+
+        {/* 标签 */}
+        {tags && (
+          <>
+            <Text>标签：</Text>
+            <Overflow padding={25}>
+              <div flex="~ row items-center" gap="5px" overflow-hidden>
+                {tags.map(tag => (
+                  <OverflowItem key={tag} id={tag}>
+                    <Tag key={tag} appearance="brand" size="small" shape="circular">
+                      {tag}
+                    </Tag>
+                  </OverflowItem>
+                ))}
+                <OverflowMenu itemIds={tags} />
+              </div>
+            </Overflow>
+          </>
+        )}
       </div>
     </div>
   )

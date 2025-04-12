@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 
-export interface VideoRecommendationCardProps extends HTMLAttributes<HTMLDivElement> {
+export interface VideoCardProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 视频链接
    */

@@ -10,7 +10,6 @@ import {
   MenuTrigger,
   Overflow,
   OverflowItem,
-  Skeleton,
   Subtitle1,
   Tag,
   Tooltip,
@@ -24,7 +23,7 @@ import type { JoLPlayerRef } from 'jol-player'
 import type { FC } from 'react'
 import { lazy, Suspense, useRef, useState } from 'react'
 
-import { VideoRecommendationCard } from '~/components/VideoRecommendationCard'
+import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
 import { TabComponentNameEnum } from '~/layouts'
 
@@ -160,19 +159,21 @@ export default function VideoPage({ className }: VideoPageProps) {
           </Button>
         </div>
 
-        <Skeleton className="grow flex-(~ col) gap-2px">
-          {/* Video Recommendations */}
-          <List navigationMode="items">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <VideoRecommendationCard
-                key={index}
-                cover={coverUrl}
-                title={`携手同行的人，不止是朋友还有你呀 ${index + 1}`}
-                url=""
-              />
-            ))}
-          </List>
-        </Skeleton>
+        <Suspense>
+          <VideoCardList>
+            {/* Video Recommendations */}
+            <List navigationMode="items">
+              {Array.from({ length: 10 }).map((_, index) => (
+                <VideoCard
+                  key={index}
+                  cover={coverUrl}
+                  title={`携手同行的人，不止是朋友还有你呀 ${index + 1}`}
+                  url=""
+                />
+              ))}
+            </List>
+          </VideoCardList>
+        </Suspense>
       </div>
     </div>
   )

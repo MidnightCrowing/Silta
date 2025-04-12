@@ -35,8 +35,15 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
 
   const imageTitle = '“黑豹”速度超过10米秒！中国造出世界最快四足机器人'
   const imageLink = 'https://react-photo-view.vercel.app/'
+  const breadcrumbPath = [
+    { title: 'Item 1', link: 'Item 1' },
+    { title: 'Item 2', link: 'Item 1' },
+    { title: 'Item 3', link: 'Item 1' },
+    { title: 'Item 4', link: 'Item 1' },
+    { title: 'Item 5s', link: 'Item 1' },
+  ]
   const publishTime = '2025-02-10 12:30:00'
-  const sourceUrl = '/panel/folder'
+  const source = '/panel/folder'
   const authorName = '渣暴风StorM'
   const description = `联合国首次启动《行星安全协议》？这玩意儿真的存在吗？国际法对于小行星的防御有什么规定？普通人要不要早做准备？今天带大家一探究竟！
             ——
@@ -64,8 +71,9 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
       <MultiPreviewPageTopBar
         imageTitle={imageTitle}
         imageLink={imageLink}
+        breadcrumbPath={breadcrumbPath}
         publishTime={publishTime}
-        sourceUrl={sourceUrl}
+        source={source}
         authorName={authorName}
         imageCount={imagePaths.length}
         description={description}
