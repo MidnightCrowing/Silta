@@ -31,7 +31,7 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
       worker.terminate()
     }
 
-    worker.postMessage({ src: rawImage, width: 320, height: 480 })
+    worker.postMessage({ src: rawImage, width: 480, height: 270 })
 
     return () => {
       worker.terminate()
@@ -52,7 +52,7 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
       {/* 在图片加载完成前，显示骨架图占位 */}
       {isImageLoading && (
         <SkeletonItem
-          className="aspect-[2/3] h-unset!"
+          className="aspect-[16/9] h-unset!"
           shape="rectangle"
         />
       )}
@@ -60,11 +60,11 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
       <PhotoView src={rawImage}>
         <Image
           block
-          className="aspect-[2/3] shadow-xl"
+          className="aspect-[16/9] shadow-xl"
           src={thumbnail}
           alt={`image ${index + 1}`}
           shape="rounded"
-          fit="cover"
+          fit="contain"
           style={{ display: isImageLoading ? 'none' : 'block' }}
           onLoad={() => setIsImageLoading(false)}
         />

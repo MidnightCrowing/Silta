@@ -11,7 +11,7 @@ import { TabComponentNameEnum } from '~/layouts'
 
 import type { SearchPageProps } from './SearchPage.types'
 
-const searchBg: boolean = true // 是否显示搜索标签页背景图片
+const searchBg: boolean = false // 是否显示搜索标签页背景图片
 const bgUrl = convertFileSrc('assets/background.jpg')
 const logoUrl = convertFileSrc('assets/logo.svg')
 

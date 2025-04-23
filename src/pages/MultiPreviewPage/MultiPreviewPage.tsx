@@ -33,7 +33,7 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
     loadImages()
   }, [])
 
-  const imageTitle = '“黑豹”速度超过10米秒！中国造出世界最快四足机器人'
+  const imageTitle = '【新闻调查】机器人“马拉松”：一场未来科技的极限测试'
   const imageLink = 'https://react-photo-view.vercel.app/'
   const breadcrumbPath = [
     { title: 'Item 1', link: 'Item 1' },
@@ -99,7 +99,7 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
 
             {/* Images */}
             <div
-              grid="~ @[1200px]:cols-7 @[1000px]:cols-6 @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
+              grid="~ @[1100px]:cols-6! @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
               gap="20px"
             >
               {imagePaths.map((imagePath, index) => (

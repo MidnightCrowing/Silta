@@ -3,7 +3,7 @@ import { Folder20Regular, Image20Regular, VideoClip20Regular } from '@fluentui/r
 
 export default function FolderPanel() {
   return (
-    <Tree aria-label="Default">
+    <Tree className="select-none!" aria-label="Default">
       <TreeItem itemType="branch">
         <TreeItemLayout iconBefore={<Folder20Regular />}>level 1, item 1</TreeItemLayout>
         <Tree>
