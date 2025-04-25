@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 
-import { MultiPreviewPage, SearchPage, SinglePreviewPage, VideoPage } from '~/pages'
+import { MultiPreviewPage, SearchListPage, SearchPage, SinglePreviewPage, VideoPage } from '~/pages'
 
 import { TabComponentNameEnum } from './TabItem.types'
 
@@ -12,4 +12,5 @@ export const componentMap: ComponentMapType = {
   [TabComponentNameEnum.MultiPreviewPage]: MultiPreviewPage,
   [TabComponentNameEnum.SinglePreviewPage]: SinglePreviewPage,
   [TabComponentNameEnum.VideoPage]: VideoPage,
+  [TabComponentNameEnum.SearchListPage]: SearchListPage,
 }

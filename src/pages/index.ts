@@ -1,4 +1,5 @@
 export { MultiPreviewPage } from './MultiPreviewPage'
+export { SearchListPage } from './SearchListPage'
 export { SearchPage } from './SearchPage'
 export { SinglePreviewPage } from './SinglePreviewPage'
 export { VideoPage } from './VideoPage'

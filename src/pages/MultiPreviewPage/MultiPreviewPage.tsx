@@ -5,32 +5,26 @@ import { Suspense, useEffect, useState } from 'react'
 import { PhotoProvider } from 'react-photo-view'
 
 import { ImageCard } from '~/components/ImageCard'
+import type { ImageInfo } from '~/tauri-types.ts'
 
 import { MultiPreviewPageTopBar } from './components'
 import type { MultiPreviewPageProps } from './MultiPreviewPage.types'
 
-const path = 'assets/demo-test'
-
-async function listFiles(folderPath: string): Promise<string[]> {
-  return await invoke('list_files', { folderPath })
-}
+const path = 'C:\\Users\\lenovo\\Downloads\\国产蓝莓为何几年内爆炸式增长？【主播说三农】'
 
 export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
-  const [imagePaths, setImagePaths] = useState<string[]>([])
+  const [imageInfos, setImageInfos] = useState<ImageInfo[]>([])
   const [loadError, setLoadError] = useState<string>('')
 
+  // 获取图片列表
   useEffect(() => {
-    const loadImages = async () => {
-      try {
-        setImagePaths(await listFiles(path))
-        setLoadError('')
-      }
-      catch (error: any) {
+    invoke<ImageInfo[]>('list_images', { path })
+      .then(setImageInfos)
+      .then(() => setLoadError(''))
+      .catch((error: any) => {
         console.error(error)
         setLoadError(error)
-      }
-    }
-    loadImages()
+      })
   }, [])
 
   const imageTitle = '【新闻调查】机器人“马拉松”：一场未来科技的极限测试'
@@ -75,7 +69,7 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
         publishTime={publishTime}
         source={source}
         authorName={authorName}
-        imageCount={imagePaths.length}
+        imageCount={imageInfos.length}
         description={description}
         tags={tags}
       />
@@ -102,11 +96,11 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
               grid="~ @[1100px]:cols-6! @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
               gap="20px"
             >
-              {imagePaths.map((imagePath, index) => (
-                <Suspense key={imagePath}>
+              {imageInfos.map((imageInfo, index) => (
+                <Suspense key={imageInfo.name}>
                   <ImageCard
                     index={index}
-                    imagePath={imagePath}
+                    imageInfo={imageInfo}
                   />
                 </Suspense>
               ))}

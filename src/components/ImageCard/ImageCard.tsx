@@ -1,42 +1,36 @@
 import './ImageCard.scss'
 
 import { Image, SkeletonItem } from '@fluentui/react-components'
-import { convertFileSrc } from '@tauri-apps/api/core'
-import { useEffect, useState } from 'react'
+import { convertFileSrc, invoke } from '@tauri-apps/api/core'
+import { useEffect, useMemo, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 
-import ThumbnailWorker from '~/workers/thumbnailWorker?worker'
+import type { ThumbnailInfo } from '~/tauri-types.ts'
 
 import type { ImageCardProps } from './ImageCard.types'
 
-export default function ImageCard({ index, imagePath }: ImageCardProps) {
+export default function ImageCard({ index, imageInfo }: ImageCardProps) {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true)
-  const [thumbnail, setThumbnail] = useState<string>('')
+  const [thumbnail, setThumbnail] = useState<ThumbnailInfo>({ name: '', cache_path: '', width: 0, height: 0, size: 0 })
 
-  const rawImage = convertFileSrc(imagePath)
+  const rawImage = convertFileSrc(imageInfo.path)
 
+  // 获取缩略图
   useEffect(() => {
-    const worker = new ThumbnailWorker()
+    invoke<ThumbnailInfo>('get_image_thumbnail', {
+      path: imageInfo.path,
+      maxSize: 100,
+    })
+      .then(setThumbnail)
+      .catch(console.error)
+  }, [imageInfo.path])
 
-    worker.onmessage = (e) => {
-      const { thumbnail, error } = e.data
-      if (thumbnail) {
-        setThumbnail(thumbnail)
-      }
-      else if (error) {
-        console.error('Error generating thumbnail:', imagePath, error)
-      }
-      setIsImageLoading(false)
-
-      worker.terminate()
-    }
-
-    worker.postMessage({ src: rawImage, width: 480, height: 270 })
-
-    return () => {
-      worker.terminate()
-    }
-  }, [imagePath, rawImage])
+  // 计算图片的宽高比
+  const aspectRatio = useMemo(() => {
+    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
+    const divisor = gcd(imageInfo.width, imageInfo.height)
+    return `${imageInfo.width / divisor}/${imageInfo.height / divisor}`
+  }, [imageInfo.width, imageInfo.height])
 
   return (
     <div
@@ -52,20 +46,24 @@ export default function ImageCard({ index, imagePath }: ImageCardProps) {
       {/* 在图片加载完成前，显示骨架图占位 */}
       {isImageLoading && (
         <SkeletonItem
-          className="aspect-[16/9] h-unset!"
+          className="h-unset!"
           shape="rectangle"
+          style={{ aspectRatio }}
         />
       )}
       {/* 图片加载后显示 */}
       <PhotoView src={rawImage}>
         <Image
           block
-          className="aspect-[16/9] shadow-xl"
-          src={thumbnail}
+          className="shadow-xl"
+          src={convertFileSrc(thumbnail.cache_path)}
           alt={`image ${index + 1}`}
           shape="rounded"
           fit="contain"
-          style={{ display: isImageLoading ? 'none' : 'block' }}
+          style={{
+            display: isImageLoading ? 'none' : 'block',
+            aspectRatio,
+          }}
           onLoad={() => setIsImageLoading(false)}
         />
       </PhotoView>

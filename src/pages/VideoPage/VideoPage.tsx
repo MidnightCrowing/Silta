@@ -31,7 +31,7 @@ import type { VideoPageProps } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
-const videoUrl = convertFileSrc('assets/demo.mp4')
+const videoUrl = convertFileSrc('C:\\Users\\lenovo\\Downloads\\夏日口袋第3集-番剧-高清独家在线观看-bilibili-哔哩哔哩.mp4')
 const coverUrl = convertFileSrc('assets/cover-0.avif')
 
 const OverflowMenuItem: FC<Pick<OverflowItemProps, 'id'>> = (props) => {
@@ -93,6 +93,7 @@ export default function VideoPage({ className }: VideoPageProps) {
 
   const videoTitle = '时隔两年～再次翻唱《Ivory Tower》_《最后的旅行》 P1 Ivory Tower'
   const tags = ['发现《IVORY TOWER》', '龙族', '翻唱', '上杉绘梨衣', '龙族卡塞尔之门', '龙族史上最热闹的春节', '龙族首届新春会']
+  const showDownload: boolean = true
 
   return (
     <div className={`@container overflow-x-hidden ${className}`}>
@@ -112,7 +113,7 @@ export default function VideoPage({ className }: VideoPageProps) {
                 isShowScreenshot: false,
                 isShowWebFullScreen: true,
                 isProgressFloat: true,
-              // isToast: true,
+                isToast: true,
               }}
             />
           </Suspense>
@@ -130,7 +131,7 @@ export default function VideoPage({ className }: VideoPageProps) {
                 <Subtitle1 className="line-clamp-2!">{videoTitle}</Subtitle1>
               </Tooltip>
 
-              <Button shape="circular" icon={<ArrowDownloadRegular />}>下载</Button>
+              {showDownload && <Button shape="circular" icon={<ArrowDownloadRegular />}>下载</Button>}
             </div>
 
             {/* Tags */}
@@ -159,6 +160,7 @@ export default function VideoPage({ className }: VideoPageProps) {
           </Button>
         </div>
 
+        {/* 视频推荐列表 */}
         <Suspense>
           <VideoCardList>
             {/* Video Recommendations */}

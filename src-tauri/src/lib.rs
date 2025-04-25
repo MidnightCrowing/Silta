@@ -1,5 +1,10 @@
 use tauri::{AppHandle, Manager};
-mod commands;
+
+pub mod commands;
+pub mod concurrency;
+pub mod models;
+pub mod services;
+pub mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -8,7 +13,7 @@ pub fn run() {
             show_window(app);
         }))
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![commands::list_files])
+        .invoke_handler(tauri::generate_handler![commands::gallery::list_images, commands::gallery::get_image_thumbnail])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

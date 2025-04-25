@@ -19,6 +19,7 @@ export default antfu({
     'public',
     'src/libs',
     'src-tauri',
+    'src/tauri-types.ts',
   ],
 
   plugins: {

@@ -3,6 +3,7 @@ import type { FluentIcon } from '@fluentui/react-icons'
 export enum TabComponentNameEnum {
   NewPage = 'NewPage',
   SearchPage = 'SearchPage',
+  SearchListPage = 'SearchListPage',
   MultiPreviewPage = 'MultiPreviewPage',
   SinglePreviewPage = 'SinglePreviewPage',
   VideoPage = 'VideoPage',

@@ -74,6 +74,10 @@ const TabItems: TabItem[] = [
     label: '<UNK1>',
     componentName: TabComponentNameEnum.SinglePreviewPage,
   },
+  {
+    label: '<UNK1>',
+    componentName: TabComponentNameEnum.SearchListPage,
+  },
 ]
 
 function MainLayout() {
