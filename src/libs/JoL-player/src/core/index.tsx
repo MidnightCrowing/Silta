@@ -21,6 +21,8 @@ import toast from '@/components/toast';
 import '@/assets/css/reset.scss';
 import './index.scss';
 import { JoLPlayerRef, videoparameter } from 'types';
+import Toast, { ToastHandle } from '@/components/toast/Toast';
+import { registerToast } from '@/components/toast/showToast';
 const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unknown> | undefined) {
   const {
     option,
@@ -241,6 +243,14 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
     );
   }, [videoRef.current, videoFlow, option]);
 
+  const toastRef = useRef<ToastHandle>(null);
+
+  useEffect(() => {
+    if (toastRef.current) {
+      registerToast(toastRef.current);
+    }
+  }, []);
+
   return (
     <div
       className={`JoL-player-container ${className}`}
@@ -278,6 +288,8 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
           <Controller />
         </Suspense>
       </FlowContext.Provider>
+
+      <Toast ref={toastRef} />
     </div>
   );
 };
