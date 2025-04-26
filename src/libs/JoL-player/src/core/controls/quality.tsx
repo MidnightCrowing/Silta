@@ -1,9 +1,8 @@
-import React, { memo, FC, useState, useContext, useMemo } from 'react';
-import { defaultTheme, qualityList, qualityListType } from '@/core/config';
+import React, { FC, memo, useContext, useMemo, useState } from 'react';
+import { defaultLanguage, defaultTheme, qualityList, qualityListType } from '@/core/config';
 import { FlowContext } from '@/core/context';
 import toast from '@/components/toast';
 import { il8n } from '@/language';
-import { defaultLanguage } from '@/core/config';
 import './index.scss';
 import { qualityKey } from 'types';
 
@@ -20,7 +19,7 @@ export type qualityMerge = qualityListType & { url: string };
 const Quality: FC<QualityType> = memo(function Quality({ style, videoSrc, qualityToggle }) {
   const reviceProps = useContext(FlowContext);
 
-  const { theme, quality, language, isToast, toastPosition } = reviceProps.propsAttributes!;
+  const { theme, quality, language, toastPosition } = reviceProps.propsAttributes!;
 
   const [isShow, setIsShow] = useState<boolean>(false);
 
@@ -50,16 +49,15 @@ const Quality: FC<QualityType> = memo(function Quality({ style, videoSrc, qualit
 
   const toggle = (url: string, key: qualityKey) => {
     qualityToggle(url, key);
-    isToast &&
-      toast({
-        message: (
-          <div>
-            {`${il8n(language || defaultLanguage, 'clarityHint')} ：`}
-            <strong style={{ color: '#FF455B' }}>{key}</strong>
-          </div>
-        ),
-        position: toastPosition,
-      });
+    toast({
+      message: (
+        <div>
+          {`${il8n(language || defaultLanguage, 'clarityHint')} ：`}
+          <strong style={{ color: '#FF455B' }}>{key}</strong>
+        </div>
+      ),
+      position: toastPosition,
+    });
   };
   return (
     <div

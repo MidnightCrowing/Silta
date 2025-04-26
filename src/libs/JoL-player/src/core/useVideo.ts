@@ -1,8 +1,9 @@
-import { useRef, useMemo, useEffect, DependencyList } from 'react';
+import { DependencyList, useEffect, useMemo, useRef } from 'react';
 import useMandatoryUpdate from '@/utils/useMandatoryUpdate';
 import { defaultVolume } from '@/core/config';
 import { parVoid, videoAttributes, videoMethod } from 'types';
 import screenfull from 'screenfull';
+
 export interface useVideoType extends videoAttributes {
   handleChangePlayState: () => void;
   videoAttributes: videoAttributes;

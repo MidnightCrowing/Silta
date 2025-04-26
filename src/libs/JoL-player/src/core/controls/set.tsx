@@ -1,4 +1,4 @@
-import React, { memo, FC, useState, useContext } from 'react';
+import React, { FC, memo, useContext, useState } from 'react';
 import Broadcast from '@/components/svgIcon';
 import Switch from '@/components/switch';
 import { FlowContext } from '@/core/context';

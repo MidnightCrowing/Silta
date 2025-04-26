@@ -1,7 +1,7 @@
-import React, { memo, FC } from 'react';
+import React, { FC, memo } from 'react';
 import './index.module.scss';
 import Broadcast from '@/components/svgIcon';
-import { defaultTheme, defaultLanguage } from '@/core/config';
+import { defaultLanguage, defaultTheme } from '@/core/config';
 import { il8n } from '@/language';
 import { languageType } from 'types';
 

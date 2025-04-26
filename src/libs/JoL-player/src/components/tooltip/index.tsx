@@ -1,5 +1,6 @@
-import React, { memo, FC } from "react";
-import "./index.module.scss";
+import React, { FC, memo } from 'react';
+import './index.module.scss';
+
 export type tooltip = {
   title: string;
   icon: React.ReactNode;

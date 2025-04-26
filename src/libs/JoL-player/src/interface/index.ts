@@ -1,5 +1,6 @@
 import React from 'react';
 import { toastPosition } from 'types';
+
 export interface hoverShowStyleType {
   height: number;
   opacity: number;
@@ -7,6 +8,7 @@ export interface hoverShowStyleType {
   progressBgRefEle: HTMLDivElement;
   progressScrubberRefEle: HTMLDivElement;
 }
+
 export interface toastType {
   message: React.ReactNode;
   duration?: number;

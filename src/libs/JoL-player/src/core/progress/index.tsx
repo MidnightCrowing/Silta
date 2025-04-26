@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo, useRef, useEffect } from 'react';
+import React, { memo, useContext, useEffect, useMemo, useRef } from 'react';
 import { FlowContext } from '@/core/context';
 import { useVideo } from '@/core/useVideo';
 import { percentToMinutesAndSeconds, percentToSeconds } from '@/utils';
@@ -68,7 +68,7 @@ const Index = memo(function Index(props) {
     }
     return () => {
       intervalToJudgeIsMovingProgress.current &&
-        clearInterval(intervalToJudgeIsMovingProgress.current);
+      clearInterval(intervalToJudgeIsMovingProgress.current);
     };
   }, [progressState.isMovingProgress]);
 

@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import { qualityKey, videoOption } from 'types';
+
 export interface VideoStateType<K = boolean, T = number> {
   /**
    * @description 是否显示控件
@@ -18,6 +19,7 @@ export interface VideoStateType<K = boolean, T = number> {
    */
   quality: qualityKey | undefined;
 }
+
 /**
  * @description 永不变的数据
  */
@@ -29,6 +31,7 @@ export interface contextType {
   videoFlow: VideoStateType;
   propsAttributes?: videoOption;
 }
+
 /**
  * @description 变化的数据
  */
@@ -47,22 +50,27 @@ export const defaultValue = {
 };
 
 export const FlowContext = React.createContext<contextType>(defaultValue);
+
 export interface isControlActionType {
   type: 'isControl';
   data: VideoStateType['isControl'];
 }
+
 export interface progressSliderChangeValActionType {
   type: 'progressSliderChangeVal';
   data: VideoStateType['progressSliderChangeVal'];
 }
+
 export interface progressMouseUpChangeValValActionType {
   type: 'progressMouseUpChangeVal';
   data: VideoStateType['progressMouseUpChangeVal'];
 }
+
 export interface qualityActionType {
   type: 'quality';
   data: VideoStateType['quality'];
 }
+
 export type mergeAction =
   | isControlActionType
   | progressSliderChangeValActionType

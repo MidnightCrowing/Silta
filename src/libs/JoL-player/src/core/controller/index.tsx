@@ -1,4 +1,4 @@
-import React, { memo, useContext, useRef, useMemo, useEffect, useState } from 'react';
+import React, { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import Broadcast from '@/components/svgIcon';
 import Progress from '../progress';
 import Controls from '../controls';
@@ -45,12 +45,11 @@ const Index = memo(function Index() {
   const [screenshotLoading, setScreenshotLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    propsAttributes!.isToast &&
-      !isPlay &&
-      toast({
-        message: il8n(propsAttributes!.language || defaultLanguage, 'playText'),
-        position: propsAttributes!.toastPosition,
-      });
+    !isPlay &&
+    toast({
+      message: il8n(propsAttributes!.language || defaultLanguage, 'playText'),
+      position: propsAttributes!.toastPosition,
+    });
   }, [isPlay]);
 
   useEffect(() => {

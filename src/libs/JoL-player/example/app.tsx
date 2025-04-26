@@ -1,5 +1,5 @@
-import JoLPlayer from '../../src/index';
-// import JoLPlayer from '../../dist';
+// import JoLPlayer from '@/index';
+import { JoLPlayer }  from '../dist-dev/assets/index-DxJWOi0M';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 

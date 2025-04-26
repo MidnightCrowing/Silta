@@ -1,9 +1,11 @@
-@import 'src/assets/css/mixin.scss';
+@import '@/assets/css/mixin.scss';
+
 .clientFullScreen {
   @include wh(auto !important, auto !important);
   @include position(fixed !important, 0, 0, 0, 0);
   z-index: 100000 !important;
 }
+
 .JoL-controls-container {
   padding: 0 5px;
   box-sizing: border-box;
@@ -14,9 +16,11 @@
   // z-index: 10020;
   display: flex;
   align-items: center;
+
   &:hover {
     cursor: default;
   }
+
   &:after {
     content: '';
     @include wh(calc(100% + 26px), 100%);
@@ -25,38 +29,46 @@
     transform: translateX(-50%);
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
   }
+
   .play-pause-timeline {
     display: flex;
     align-items: center;
+
     .icon {
       cursor: pointer;
     }
+
     .time-wrap {
       font-size: 13px;
       vertical-align: middle;
       padding: 0 10px;
     }
   }
+
   .JoL-multifunction {
     @include wh(100%, 100%);
     @include flexContainer(flex-end);
     text-align: center;
     line-height: 42px;
+
     &-multiple {
       cursor: pointer;
       padding: 0 10px;
       position: relative;
+
       &-container {
         transition: all 0.5s;
         @include position(absolute, -12px, auto, auto, 50%);
         transform: translateX(-50%);
         @include wh(100%, 70px);
+
         &:hover {
           .multifunction-multiple-layer {
             animation: show 0.3s ease;
           }
         }
       }
+
       &-layer {
         list-style: none;
         line-height: normal;
@@ -64,47 +76,58 @@
         transform: translateX(-50%);
         border-radius: 3px;
         background-color: rgba(0, 0, 0, 0.7);
+
         li {
           padding: 10px 22px;
           cursor: pointer;
           font-size: 14px;
           white-space: nowrap;
           display: flex;
+
           p {
             padding: 0 3px;
           }
+
           &:hover {
             background: rgba(255, 255, 255, 0.2);
           }
         }
       }
+
       &:hover {
         z-index: 1000000000;
+
         &-layer {
           z-index: 1000000000;
         }
       }
     }
+
     &-volume {
       padding: 0 10px;
       position: relative;
       cursor: pointer;
+
       &:hover {
         z-index: 1000000000;
+
         &-layer {
           z-index: 1000000000;
         }
       }
+
       &-container {
         @include wh(100%, 70px);
         @include position(absolute, -12px, auto, 0, 50%);
         transform: translateX(-50%);
+
         &:hover {
           .volume-box {
             animation: show 0.3s ease;
           }
         }
       }
+
       .volume-box {
         line-height: normal;
         position: absolute;
@@ -113,32 +136,39 @@
         padding-bottom: 8px;
         border-radius: 3px;
         background-color: rgba(0, 0, 0, 0.7);
+
         .current-volume {
           @include wh(100%, 24px);
           margin: 0;
           line-height: 24px;
           text-align: center;
+
           &:hover {
             cursor: default;
           }
+
           .volume-value {
             font-size: 13px;
             font-style: normal;
           }
         }
+
         .volume-slider {
           @include wh(100%, 96px);
           @include flexContainer(center);
+
           .volume-slider-bg {
             @include wh(2px, 86px);
             border-radius: 1px;
             background-color: #fff;
             position: relative;
+
             .volume-slider-op {
               @include wh(100%, 100%);
               @include position(absolute, auto, auto, 0, 0);
               z-index: 1;
               border-radius: 1px;
+
               .volume-slider-op-circle {
                 @include wh(10px, 10px);
                 @include position(absolute, calc(-10px / 2), auto, auto, 50%);
@@ -146,6 +176,7 @@
                 border-radius: 50%;
               }
             }
+
             .volume-slider-mirror {
               @include wh(32px, calc(100% + 5px));
               @include position(absolute, auto, auto, 0, -15px);
@@ -155,25 +186,31 @@
         }
       }
     }
+
     &-set {
       padding: 0 10px;
       position: relative;
       cursor: pointer;
+
       &-container {
         @include wh(100%, 70px);
         @include position(absolute, -12px, auto, 0, 50%);
         transition: all 0.5s;
         transform: translateX(-50%);
       }
+
       &:hover {
         z-index: 1000000000;
+
         .hover-icon-rotateAnimate {
           animation: rotateAnimate 0.5s ease;
         }
+
         .JoL-multifunction-set-layer {
           animation: show 0.3s ease;
         }
       }
+
       &-layer {
         line-height: normal;
         list-style: none;
@@ -182,6 +219,7 @@
         border-radius: 3px;
         background-color: rgba(0, 0, 0, 0.7);
         padding: 8px 0;
+
         li {
           padding: 7px 22px;
           cursor: pointer;
@@ -191,6 +229,7 @@
       }
     }
   }
+
   .hover-icon-animate {
     &:hover {
       animation: scaleAnimate 0.5s ease;

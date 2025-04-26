@@ -1,16 +1,19 @@
-@import 'src/assets/css/mixin.scss';
+@import '@/assets/css/mixin.scss';
+
 .JoL-controller-container {
   @include wh(100%, 100%);
   @include position(absolute, auto, auto, 0, 50%);
   transform: translateX(-50%);
   z-index: 3;
   cursor: pointer;
+
   .JoL-click-to-play-or-pause {
     @include wh(100%, calc(100% - 47px));
     @include position(absolute, 0, auto, auto, 0);
     z-index: 101;
     outline: none;
   }
+
   .play-icon {
     display: inline-block;
     @include style(24px, #fff);
@@ -22,6 +25,7 @@
     border-radius: 30%;
     opacity: 0.7;
   }
+
   .JoL-progress-and-controls-wrap {
     width: calc(100% - 26px);
     @include position(absolute, auto, auto, 0, 50%);

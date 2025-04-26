@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
+
 export interface useWindowSizeType {
   clientX: number;
   clientY: number;
+
   [prs: string]: any;
 }
 
@@ -20,8 +22,9 @@ const useWindowClient = (): useWindowSizeType => {
         };
       });
     }
-    window.addEventListener("mousemove", handle);
-    return () => window.removeEventListener("mousemove", handle);
+
+    window.addEventListener('mousemove', handle);
+    return () => window.removeEventListener('mousemove', handle);
   }, []);
 
   return { ...windowDistance };

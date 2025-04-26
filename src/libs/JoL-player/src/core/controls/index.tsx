@@ -1,13 +1,13 @@
-import React, { memo, useContext, useRef, useEffect, useMemo, FC } from 'react';
+import React, { FC, memo, useContext, useEffect, useMemo, useRef } from 'react';
 import Broadcast from '@/components/svgIcon';
 import Tooltip from '@/components/tooltip';
 import { contextType, FlowContext } from '@/core/context';
 import { useVideo } from '@/core/useVideo';
-import { secondsToMinutesAndSecondes, capture, filterDefaults } from '@/utils';
+import { capture, filterDefaults, secondsToMinutesAndSecondes } from '@/utils';
 import { useControls } from './variable';
 import useWindowClient from '@/utils/useWindowClient';
 import screenfull, { Screenfull } from 'screenfull';
-import { multipleList, defaultLanguage } from '@/core/config';
+import { defaultLanguage, multipleList } from '@/core/config';
 import SetComponent from './set';
 import MultipleComponent from './multiple';
 import VolumeComponent from './volume';
@@ -107,7 +107,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
             toast({
               message: `音量: ${Math.floor(newVolumeUp * 100)}%`,
               duration: 2000,
-            })
+            });
             break;
           case 'ArrowDown':
             event.preventDefault();
@@ -118,7 +118,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
             toast({
               message: `音量: ${Math.floor(newVolumeDown * 100)}%`,
               duration: 2000,
-            })
+            });
             break;
           case 'ArrowRight':
             event.preventDefault();
@@ -136,7 +136,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
               toast({
                 message: '倍速: 3.0x',
                 duration: 50,
-              })
+              });
             }
             break;
           case 'ArrowLeft':
@@ -147,7 +147,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
             toast({
               message: `进度: ${secondsToMinutesAndSecondes(newTimeBackward)}`,
               duration: 2000,
-            })
+            });
             break;
           case 'Escape':
             event.preventDefault();
@@ -186,7 +186,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
             toast({
               message: `进度: ${secondsToMinutesAndSecondes(newTimeForward)}`,
               duration: 2000,
-            })
+            });
           } else {
             // 长按：恢复原倍速
             const originalRate = originalPlaybackRate.current;
@@ -211,7 +211,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
           toast({
             message: `音量: ${Math.floor(newVolumeUp * 100)}%`,
             duration: 2000,
-          })
+          });
         } else {
           // 向下滚动，减少音量
           const newVolumeDown = Math.max(videoRef.volume - 0.02, 0);
@@ -221,7 +221,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
           toast({
             message: `音量: ${Math.floor(newVolumeDown * 100)}%`,
             duration: 2000,
-          })
+          });
         }
       };
 

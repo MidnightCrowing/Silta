@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { defaultVolume } from '@/core/config';
+
 export interface controlsVariableType<T = number, K = boolean> {
   /**
    * @description 音量键的值
@@ -35,30 +36,37 @@ export interface volumeActionType {
   type: 'volume';
   data: controlsVariableType['volume'];
 }
+
 export interface isMutedActionType {
   type: 'isMuted';
   data: controlsVariableType['isMuted'];
 }
+
 export interface isSlideVolumeActionType {
   type: 'isSlideVolume';
   data: controlsVariableType['isSlideVolume'];
 }
+
 export interface isScreentFullActionType {
   type: 'isScreentFull';
   data: controlsVariableType['isScreentFull'];
 }
+
 export interface multipleActionType {
   type: 'multiple';
   data: controlsVariableType['multiple'];
 }
+
 export interface isWebPageFullScreenActionType {
   type: 'isWebPageFullScreen';
   data: controlsVariableType['isWebPageFullScreen'];
 }
+
 export interface isMuteActionType {
   type: 'isMute';
   data: controlsVariableType['isMute'];
 }
+
 export type mergeAction =
   | volumeActionType
   | isMutedActionType

@@ -25,6 +25,7 @@ export interface qualityListType {
   name: string;
   id: number;
 }
+
 export const qualityList: qualityListType[] = [
   { name: '标清', key: '360P', enName: 'SD', id: 1 },
   { name: '高清', key: '540P', enName: 'HD', id: 2 },

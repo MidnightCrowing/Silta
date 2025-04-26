@@ -1,12 +1,12 @@
 import React, {
   forwardRef,
+  Suspense,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
   useRef,
   useState,
-  useEffect,
-  useMemo,
-  useImperativeHandle,
-  useCallback,
-  Suspense,
 } from 'react';
 import Controller from './controller';
 // import { videoparameter, JoLPlayerRef } from '@/interface';
@@ -23,6 +23,7 @@ import './index.scss';
 import { JoLPlayerRef, videoparameter } from 'types';
 import Toast, { ToastHandle } from '@/components/toast/Toast';
 import { registerToast } from '@/components/toast/showToast';
+
 const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unknown> | undefined) {
   const {
     option,
@@ -289,7 +290,7 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
         </Suspense>
       </FlowContext.Provider>
 
-      <Toast ref={toastRef} />
+      {option.isToast && < Toast ref={toastRef} />}
     </div>
   );
 };

@@ -1,4 +1,5 @@
-@import 'src/assets/css/mixin.scss';
+@import '@/assets/css/mixin.scss';
+
 .JoL-player-container {
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -17,6 +18,7 @@
     @include position(absolute, 0, auto, auto, 0);
     z-index: 1;
   }
+
   .JoL-light-off-mask {
     @include wh(100vw, 100vh);
     @include position(fixed, 0, auto, auto, 0);
@@ -24,6 +26,7 @@
     background-color: rgba(0, 0, 0, 0.9);
     display: none;
   }
+
   .video-no-useful-tip,
   .buffering-animation {
     @include wh(100%, 100px);
@@ -34,6 +37,7 @@
     line-height: 100px;
     z-index: 99;
   }
+
   .player-loading {
     @include position(absolute, 50%, auto, auto, 50%);
     z-index: 30;

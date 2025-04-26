@@ -1,6 +1,7 @@
-import React, { useEffect, FC, useMemo, useState, useRef } from "react";
-import "./index.module.scss";
-import { defaultTheme } from "@/core/config";
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import './index.module.scss';
+import { defaultTheme } from '@/core/config';
+
 export interface switchType {
   sole: string;
   label: string;
@@ -9,18 +10,18 @@ export interface switchType {
 }
 
 const Index: FC<switchType> = function Index({ sole, label, onChange, theme }) {
-  const [on, setOn] = useState("no");
+  const [on, setOn] = useState('no');
 
   const refs = useRef<HTMLInputElement>(null!);
 
   const switchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     e.stopPropagation();
-    const status = e.target.value === "yes" ? "no" : "yes";
+    const status = e.target.value === 'yes' ? 'no' : 'yes';
     setOn(status);
     onChange && onChange(status);
   };
   useEffect(() => {
-    refs.current.style.setProperty("--JoL-theme", theme ? theme : defaultTheme);
+    refs.current.style.setProperty('--JoL-theme', theme ? theme : defaultTheme);
   }, [theme]);
 
   const render = useMemo(
@@ -39,7 +40,7 @@ const Index: FC<switchType> = function Index({ sole, label, onChange, theme }) {
         />
       </div>
     ),
-    [sole, label, on]
+    [sole, label, on],
   );
   return render;
 };

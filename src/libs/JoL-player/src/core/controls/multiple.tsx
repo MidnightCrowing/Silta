@@ -1,10 +1,10 @@
-import React, { memo, FC, useState, useContext } from 'react';
-import { multipleList, defaultTheme } from '@/core/config';
+import React, { FC, memo, useContext, useState } from 'react';
+import { defaultLanguage, defaultTheme, multipleList } from '@/core/config';
 import { FlowContext } from '@/core/context';
 import toast from '@/components/toast';
 import { il8n } from '@/language';
-import { defaultLanguage } from '@/core/config';
 import './index.scss';
+
 export interface MultipleType {
   multipleText: string;
   selectPlayRate: Function;
@@ -12,15 +12,10 @@ export interface MultipleType {
   style?: React.CSSProperties;
 }
 
-const Multiple: FC<MultipleType> = memo(function Multiple({
-  multipleText,
-  selectPlayRate,
-  multiple,
-  style,
-}) {
+const Multiple: FC<MultipleType> = memo(function Multiple({ multipleText, selectPlayRate, multiple, style }) {
   const reviceProps = useContext(FlowContext);
 
-  const { theme, language, isToast, toastPosition } = reviceProps.propsAttributes!;
+  const { theme, language, toastPosition } = reviceProps.propsAttributes!;
 
   const [isShow, setIsShow] = useState<boolean>(false);
 
@@ -32,28 +27,24 @@ const Multiple: FC<MultipleType> = memo(function Multiple({
       style={style}
     >
       <p>{multipleText}</p>
-      <div
-        className="JoL-multifunction-multiple-container"
-        style={{ display: isShow ? 'block' : 'none' }}
-      >
+      <div className="JoL-multifunction-multiple-container" style={{ display: isShow ? 'block' : 'none' }}>
         <ul className="JoL-multifunction-multiple-layer">
           {multipleList.map((item, index) => (
             <li
-              onClick={(e) => [
-                selectPlayRate(item.id),
-                setIsShow(false),
-                e.stopPropagation(),
-                isToast &&
-                  toast({
-                    message: (
-                      <div>
-                        {`${il8n(language || defaultLanguage, 'multipleHint')} ：`}
-                        <strong style={{ color: '#FF455B' }}>{item.name}</strong>
-                      </div>
-                    ),
-                    position: toastPosition,
-                  }),
-              ]}
+              onClick={(e) => {
+                selectPlayRate(item.id);
+                setIsShow(false);
+                e.stopPropagation();
+                toast({
+                  message: (
+                    <div>
+                      {`${il8n(language || defaultLanguage, 'multipleHint')} ：`}
+                      <strong style={{ color: '#FF455B' }}>{item.name}</strong>
+                    </div>
+                  ),
+                  position: toastPosition,
+                });
+              }}
               key={index}
               style={{ color: multiple === item.id ? (theme ? theme : defaultTheme) : '#fff' }}
             >

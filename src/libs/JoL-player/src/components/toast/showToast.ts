@@ -10,7 +10,5 @@ export const registerToast = (ref: ToastHandle) => {
 export const showToast = (options: toastType) => {
   if (toastRef) {
     toastRef.show(options);
-  } else {
-    console.warn('Toast is not registered yet.');
   }
 };

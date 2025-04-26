@@ -18,6 +18,7 @@ export interface langType<T = string> {
   clarityHint: T;
   multipleHint: T;
 }
+
 export const zhJson: langType = {
   multiple: '倍数',
   closeLights: '关灯',

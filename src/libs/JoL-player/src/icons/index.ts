@@ -1,10 +1,4 @@
-/**
- *
- * @requires @types/webpack-env
- */
-const requireAll = (requireContext: __WebpackModuleApi.RequireContext) =>
-  requireContext.keys().map(requireContext);
-const svgs = require.context('./svg', true, /\.svg$/);
-requireAll(svgs);
+const svgs = import.meta.glob('./svg/**/*.svg', { eager: true });
 
-export default requireAll;
+export default svgs;
+

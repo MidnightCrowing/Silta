@@ -1,4 +1,5 @@
 import React, { memo, useMemo } from 'react';
+
 export type svgProps = {
   iconClass: string;
   fill?: string;
@@ -9,13 +10,13 @@ export type svgProps = {
 };
 
 const SvgIcon: React.FC<svgProps> = memo(function SvgIcon({
-  iconClass,
-  fill,
-  fontSize = '18px',
-  className,
-  onClick,
-  style,
-}) {
+                                                            iconClass,
+                                                            fill,
+                                                            fontSize = '18px',
+                                                            className,
+                                                            onClick,
+                                                            style,
+                                                          }) {
   const iconName = useMemo(() => '#icon-' + iconClass, [iconClass]);
   return (
     <svg

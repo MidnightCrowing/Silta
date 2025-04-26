@@ -5,15 +5,18 @@
   justify-content: $jc;
   align-items: center;
 }
+
 @mixin style($size, $color, $bold: normal) {
   font-size: $size;
   color: $color;
   font-weight: $bold;
 }
+
 @mixin wh($w, $h) {
   width: $w;
   height: $h;
 }
+
 @mixin position($type, $top, $right, $bottom, $left) {
   position: $type;
   left: $left;
@@ -21,12 +24,14 @@
   right: $right;
   bottom: $bottom;
 }
+
 @mixin fixed($t, $l) {
   position: fixed;
   top: $t;
   left: $l;
 }
-.JoL-player-container{
+
+.JoL-player-container {
   @keyframes show {
     0% {
       opacity: 0;

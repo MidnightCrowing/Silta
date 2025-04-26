@@ -24,12 +24,12 @@ const Toast = forwardRef<ToastHandle>((_, ref) => {
   }));
 
   return (
-          <div
-                  className={`jolPlayerToast ${position}`}
-                  style={{ opacity: visible ? 1 : 0 }}
-          >
-            {message}
-          </div>
+    <div
+      className={`jolPlayerToast ${position}`}
+      style={{ opacity: visible ? 1 : 0 }}
+    >
+      {message}
+    </div>
   );
 });
 

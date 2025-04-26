@@ -23,18 +23,22 @@ export interface positionXActionType {
   type: 'positionX';
   data: ProgressVariableType['positionX'];
 }
+
 export interface isMovingProgressActionType {
   type: 'isMovingProgress';
   data: ProgressVariableType['isMovingProgress'];
 }
+
 export interface progressPercentActionType {
   type: 'progressPercent';
   data: ProgressVariableType['progressPercent'];
 }
+
 export interface isDragActionType {
   type: 'isDrag';
   data: ProgressVariableType['isDrag'];
 }
+
 export type mergeAction =
   | positionXActionType
   | isMovingProgressActionType
