@@ -1,36 +1,50 @@
-import { createElement, forwardRef, Suspense, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { createElement, forwardRef, Suspense, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import KeepAlive from 'react-activation'
 
 import { LocationProvider, useLocation } from '~/contexts/location'
 
 import { componentMap } from '../../shared/componentMap'
-import { DefaultTabIcon } from '../../shared/DefaultTabIcon'
+import { DefaultTabIcon } from '../../shared/DefaultTabIcon.ts'
+import { isLocationEqualToActiveItem } from '../../shared/TabItem.util.ts'
 import { TabToolbar } from '../TabToolbar'
 import type { LocationState, PageWrapperProps, PageWrapperRef, TabPageProps } from './TabPage.types'
 
 const PageWrapper = forwardRef<PageWrapperRef, PageWrapperProps>(({
   activeItemId,
+  activeItem,
   setPageTitle,
   setPageIcon,
   setPageComponentName,
   setPageComponentProps,
   setLocationState,
 }, ref) => {
-  const { location, isBack, isForward, locationBack, locationForward } = useLocation()
+  const { location, isBack, isForward, setLocation, locationBack, locationForward } = useLocation()
 
+  // 更新location时，同步Tab
   useEffect(() => {
-    setPageTitle(activeItemId, location.pageLabel)
-    setPageIcon(activeItemId, location.pageIcon ?? DefaultTabIcon)
-    setPageComponentName(activeItemId, location.pageComponentName)
-    setPageComponentProps(activeItemId, location.pageComponentProps)
-  }, [
-    activeItemId,
-    location,
-    setPageTitle,
-    setPageIcon,
-    setPageComponentName,
-    setPageComponentProps,
-  ])
+    if (!isLocationEqualToActiveItem(location, activeItem)) {
+      // console.log(1)
+      setPageTitle(activeItemId, location.pageLabel)
+      setPageIcon(activeItemId, location.pageIcon ?? DefaultTabIcon)
+      setPageComponentName(activeItemId, location.pageComponentName)
+      setPageComponentProps(activeItemId, location.pageComponentProps)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
+
+  // 更新Tab时，同步location
+  useEffect(() => {
+    if (!isLocationEqualToActiveItem(location, activeItem)) {
+      // console.log(2)
+      setLocation({
+        pageComponentName: activeItem.componentName,
+        pageComponentProps: activeItem.componentProps,
+        pageLabel: activeItem.label,
+        pageIcon: activeItem.icon,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeItem])
 
   useEffect(() => {
     setLocationState({ isBack, isForward, locationBack, locationForward })
@@ -40,7 +54,7 @@ const PageWrapper = forwardRef<PageWrapperRef, PageWrapperProps>(({
     getLocationState: () => ({ isBack, isForward, locationBack, locationForward }),
   }))
 
-  const Component = componentMap[location.pageComponentName]
+  const Component = useMemo(() => componentMap[location.pageComponentName], [location])
 
   return (
     <Suspense>
@@ -85,12 +99,14 @@ export function TabPage({
   return (
     <div size-full flex="~ col">
       <TabToolbar
+        activeItemId={activeItemId}
         activeItem={activeItem}
         refreshPage={refreshPage}
         isBack={locationState.isBack}
         isForward={locationState.isForward}
         locationBack={locationState.locationBack}
         locationForward={locationState.locationForward}
+        pageComponent={{ setName: setPageComponentName, setProps: setPageComponentProps }}
       />
 
       <div grow overflow-auto>
@@ -105,6 +121,7 @@ export function TabPage({
               <PageWrapper
                 ref={pageWrapperRef}
                 activeItemId={activeItemId}
+                activeItem={activeItem}
                 setPageTitle={setPageTitle}
                 setPageIcon={setPageIcon}
                 setPageComponentName={setPageComponentName}

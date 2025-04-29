@@ -39,6 +39,11 @@ export interface PageWrapperProps {
   activeItemId: string
 
   /**
+   * @description 当前激活的项目
+   */
+  activeItem: TabItem
+
+  /**
    * @description 设置页面标题
    * @param pageId 页面ID
    * @param newTitle 新标题

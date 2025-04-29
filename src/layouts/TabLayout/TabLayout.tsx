@@ -11,7 +11,7 @@ import { Component, Fragment } from 'react'
 import { generateItemId } from '~/utils/common'
 
 import { SortableTab, TabPage } from './components'
-import type { DefaultTabIcon } from './shared/DefaultTabIcon'
+import type { DefaultTabIcon } from './shared/DefaultTabIcon.ts'
 import type { TabItem } from './shared/TabItem.types'
 import { TabComponentNameEnum } from './shared/TabItem.types'
 import type { TabLayoutProps, TabLayoutState } from './TabLayout.types'

@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 
-import type { TabItem } from '../../shared/TabItem.types'
+import type { TabComponentNameEnum, TabItem } from '../../shared/TabItem.types'
 
 export interface BackButtonProps extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -33,14 +33,32 @@ export interface RefreshButtonProps extends HTMLAttributes<HTMLDivElement> {
   refreshPage: () => void
 }
 
-export interface UrlInputProps extends HTMLAttributes<HTMLDivElement> {
+export interface AddressBarProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * @description 当前激活的项目ID
+   */
+  activeItemId: string
+
   /**
    * @description 当前激活的项目
    */
   activeItem: TabItem | null
+
+  /**
+   * @description 页面组件相关操作
+   */
+  pageComponent: {
+    setName: (pageId: string, newComponentName: TabComponentNameEnum) => void
+    setProps: (pageId: string, newComponentProps: Record<string, any>) => void
+  }
 }
 
 export interface TabToolbarProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * @description 当前激活的项目ID
+   */
+  activeItemId: string
+
   /**
    * @description 当前激活的项目
    */
@@ -70,4 +88,12 @@ export interface TabToolbarProps extends HTMLAttributes<HTMLDivElement> {
    * @description 前进到下一个位置
    */
   locationForward: () => void
+
+  /**
+   * @description 页面组件相关操作
+   */
+  pageComponent: {
+    setName: (pageId: string, newComponentName: TabComponentNameEnum) => void
+    setProps: (pageId: string, newComponentProps: Record<string, any>) => void
+  }
 }

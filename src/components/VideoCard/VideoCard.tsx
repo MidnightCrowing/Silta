@@ -12,6 +12,7 @@ export default function VideoCard({ cover, title }: VideoCardProps) {
         bg="hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
         ring="hover:6 hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
         m="6px"
+        w-full
         rounded="3px"
         flex="~ row items-start"
         gap="7px"
@@ -22,13 +23,13 @@ export default function VideoCard({ cover, title }: VideoCardProps) {
         {/* 在图片加载完成前，显示骨架图占位 */}
         {isImageLoading && (
           <SkeletonItem
-            className="w-76%! h-unset! aspect-[16/9]"
+            className="w-45%! h-full! aspect-[16/9]"
             shape="rectangle"
           />
         )}
         {/* 图片加载后显示 */}
         <Image
-          className="w-45% h-auto"
+          className="w-45% max-w-150px h-auto"
           alt="video recommendation card image"
           src={cover}
           shape="rounded"

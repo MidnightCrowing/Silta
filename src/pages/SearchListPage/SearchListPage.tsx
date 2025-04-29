@@ -1,5 +1,6 @@
 import { makeStyles } from '@fluentui/react-components'
 import { VirtualizerScrollViewDynamic } from '@fluentui/react-components/unstable'
+import { useRef } from 'react'
 import * as React from 'react'
 
 const useStyles = makeStyles({
@@ -15,7 +16,7 @@ export function SearchListPage() {
   const childLength = 1000
   const minHeight = 42
   // Array size ref stores a list of random num for div sizing and callbacks
-  const arraySize = React.useRef(
+  const arraySize = useRef(
     Array.from({ length: childLength }).fill(minHeight),
   )
   // totalSize flag drives our callback update
