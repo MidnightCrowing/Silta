@@ -1,3 +1,4 @@
+import type { LocationComponentProps } from '~/contexts/location'
 import type { TabItem } from '~/layouts'
 import { TabComponentNameEnum } from '~/layouts'
 
@@ -45,7 +46,7 @@ export function generateUrlFromTabItem(item: TabItem): string {
  */
 export function parseUrlToComponentData(urlString: string): {
   componentName: TabComponentNameEnum
-  componentProps: Record<string, any>
+  componentProps: LocationComponentProps
 } {
   const [componentName, queryString] = urlString.split('?')
 

@@ -67,8 +67,11 @@ const TabItems: TabItem[] = [
     componentName: TabComponentNameEnum.VideoPage,
   },
   {
-    label: '“黑豹”速度超过10米秒！中国造出世界最快四足机器人',
+    label: '国产蓝莓为何几年内爆炸式增长？【主播说三农】1',
     componentName: TabComponentNameEnum.MultiPreviewPage,
+    componentProps: {
+      path: 'C:\\Users\\lenovo\\Downloads\\国产蓝莓为何几年内爆炸式增长？【主播说三农】1',
+    },
   },
   {
     label: '<UNK1>',

@@ -1,6 +1,8 @@
 import type { FluentIcon } from '@fluentui/react-icons'
 import type { Dispatch, SetStateAction } from 'react'
 
+import type { LocationComponentProps } from '~/contexts/location'
+
 import type { TabComponentNameEnum, TabItem } from '../../shared/TabItem.types'
 
 export interface LocationState {
@@ -69,7 +71,7 @@ export interface PageWrapperProps {
    * @param pageId 页面ID
    * @param newComponentProps 新组件属性
    */
-  setPageComponentProps: (pageId: string, newComponentProps: Record<string, any>) => void
+  setPageComponentProps: (pageId: string, newComponentProps: LocationComponentProps) => void
 
   /**
    * @description 设置位置状态
@@ -114,5 +116,5 @@ export interface TabPageProps {
    * @param pageId 页面ID
    * @param newComponentProps 新组件属性
    */
-  setPageComponentProps: (pageId: string, newComponentProps: Record<string, any>) => void
+  setPageComponentProps: (pageId: string, newComponentProps: LocationComponentProps) => void
 }

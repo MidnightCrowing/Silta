@@ -1,2 +1,2 @@
 export { MultiPreviewPage } from './MultiPreviewPage.lazy'
-export type { MultiPreviewPageProps } from './MultiPreviewPage.types'
+export type { MultiPreviewPageLocationProps, MultiPreviewPageProps } from './MultiPreviewPage.types'

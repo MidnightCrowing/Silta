@@ -25,7 +25,7 @@ function AddressBar({ activeItemId, activeItem, pageComponent }: AddressBarProps
   useEffect(() => {
     if (activeItem) {
       const urlText = generateUrlFromTabItem(activeItem)
-      setText(urlText)
+      setText(decodeURIComponent(urlText))
     }
   }, [activeItem])
 
@@ -51,7 +51,7 @@ function AddressBar({ activeItemId, activeItem, pageComponent }: AddressBarProps
   const handleInput = (event: FormEvent<HTMLTextAreaElement>) => {
     // 处理按下Enter事件，阻止换行
     const inputValue = (event.target as HTMLTextAreaElement).value.replace(/\n/g, '') // 移除换行符
-    setText(inputValue)
+    setText(decodeURIComponent(inputValue))
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -61,7 +61,6 @@ function AddressBar({ activeItemId, activeItem, pageComponent }: AddressBarProps
     event.preventDefault() // 阻止默认换行行为
     // 在这里执行你的方法
     const { componentName, componentProps } = parseUrlToComponentData(text)
-    console.log('回车键被按下', componentName, componentProps)
     pageComponent.setName(activeItemId, componentName)
     pageComponent.setProps(activeItemId, componentProps)
   }
@@ -87,6 +86,7 @@ function AddressBar({ activeItemId, activeItem, pageComponent }: AddressBarProps
         <div
           ref={displayRef}
           h-full
+          flex="~ row items-center"
         >
           {parsedUrl}
         </div>

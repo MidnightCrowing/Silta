@@ -1,3 +1,2 @@
-import { lazy } from 'react'
-
-export const VideoPage = lazy(() => import('./VideoPage'))
+export { VideoPage } from './VideoPage.lazy'
+export type { VideoPageLocationProps, VideoPageProps } from './VideoPage.types.ts'

@@ -57,7 +57,7 @@ export function urlToHtmlParts(urlString: string): ReactNode {
       {urlParts.map(({ type, text }) =>
         text
           ? (
-              <span key={type} data-type={type} className={typeClassNameMap[type]}>
+              <span key={type} data-type={type} className={`whitespace-nowrap ${typeClassNameMap[type]}`}>
                 {text}
               </span>
             )

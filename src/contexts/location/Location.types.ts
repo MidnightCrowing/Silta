@@ -2,6 +2,8 @@ import type { FluentIcon } from '@fluentui/react-icons'
 
 import type { TabComponentNameEnum } from '~/layouts'
 
+export type LocationComponentProps = Record<string, any>
+
 /**
  * @description 表示页面的状态
  */
@@ -24,7 +26,7 @@ export interface LocationState {
   /**
    * @description 页面组件属性
    */
-  pageComponentProps: Record<string, any>
+  pageComponentProps: LocationComponentProps
 }
 
 /**

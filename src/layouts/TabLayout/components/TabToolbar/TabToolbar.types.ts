@@ -1,5 +1,7 @@
 import type { HTMLAttributes } from 'react'
 
+import type { LocationComponentProps } from '~/contexts/location'
+
 import type { TabComponentNameEnum, TabItem } from '../../shared/TabItem.types'
 
 export interface BackButtonProps extends HTMLAttributes<HTMLDivElement> {
@@ -49,7 +51,7 @@ export interface AddressBarProps extends HTMLAttributes<HTMLDivElement> {
    */
   pageComponent: {
     setName: (pageId: string, newComponentName: TabComponentNameEnum) => void
-    setProps: (pageId: string, newComponentProps: Record<string, any>) => void
+    setProps: (pageId: string, newComponentProps: LocationComponentProps) => void
   }
 }
 
@@ -94,6 +96,6 @@ export interface TabToolbarProps extends HTMLAttributes<HTMLDivElement> {
    */
   pageComponent: {
     setName: (pageId: string, newComponentName: TabComponentNameEnum) => void
-    setProps: (pageId: string, newComponentProps: Record<string, any>) => void
+    setProps: (pageId: string, newComponentProps: LocationComponentProps) => void
   }
 }

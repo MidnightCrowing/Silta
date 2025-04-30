@@ -3,7 +3,7 @@ use crate::models::gallery::{ImageInfo, ThumbnailInfo};
 use crate::utils;
 use crate::utils::cache_paths::get_thumbnail_path;
 use anyhow::{Context, Result};
-use image::{GenericImageView, ImageFormat, ImageReader};
+use image::{image_dimensions, GenericImageView, ImageFormat, ImageReader};
 use natord::compare;
 use std::fs;
 use std::path::Path;
@@ -42,9 +42,7 @@ impl GalleryService for FolderGalleryService {
             let path_str = path.to_str().unwrap_or("").to_string();
 
             // 获取图片宽高
-            let img = ImageReader::open(&path)
-                .with_context(|| format!("无法打开图片文件: {:?}", path))?;
-            let (width, height) = get_image_dimensions(img)?;
+            let (width, height) = get_image_dimensions(&path)?;
 
             // 将图片信息添加到结果向量
             images.push(ImageInfo {
@@ -74,7 +72,8 @@ impl GalleryService for FolderGalleryService {
         let cached_path = get_thumbnail_path(path, max_size);
 
         if cached_path.exists() {
-            let metadata = fs::metadata(&cached_path)?;
+            let metadata = fs::metadata(&cached_path)
+                .with_context(|| format!("无法读取缓存文件元数据: {}", cached_path.display()))?;
             return Ok(ThumbnailInfo {
                 name,
                 cache_path: cached_path.to_string_lossy().into(),
@@ -85,9 +84,11 @@ impl GalleryService for FolderGalleryService {
         }
 
         let img = ImageReader::open(path)
-            .with_context(|| format!("Failed to open image at path: {}", path))?
+            .with_context(|| format!("无法打开图片文件: {}", path))?
+            .with_guessed_format()
+            .with_context(|| format!("无法猜测图片格式: {}", path))?
             .decode()
-            .context("Failed to decode image")?;
+            .with_context(|| format!("图片解码失败: {}", path))?;
 
         let (orig_width, orig_height) = img.dimensions();
         let scale = (*max_size as f32 / orig_width.max(orig_height) as f32).min(1.0);
@@ -96,12 +97,12 @@ impl GalleryService for FolderGalleryService {
 
         let thumbnail = img.resize(new_width, new_height, image::imageops::FilterType::Lanczos3);
 
-        // 保存到缓存目录
         thumbnail
             .save_with_format(&cached_path, ImageFormat::Png)
-            .context("Failed to save thumbnail")?;
+            .with_context(|| format!("无法保存缩略图到缓存路径: {}", cached_path.display()))?;
 
-        let metadata = fs::metadata(&cached_path)?;
+        let metadata = fs::metadata(&cached_path)
+            .with_context(|| format!("无法读取缩略图文件元数据: {}", cached_path.display()))?;
 
         Ok(ThumbnailInfo {
             name,

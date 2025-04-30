@@ -8,6 +8,7 @@ import { AddRegular } from '@fluentui/react-icons'
 import type { FC, ReactNode } from 'react'
 import { Component, Fragment } from 'react'
 
+import type { LocationComponentProps } from '~/contexts/location'
 import { generateItemId } from '~/utils/common'
 
 import { SortableTab, TabPage } from './components'
@@ -100,7 +101,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     this.updatePageItem(pageId, { componentName: newComponentName })
   }
 
-  private updatePageComponentProps = (pageId: string, newComponentProps: Record<string, any>) => {
+  private updatePageComponentProps = (pageId: string, newComponentProps: LocationComponentProps) => {
     this.updatePageItem(pageId, { componentProps: newComponentProps })
   }
 

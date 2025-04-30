@@ -5,29 +5,39 @@ import { Suspense, useEffect, useState } from 'react'
 import { PhotoProvider } from 'react-photo-view'
 
 import { ImageCard } from '~/components/ImageCard'
+import { useLocation } from '~/contexts/location'
 import type { ImageInfo } from '~/tauri-types.ts'
 
 import { MultiPreviewPageTopBar } from './components'
-import type { MultiPreviewPageProps } from './MultiPreviewPage.types'
-
-const path = 'C:\\Users\\lenovo\\Downloads\\国产蓝莓为何几年内爆炸式增长？【主播说三农】'
+import type { MultiPreviewPageLocationProps, MultiPreviewPageProps } from './MultiPreviewPage.types'
 
 export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
   const [imageInfos, setImageInfos] = useState<ImageInfo[]>([])
   const [loadError, setLoadError] = useState<string>('')
+  const { location, setLocation } = useLocation()
+
+  const fullPath: string = (location.pageComponentProps as MultiPreviewPageLocationProps).path || ''
 
   // 获取图片列表
   useEffect(() => {
-    invoke<ImageInfo[]>('list_images', { path })
+    invoke<ImageInfo[]>('list_images', { path: fullPath })
       .then(setImageInfos)
       .then(() => setLoadError(''))
       .catch((error: any) => {
-        console.error(error)
-        setLoadError(error)
+        console.error(`Error occurred while loading images from path: ${fullPath}`, error)
+        setLoadError(`Failed to load images from path: ${fullPath || null}, Error: ${error.message || error}`)
+        setImageInfos([])
       })
-  }, [])
+  }, [fullPath])
 
-  const imageTitle = '【新闻调查】机器人“马拉松”：一场未来科技的极限测试'
+  useEffect(() => {
+    console.log(fullPath.split('\\').pop() || '', location.pageLabel)
+    setLocation({
+      pageLabel: fullPath.split('\\').pop() || '',
+    })
+  }, [fullPath])
+
+  const imageTitle = fullPath.split('\\').pop() || ''
   const imageLink = 'https://react-photo-view.vercel.app/'
   const breadcrumbPath = [
     { title: 'Item 1', link: 'Item 1' },
@@ -79,19 +89,19 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
         animation="pulse"
         aria-label="Loading Images"
       >
-        <PhotoProvider maskOpacity={0.85}>
-          <div max-w="1150px" flex="~ col" gap="20px" m="t-40px x-auto" p="15px" box-border>
-            {/* Error message */}
-            {loadError && (
-              <MessageBar intent="error">
-                <MessageBarBody>
-                  <MessageBarTitle>Loading Error</MessageBarTitle>
-                  {loadError}
-                </MessageBarBody>
-              </MessageBar>
-            )}
+        <div max-w="1150px" flex="~ col" gap="20px" m="t-40px x-auto" p="15px" box-border>
+          {/* Error message */}
+          {loadError && (
+            <MessageBar intent="error" layout="multiline">
+              <MessageBarBody>
+                <MessageBarTitle>Loading Error</MessageBarTitle>
+                {loadError}
+              </MessageBarBody>
+            </MessageBar>
+          )}
 
-            {/* Images */}
+          {/* Images */}
+          <PhotoProvider maskOpacity={0.85}>
             <div
               grid="~ @[1100px]:cols-6! @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
               gap="20px"
@@ -105,8 +115,8 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
                 </Suspense>
               ))}
             </div>
-          </div>
-        </PhotoProvider>
+          </PhotoProvider>
+        </div>
       </Skeleton>
     </div>
   )

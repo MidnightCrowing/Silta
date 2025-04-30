@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { TabComponentNameEnum } from '~/layouts'
 
-import type { LocationContextType, LocationState } from './Location.types'
+import type { LocationComponentProps, LocationContextType, LocationState } from './Location.types'
 import { LocationContext } from './LocationContext'
 
 export function LocationProvider({ children, pageLabel, pageIcon, pageComponentName, pageComponentProps }: {
@@ -12,7 +12,7 @@ export function LocationProvider({ children, pageLabel, pageIcon, pageComponentN
   pageLabel?: string
   pageIcon?: FluentIcon
   pageComponentName?: TabComponentNameEnum
-  pageComponentProps?: Record<string, any>
+  pageComponentProps?: LocationComponentProps
 }) {
   const [location, setLocationState] = useState<LocationState>({
     pageLabel: pageLabel || '',

@@ -29,7 +29,7 @@ import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
 import { TabComponentNameEnum } from '~/layouts'
 
-import type { VideoPageProps } from './VideoPage.types'
+import type { VideoPageLocationProps, VideoPageProps } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
@@ -85,14 +85,15 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
 }
 
 export default function VideoPage({ className }: VideoPageProps) {
-  const { setLocation } = useLocation()
+  const { location, setLocation } = useLocation()
   const videoRef = useRef<JoLPlayerRef>(null)
 
   const [visible, setVisible] = useState<boolean>(false)
 
-  const videoPath = 'C:\\Users\\lenovo\\Downloads\\夏日口袋第4集-番剧-高清独家在线观看-bilibili-哔哩哔哩.mp4'
+  const videoPath: string = (location.pageComponentProps as VideoPageLocationProps).src || ''
+  // const videoPath = 'C:\\Users\\lenovo\\Downloads\\夏日口袋第4集-番剧-高清独家在线观看-bilibili-哔哩哔哩.mp4'
   const videoUrl = convertFileSrc(videoPath)
-  const coverUrl = convertFileSrc('assets/cover-0.avif')
+  // const coverUrl = convertFileSrc('assets/cover-0.avif')
   const videoTitle = '时隔两年～再次翻唱《Ivory Tower》_《最后的旅行》 P1 Ivory Tower'
   // const tags: string[] = ['发现《IVORY TOWER》', '龙族', '翻唱', '上杉绘梨衣', '龙族卡塞尔之门', '龙族史上最热闹的春节', '龙族首届新春会']
   const tags: string[] = []

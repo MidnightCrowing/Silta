@@ -1,8 +1,8 @@
 import './ImageCard.scss'
 
 import { Image, SkeletonItem } from '@fluentui/react-components'
-import { convertFileSrc, invoke } from '@tauri-apps/api/core'
-import { useEffect, useMemo, useState } from 'react'
+import { convertFileSrc } from '@tauri-apps/api/core'
+import { useMemo, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 
 import type { ThumbnailInfo } from '~/tauri-types.ts'
@@ -16,14 +16,14 @@ export default function ImageCard({ index, imageInfo }: ImageCardProps) {
   const rawImage = convertFileSrc(imageInfo.path)
 
   // 获取缩略图
-  useEffect(() => {
-    invoke<ThumbnailInfo>('get_image_thumbnail', {
-      path: imageInfo.path,
-      maxSize: 100,
-    })
-      .then(setThumbnail)
-      .catch(console.error)
-  }, [imageInfo.path])
+  // useEffect(() => {
+  //   invoke<ThumbnailInfo>('get_image_thumbnail', {
+  //     path: imageInfo.path,
+  //     maxSize: 100,
+  //   })
+  //     .then(setThumbnail)
+  //     .catch(error => console.error(`Error fetching thumbnail for path: ${imageInfo.path}`, error))
+  // }, [imageInfo.path])
 
   // 计算图片的宽高比
   const aspectRatio = useMemo(() => {
@@ -56,7 +56,7 @@ export default function ImageCard({ index, imageInfo }: ImageCardProps) {
         <Image
           block
           className="shadow-xl"
-          src={convertFileSrc(thumbnail.cache_path)}
+          src={rawImage}
           alt={`image ${index + 1}`}
           shape="rounded"
           fit="contain"

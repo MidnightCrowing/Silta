@@ -2,10 +2,10 @@ import { createElement, forwardRef, Suspense, useEffect, useImperativeHandle, us
 import KeepAlive from 'react-activation'
 
 import { LocationProvider, useLocation } from '~/contexts/location'
+import { isLocationEqualToActiveItem } from '~/layouts/TabLayout/shared/TabItem.util.ts'
 
 import { componentMap } from '../../shared/componentMap'
 import { DefaultTabIcon } from '../../shared/DefaultTabIcon.ts'
-import { isLocationEqualToActiveItem } from '../../shared/TabItem.util.ts'
 import { TabToolbar } from '../TabToolbar'
 import type { LocationState, PageWrapperProps, PageWrapperRef, TabPageProps } from './TabPage.types'
 
@@ -37,10 +37,10 @@ const PageWrapper = forwardRef<PageWrapperRef, PageWrapperProps>(({
     if (!isLocationEqualToActiveItem(location, activeItem)) {
       // console.log(2)
       setLocation({
-        pageComponentName: activeItem.componentName,
-        pageComponentProps: activeItem.componentProps,
         pageLabel: activeItem.label,
         pageIcon: activeItem.icon,
+        pageComponentName: activeItem.componentName,
+        pageComponentProps: activeItem.componentProps,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
