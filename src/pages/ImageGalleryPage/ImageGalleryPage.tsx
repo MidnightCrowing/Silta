@@ -1,26 +1,27 @@
 // 多图预览页
 import { MessageBar, MessageBarBody, MessageBarTitle, Skeleton } from '@fluentui/react-components'
 import { invoke } from '@tauri-apps/api/core'
+import { readTextFile } from '@tauri-apps/plugin-fs'
 import { Suspense, useEffect, useState } from 'react'
 import { PhotoProvider } from 'react-photo-view'
 
 import { ImageCard } from '~/components/ImageCard'
 import { useLocation } from '~/contexts/location'
-import type { ImageInfo } from '~/tauri-types.ts'
+import type { GalleryImageInfo } from '~/tauri-types.ts'
 
-import { MultiPreviewPageTopBar } from './components'
-import type { MultiPreviewPageLocationProps, MultiPreviewPageProps } from './MultiPreviewPage.types'
+import { ImageGalleryPageTopBar } from './components'
+import type { ImageGalleryConfig, ImageGalleryPageLocationProps, ImageGalleryPageProps } from './ImageGalleryPage.types'
 
-export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
-  const [imageInfos, setImageInfos] = useState<ImageInfo[]>([])
+export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
+  const [imageInfos, setImageInfos] = useState<GalleryImageInfo[]>([])
   const [loadError, setLoadError] = useState<string>('')
   const { location, setLocation } = useLocation()
 
-  const fullPath: string = (location.pageComponentProps as MultiPreviewPageLocationProps).path || ''
+  const fullPath: string = (location.pageComponentProps as ImageGalleryPageLocationProps).path || ''
 
   // 获取图片列表
   useEffect(() => {
-    invoke<ImageInfo[]>('list_images', { path: fullPath })
+    invoke<GalleryImageInfo[]>('list_images', { path: fullPath })
       .then(setImageInfos)
       .then(() => setLoadError(''))
       .catch((error: any) => {
@@ -28,10 +29,14 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
         setLoadError(`Failed to load images from path: ${fullPath || null}, Error: ${error.message || error}`)
         setImageInfos([])
       })
+    invoke<string>('get_images_config', { path: fullPath })
+      .then(async cfgPath => JSON.parse(await readTextFile(cfgPath)))
+      .then((cfg: ImageGalleryConfig) => {
+        console.log(cfg)
+      })
   }, [fullPath])
 
   useEffect(() => {
-    console.log(fullPath.split('\\').pop() || '', location.pageLabel)
     setLocation({
       pageLabel: fullPath.split('\\').pop() || '',
     })
@@ -72,7 +77,7 @@ export default function MultiPreviewPage({ className }: MultiPreviewPageProps) {
 
   return (
     <div className={`@container relative ${className}`}>
-      <MultiPreviewPageTopBar
+      <ImageGalleryPageTopBar
         imageTitle={imageTitle}
         imageLink={imageLink}
         breadcrumbPath={breadcrumbPath}

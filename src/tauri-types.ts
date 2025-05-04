@@ -1,4 +1,4 @@
-export type ImageInfo = {
+export type GalleryImageInfo = {
   name: string;
   path: string;
   width: number;
@@ -6,7 +6,7 @@ export type ImageInfo = {
   size: number;
 };
 
-export type ThumbnailInfo = {
+export type GalleryThumbnailInfo = {
   name: string;
   cache_path: string;
   width: number;

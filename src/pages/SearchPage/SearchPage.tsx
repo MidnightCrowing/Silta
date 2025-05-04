@@ -4,7 +4,7 @@ import { Button } from '@fluentui/react-components'
 import { Dismiss16Regular, Search24Regular } from '@fluentui/react-icons'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import clsx from 'clsx'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useLocation } from '~/contexts/location'
 import { TabComponentNameEnum } from '~/layouts'
@@ -19,7 +19,13 @@ export default function SearchPage({ className }: SearchPageProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
-  const { setLocation } = useLocation()
+  const { location, setLocation } = useLocation()
+
+  useEffect(() => {
+    if (location.pageLabel !== '新建标签页') {
+      setLocation({ pageLabel: '搜索 - Silta' })
+    }
+  }, [])
 
   const clearInputAndFocus = () => {
     setInputValue('')

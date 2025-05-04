@@ -1,79 +1,26 @@
-import { makeStyles } from '@fluentui/react-components'
-import { VirtualizerScrollViewDynamic } from '@fluentui/react-components/unstable'
+import { Button } from '@fluentui/react-components'
 import { useRef } from 'react'
-import * as React from 'react'
-
-const useStyles = makeStyles({
-  child: {
-    lineHeight: '42px',
-    width: '100%',
-    minHeight: '42px',
-  },
-})
 
 export function SearchListPage() {
-  const styles = useStyles()
-  const childLength = 1000
-  const minHeight = 42
-  // Array size ref stores a list of random num for div sizing and callbacks
-  const arraySize = useRef(
-    Array.from({ length: childLength }).fill(minHeight),
-  )
-  // totalSize flag drives our callback update
-  const [totalSize, setTotalSize] = React.useState(minHeight * childLength)
+  const clickTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  React.useEffect(() => {
-    let _totalSize = 0
-    for (let i = 0; i < childLength; i++) {
-      arraySize.current[i] = Math.random() * 150 + minHeight
-      _totalSize += arraySize.current[i]
+  const handleClick = () => {
+    // 延迟触发 click，看看会不会马上触发 doubleClick
+    clickTimeout.current = setTimeout(() => {
+      console.log('click')
+    }, 250) // 200~300ms 一般是合适的
+  }
+
+  const handleDoubleClick = () => {
+    if (clickTimeout.current) {
+      clearTimeout(clickTimeout.current)
+      clickTimeout.current = null
     }
-    setTotalSize(_totalSize)
-  }, [])
-
-  const getItemSizeCallback = React.useCallback(
-    (index: number) => {
-      return arraySize.current[index]
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [arraySize, totalSize],
-  )
-
+    console.log('doubleClick')
+  }
   return (
-    <VirtualizerScrollViewDynamic
-      numItems={childLength}
-      itemSize={minHeight}
-      getItemSize={getItemSizeCallback}
-      container={{
-        role: 'list',
-        'aria-label': `Virtualized list with ${childLength} children`,
-        tabIndex: 0,
-      }}
-      enableScrollLoad={true}
-    >
-      {(index: number, isScrolling = false) => {
-        const backgroundColor = index % 2 ? '#FFFFFF' : '#ABABAB'
-
-        console.log('index', index)
-        return isScrolling
-          ? (
-              <div style={{ minHeight: arraySize.current[index], backgroundColor }}>
-                LOADING
-              </div>
-            )
-          : (
-              <div
-                role="listitem"
-                aria-posinset={index}
-                aria-setsize={childLength}
-                key={`test-virtualizer-child-${index}`}
-                className={styles.child}
-                style={{ minHeight: arraySize.current[index], backgroundColor }}
-              >
-                {`Node-${index} - size: ${arraySize.current[index]}`}
-              </div>
-            )
-      }}
-    </VirtualizerScrollViewDynamic>
+    <Button onClick={handleClick} onDoubleClick={handleDoubleClick}>
+      Click or DoubleClick
+    </Button>
   )
 }

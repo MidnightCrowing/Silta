@@ -1,9 +1,9 @@
 use super::service::GalleryService;
-use crate::models::gallery::{ImageInfo, ThumbnailInfo};
+use crate::models::gallery::{GalleryImageInfo, GalleryThumbnailInfo};
 use crate::utils;
 use crate::utils::cache_paths::get_thumbnail_path;
-use anyhow::{Context, Result};
-use image::{image_dimensions, GenericImageView, ImageFormat, ImageReader};
+use anyhow::{anyhow, Context, Result};
+use image::{GenericImageView, ImageFormat, ImageReader};
 use natord::compare;
 use std::fs;
 use std::path::Path;
@@ -12,7 +12,7 @@ use utils::image::{get_image_dimensions, is_supported_image};
 pub struct FolderGalleryService;
 
 impl GalleryService for FolderGalleryService {
-    fn list_images(&self, path: &str) -> Result<Vec<ImageInfo>> {
+    fn list_images(&self, path: &str) -> Result<Vec<GalleryImageInfo>> {
         // 用于存储图片信息的向量
         let mut images = Vec::new();
 
@@ -45,7 +45,7 @@ impl GalleryService for FolderGalleryService {
             let (width, height) = get_image_dimensions(&path)?;
 
             // 将图片信息添加到结果向量
-            images.push(ImageInfo {
+            images.push(GalleryImageInfo {
                 name,
                 path: path_str,
                 width,
@@ -60,8 +60,7 @@ impl GalleryService for FolderGalleryService {
         Ok(images)
     }
 
-    fn get_thumbnail(&self, path: &str, max_size: &i32) -> Result<ThumbnailInfo> {
-        println!("get_thumbnail path: {}", path);
+    fn get_thumbnail(&self, path: &str, max_size: &i32) -> Result<GalleryThumbnailInfo> {
         let path_obj = Path::new(path);
         let name = path_obj
             .file_name()
@@ -74,7 +73,7 @@ impl GalleryService for FolderGalleryService {
         if cached_path.exists() {
             let metadata = fs::metadata(&cached_path)
                 .with_context(|| format!("无法读取缓存文件元数据: {}", cached_path.display()))?;
-            return Ok(ThumbnailInfo {
+            return Ok(GalleryThumbnailInfo {
                 name,
                 cache_path: cached_path.to_string_lossy().into(),
                 width: 0, // 前端读取图片时获取
@@ -104,7 +103,7 @@ impl GalleryService for FolderGalleryService {
         let metadata = fs::metadata(&cached_path)
             .with_context(|| format!("无法读取缩略图文件元数据: {}", cached_path.display()))?;
 
-        Ok(ThumbnailInfo {
+        Ok(GalleryThumbnailInfo {
             name,
             cache_path: cached_path.to_string_lossy().into(),
             width: new_width,
@@ -113,8 +112,13 @@ impl GalleryService for FolderGalleryService {
         })
     }
 
-    fn get_image_info(&self, path: &str) -> Result<ImageInfo> {
-        // 返回宽高大小信息
-        Ok(ImageInfo::default())
+    fn get_images_config(&self, path: &str) -> Result<String> {
+        let config_path = Path::new(path).join("config.json");
+
+        if config_path.exists() {
+            Ok(config_path.to_string_lossy().into())
+        } else {
+            Err(anyhow!("config.json 文件不存在于路径: {}", path))
+        }
     }
 }

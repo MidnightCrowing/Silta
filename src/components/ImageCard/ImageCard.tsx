@@ -5,25 +5,12 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import { useMemo, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 
-import type { ThumbnailInfo } from '~/tauri-types.ts'
-
 import type { ImageCardProps } from './ImageCard.types'
 
 export default function ImageCard({ index, imageInfo }: ImageCardProps) {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true)
-  const [thumbnail, setThumbnail] = useState<ThumbnailInfo>({ name: '', cache_path: '', width: 0, height: 0, size: 0 })
 
   const rawImage = convertFileSrc(imageInfo.path)
-
-  // 获取缩略图
-  // useEffect(() => {
-  //   invoke<ThumbnailInfo>('get_image_thumbnail', {
-  //     path: imageInfo.path,
-  //     maxSize: 100,
-  //   })
-  //     .then(setThumbnail)
-  //     .catch(error => console.error(`Error fetching thumbnail for path: ${imageInfo.path}`, error))
-  // }, [imageInfo.path])
 
   // 计算图片的宽高比
   const aspectRatio = useMemo(() => {

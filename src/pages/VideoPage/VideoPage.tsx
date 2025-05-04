@@ -75,7 +75,7 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
         </MenuButton>
       </MenuTrigger>
 
-      <MenuPopover className="MultiPreview-top-bar-effect">
+      <MenuPopover className="ImageGallery-top-bar-effect">
         {itemIds.map((i) => {
           return <OverflowMenuItem key={i} id={i} />
         })}

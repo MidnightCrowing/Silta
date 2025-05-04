@@ -1,4 +1,4 @@
-export { MultiPreviewPage } from './MultiPreviewPage'
+export { ImageGalleryPage } from './ImageGalleryPage'
 export { SearchListPage } from './SearchListPage'
 export { SearchPage } from './SearchPage'
 export { SinglePreviewPage } from './SinglePreviewPage'

@@ -1,4 +1,4 @@
-import './MultiPreviewPageTopBar.scss'
+import './ImageGalleryPageTopBar.scss'
 
 import type { OverflowItemProps } from '@fluentui/react-components'
 import {
@@ -24,7 +24,7 @@ import { bundleIcon, ChevronDown20Regular, Pin20Filled, Pin20Regular } from '@fl
 import type { FC } from 'react'
 import { Fragment } from 'react'
 
-import type { breadcrumbPathItem, MultiPreviewPageTopBarProps } from './MultiPreviewPageTopBar.types'
+import type { breadcrumbPathItem, ImageGalleryPageTopBarProps } from './ImageGalleryPageTopBar.types'
 
 const PinIcon = bundleIcon(Pin20Filled, Pin20Regular)
 
@@ -59,7 +59,7 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
         </MenuButton>
       </MenuTrigger>
 
-      <MenuPopover className="MultiPreview-top-bar-effect">
+      <MenuPopover className="ImageGallery-top-bar-effect">
         {itemIds.map((i) => {
           return <OverflowMenuItem key={i} id={i} />
         })}
@@ -68,7 +68,7 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
   )
 }
 
-export function MultiPreviewPageTopBar({
+export function ImageGalleryPageTopBar({
   imageTitle,
   imageLink,
   breadcrumbPath,
@@ -78,7 +78,7 @@ export function MultiPreviewPageTopBar({
   imageCount,
   description,
   tags,
-}: MultiPreviewPageTopBarProps) {
+}: ImageGalleryPageTopBarProps) {
   return (
     <div
       absolute

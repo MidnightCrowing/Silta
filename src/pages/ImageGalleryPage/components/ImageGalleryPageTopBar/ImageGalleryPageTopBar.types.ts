@@ -3,7 +3,7 @@ export interface breadcrumbPathItem {
   link: string
 }
 
-export interface MultiPreviewPageTopBarProps {
+export interface ImageGalleryPageTopBarProps {
   /**
    * @description 图片标题
    */

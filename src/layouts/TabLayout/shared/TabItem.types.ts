@@ -1,14 +1,14 @@
 import type { FluentIcon } from '@fluentui/react-icons'
 
 import type { LocationComponentProps } from '~/contexts/location'
-import type { MultiPreviewPageLocationProps } from '~/pages/MultiPreviewPage'
+import type { ImageGalleryPageLocationProps } from '~/pages/ImageGalleryPage'
 import type { VideoPageLocationProps } from '~/pages/VideoPage'
 
 export enum TabComponentNameEnum {
   NewPage = 'NewPage',
   SearchPage = 'SearchPage',
   SearchListPage = 'SearchListPage',
-  MultiPreviewPage = 'MultiPreviewPage',
+  ImageGalleryPage = 'ImageGalleryPage',
   SinglePreviewPage = 'SinglePreviewPage',
   VideoPage = 'VideoPage',
 }
@@ -18,7 +18,7 @@ interface TabComponentPropsMap {
   [TabComponentNameEnum.NewPage]: LocationComponentProps
   [TabComponentNameEnum.SearchPage]: LocationComponentProps
   [TabComponentNameEnum.SearchListPage]: LocationComponentProps
-  [TabComponentNameEnum.MultiPreviewPage]: MultiPreviewPageLocationProps
+  [TabComponentNameEnum.ImageGalleryPage]: ImageGalleryPageLocationProps
   [TabComponentNameEnum.SinglePreviewPage]: LocationComponentProps
   [TabComponentNameEnum.VideoPage]: VideoPageLocationProps
 }

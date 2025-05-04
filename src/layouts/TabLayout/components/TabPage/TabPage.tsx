@@ -24,6 +24,7 @@ const PageWrapper = forwardRef<PageWrapperRef, PageWrapperProps>(({
   useEffect(() => {
     if (!isLocationEqualToActiveItem(location, activeItem)) {
       // console.log(1)
+      // console.log(location, activeItem)
       setPageTitle(activeItemId, location.pageLabel)
       setPageIcon(activeItemId, location.pageIcon ?? DefaultTabIcon)
       setPageComponentName(activeItemId, location.pageComponentName)
@@ -36,6 +37,7 @@ const PageWrapper = forwardRef<PageWrapperRef, PageWrapperProps>(({
   useEffect(() => {
     if (!isLocationEqualToActiveItem(location, activeItem)) {
       // console.log(2)
+      // console.log(location, activeItem)
       setLocation({
         pageLabel: activeItem.label,
         pageIcon: activeItem.icon,
@@ -54,7 +56,10 @@ const PageWrapper = forwardRef<PageWrapperRef, PageWrapperProps>(({
     getLocationState: () => ({ isBack, isForward, locationBack, locationForward }),
   }))
 
-  const Component = useMemo(() => componentMap[location.pageComponentName], [location])
+  const Component = useMemo(() => {
+    return componentMap[location.pageComponentName]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pageComponentName, location.pageComponentProps])
 
   return (
     <Suspense>
