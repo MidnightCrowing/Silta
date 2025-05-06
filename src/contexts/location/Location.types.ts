@@ -1,8 +1,9 @@
 import type { FluentIcon } from '@fluentui/react-icons'
+import type { ReactNode } from 'react'
 
-import type { TabComponentNameEnum } from '~/layouts'
+import type { TabItem, updatePageData } from '~/layouts/TabLayout'
 
-export interface LocationComponentProps {
+export interface LocationProps {
   [p: string]: any
 }
 
@@ -13,22 +14,44 @@ export interface LocationState {
   /**
    * @description 页面标签
    */
-  pageLabel: string
+  title: string
 
   /**
    * @description 页面图标
    */
-  pageIcon?: FluentIcon
+  icon?: FluentIcon
 
   /**
-   * @description 页面组件名称
+   * @description 页面链接
    */
-  pageComponentName: TabComponentNameEnum
+  url: string
+}
+
+/**
+ * @description 表示位置提供者的属性
+ */
+export interface LocationProviderProps {
+  /**
+   * @description 页面组件
+   */
+  children: ReactNode
 
   /**
-   * @description 页面组件属性
+   * @description 页面ID
    */
-  pageComponentProps: LocationComponentProps
+  pageId: string
+
+  /**
+   * @description 当前激活的标签
+   */
+  activeTab: TabItem
+
+  /**
+   * @description 更新页面数据的函数
+   * @param pageId 页面ID
+   * @param updater 更新函数
+   */
+  updatePageData: updatePageData
 }
 
 /**
@@ -40,37 +63,13 @@ export interface LocationContextType {
    */
   location: LocationState
 
-  /**
-   * @description 位置历史记录
-   */
-  locationHistory: LocationState[]
-
-  /**
-   * @description 是否可以后退
-   */
-  isBack: boolean
-
-  /**
-   * @description 是否可以前进
-   */
-  isForward: boolean
-
-  /**
-   * @description 后退到上一个位置
-   */
-  locationBack: () => void
-
-  /**
-   * @description 前进到下一个位置
-   */
-  locationForward: () => void
+  getProps: <T extends LocationProps>() => T
 
   /**
    * @description 设置新的位置状态
-   * @param pageLabel 页面标签
-   * @param pageIcon 页面图标
-   * @param pageComponentName 页面组件名称
-   * @param pageComponentProps 页面组件属性
+   * @param title 页面标签
+   * @param icon 页面图标
+   * @param url 页面链接
    */
-  setLocation: ({ pageLabel, pageIcon, pageComponentName, pageComponentProps }: Partial<LocationState>) => void
+  setLocation: ({ title, icon, url }: Partial<LocationState>) => void
 }

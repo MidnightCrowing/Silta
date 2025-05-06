@@ -3,7 +3,8 @@ import { LockOpen16Regular } from '@fluentui/react-icons'
 import type { FormEvent, KeyboardEvent, ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { generateUrlFromTabItem, parseUrlToComponentData } from '~/utils/common.ts'
+import type { TabItem } from '~/layouts/TabLayout'
+import { pushTabItemUrl } from '~/layouts/TabLayout'
 
 import type { AddressBarProps } from './TabToolbar.types.ts'
 import { urlToHtmlParts } from './TabToolbar.util.tsx'
@@ -16,7 +17,7 @@ function LockButton() {
   )
 }
 
-function AddressBar({ activeItemId, activeItem, pageComponent }: AddressBarProps) {
+function AddressBar({ activeItemId, activeItem, updatePageData }: AddressBarProps) {
   const [text, setText] = useState<string>('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const displayRef = useRef<HTMLDivElement | null>(null)
@@ -24,7 +25,7 @@ function AddressBar({ activeItemId, activeItem, pageComponent }: AddressBarProps
 
   useEffect(() => {
     if (activeItem) {
-      const urlText = generateUrlFromTabItem(activeItem)
+      const urlText: string = activeItem.history[activeItem.historyIndex]
       setText(decodeURIComponent(urlText))
     }
   }, [activeItem])
@@ -59,10 +60,7 @@ function AddressBar({ activeItemId, activeItem, pageComponent }: AddressBarProps
       return
     }
     event.preventDefault() // 阻止默认换行行为
-    // 在这里执行你的方法
-    const { componentName, componentProps } = parseUrlToComponentData(text)
-    pageComponent.setName(activeItemId, componentName)
-    pageComponent.setProps(activeItemId, componentProps)
+    updatePageData(activeItemId, (old: TabItem) => pushTabItemUrl(old, text))
   }
 
   return (

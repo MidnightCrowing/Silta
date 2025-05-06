@@ -1,31 +1,44 @@
 import type { HTMLAttributes } from 'react'
 
-import type { LocationComponentProps } from '~/contexts/location'
-
-import type { TabComponentNameEnum, TabItem } from '../../shared/TabItem.types'
+import type { TabItem } from '../../shared/TabItem.types'
+import type { updatePageData } from '../../TabLayout.types.ts'
 
 export interface BackButtonProps extends HTMLAttributes<HTMLDivElement> {
   /**
-   * @description 是否可以后退
+   * @description 当前激活的项目ID
    */
-  isBack: boolean
+  activeItemId: string
 
   /**
-   * @description 设置后退
+   * @description 当前激活的项目
    */
-  setBack: () => void
+  activeItem: TabItem | null
+
+  /**
+   * @description 更新页面数据
+   * @param pageId 页面ID
+   * @param updater 更新函数
+   */
+  updatePageData: updatePageData
 }
 
 export interface ForwardButtonProps extends HTMLAttributes<HTMLDivElement> {
   /**
-   * @description 是否可以前进
+   * @description 当前激活的项目ID
    */
-  isForward: boolean
+  activeItemId: string
 
   /**
-   * @description 设置前进
+   * @description 当前激活的项目
    */
-  setForward: () => void
+  activeItem: TabItem | null
+
+  /**
+   * @description 更新页面数据
+   * @param pageId 页面ID
+   * @param updater 更新函数
+   */
+  updatePageData: updatePageData
 }
 
 export interface RefreshButtonProps extends HTMLAttributes<HTMLDivElement> {
@@ -47,12 +60,11 @@ export interface AddressBarProps extends HTMLAttributes<HTMLDivElement> {
   activeItem: TabItem | null
 
   /**
-   * @description 页面组件相关操作
+   * @description 更新页面数据
+   * @param pageId 页面ID
+   * @param updater 更新函数
    */
-  pageComponent: {
-    setName: (pageId: string, newComponentName: TabComponentNameEnum) => void
-    setProps: (pageId: string, newComponentProps: LocationComponentProps) => void
-  }
+  updatePageData: updatePageData
 }
 
 export interface TabToolbarProps extends HTMLAttributes<HTMLDivElement> {
@@ -67,35 +79,14 @@ export interface TabToolbarProps extends HTMLAttributes<HTMLDivElement> {
   activeItem: TabItem | null
 
   /**
+   * @description 更新页面数据
+   * @param pageId 页面ID
+   * @param updater 更新函数
+   */
+  updatePageData: updatePageData
+
+  /**
    * @description 刷新页面
    */
   refreshPage: () => void
-
-  /**
-   * @description 是否可以后退
-   */
-  isBack: boolean
-
-  /**
-   * @description 是否可以前进
-   */
-  isForward: boolean
-
-  /**
-   * @description 后退到上一个位置
-   */
-  locationBack: () => void
-
-  /**
-   * @description 前进到下一个位置
-   */
-  locationForward: () => void
-
-  /**
-   * @description 页面组件相关操作
-   */
-  pageComponent: {
-    setName: (pageId: string, newComponentName: TabComponentNameEnum) => void
-    setProps: (pageId: string, newComponentProps: LocationComponentProps) => void
-  }
 }

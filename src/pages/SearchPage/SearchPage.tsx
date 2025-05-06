@@ -7,7 +7,6 @@ import clsx from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 
 import { useLocation } from '~/contexts/location'
-import { TabComponentNameEnum } from '~/layouts'
 
 import type { SearchPageProps } from './SearchPage.types'
 
@@ -22,10 +21,10 @@ export default function SearchPage({ className }: SearchPageProps) {
   const { location, setLocation } = useLocation()
 
   useEffect(() => {
-    if (location.pageLabel !== '新建标签页') {
-      setLocation({ pageLabel: '搜索 - Silta' })
+    if (location.title !== '新建标签页') {
+      setLocation({ title: '搜索 - Silta' })
     }
-  }, [])
+  }, [location.title, setLocation])
 
   const clearInputAndFocus = () => {
     setInputValue('')
@@ -113,9 +112,7 @@ export default function SearchPage({ className }: SearchPageProps) {
             className="w-100px h-38px select-none bg-$colorBrandBackground-20!"
             appearance="primary"
             onClick={() => setLocation({
-              pageLabel: 'Video',
-              pageComponentName: TabComponentNameEnum.VideoPage,
-              pageComponentProps: { keyword: inputValue },
+              url: 'https://www.bing.com/search',
             })}
           >
             搜索

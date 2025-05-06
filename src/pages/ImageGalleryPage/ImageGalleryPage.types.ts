@@ -1,11 +1,11 @@
-import type { LocationComponentProps } from '~/contexts/location'
+import type { LocationProps } from '~/contexts/location'
 
 import type { PageBaseProps } from '../shared/sharedProps.types'
 
 export interface ImageGalleryPageProps extends PageBaseProps {
 }
 
-export interface ImageGalleryPageLocationProps extends LocationComponentProps {
+export interface ImageGalleryLocationProps extends LocationProps {
   // 图片路径
   path: string
 }

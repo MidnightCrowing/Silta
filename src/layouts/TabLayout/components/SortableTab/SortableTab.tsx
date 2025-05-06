@@ -9,11 +9,10 @@ import clsx from 'clsx'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 
-import { DefaultTabIcon } from '../../shared/DefaultTabIcon.ts'
 import type { SortableTabProps } from './SortableTab.types'
 
 export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeItem }) => {
-  const { label, icon: Icon = DefaultTabIcon, showAddAnimation = true } = item
+  const { title, icon: Icon, showAddAnimation = true } = item
   const [open, setOpen] = useState<boolean>(!showAddAnimation)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
@@ -66,7 +65,7 @@ export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeIt
           />
         )}
       >
-        {label}
+        {title}
       </InteractiveTab>
     </div>
   )

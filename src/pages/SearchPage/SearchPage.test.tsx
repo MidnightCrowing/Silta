@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom'
 
+import { TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -8,6 +9,21 @@ import { LocationProvider } from '~/contexts/location'
 import SearchPage from './SearchPage'
 import type { SearchPageProps } from './SearchPage.types'
 
+const mockUpdatePageData = vi.fn()
+
+const mockProps = {
+  pageId: 'test-page-id',
+  activeTab: {
+    id: 'test-tab-id',
+    title: 'Test Tab',
+    url: 'https://example.com',
+    icon: TabDesktopNewPageRegular,
+    history: [],
+    historyIndex: 0,
+  },
+  updatePageData: mockUpdatePageData,
+}
+
 // Mock Tauri API
 vi.mock('@tauri-apps/api/core', () => ({
   convertFileSrc: (path: string) => path,
@@ -15,7 +31,7 @@ vi.mock('@tauri-apps/api/core', () => ({
 
 function renderSearchPage(props: Partial<SearchPageProps> = {}) {
   return render(
-    <LocationProvider>
+    <LocationProvider {...mockProps}>
       <SearchPage className="test-class" {...props} />
     </LocationProvider>,
   )

@@ -4,22 +4,23 @@ import { restrictToHorizontalAxis, restrictToParentElement } from '@dnd-kit/modi
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import type { SelectTabData, SelectTabEvent } from '@fluentui/react-components'
 import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/react-components'
-import { AddRegular } from '@fluentui/react-icons'
+import { AddRegular, bundleIcon, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import type { FC, ReactNode } from 'react'
 import { Component, Fragment } from 'react'
 
-import type { LocationComponentProps } from '~/contexts/location'
 import { generateItemId } from '~/utils/common'
 
 import { SortableTab, TabPage } from './components'
-import type { DefaultTabIcon } from './shared/DefaultTabIcon.ts'
-import type { TabItem } from './shared/TabItem.types'
-import { TabComponentNameEnum } from './shared/TabItem.types'
-import type { TabLayoutProps, TabLayoutState } from './TabLayout.types'
+import type { TabItem } from './shared/TabItem.types.ts'
+import type { TabLayoutProps, TabLayoutState, updatePageData } from './TabLayout.types'
+
+const DefaultTabIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
 
 const newTabTemplate: TabItem = {
-  label: '新建标签页',
-  componentName: TabComponentNameEnum.NewPage,
+  title: '新建标签页',
+  icon: DefaultTabIcon,
+  history: ['NewPage'],
+  historyIndex: 0,
 }
 
 export default class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
@@ -32,6 +33,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
   private initializeState(items: TabItem[] = []): TabLayoutState {
     const itemsWithId = items.reduce((acc, item) => {
       const id = generateItemId()
+      item.showAddAnimation = false
       acc[id] = item
       return acc
     }, {} as { [id: string]: TabItem })
@@ -77,32 +79,13 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     })
   }
 
-  private updatePageItem = (pageId: string, updatedFields: Partial<TabItem>) => {
+  private updatePageData: updatePageData = (pageId, updater) => {
     this.setState(prevState => ({
       items: {
         ...prevState.items,
-        [pageId]: {
-          ...prevState.items[pageId],
-          ...updatedFields,
-        },
+        [pageId]: updater(prevState.items[pageId]),
       },
     }))
-  }
-
-  private updatePageTitle = (pageId: string, newTitle: string) => {
-    this.updatePageItem(pageId, { label: newTitle })
-  }
-
-  private updatePageIcon = (pageId: string, newIcon: typeof DefaultTabIcon) => {
-    this.updatePageItem(pageId, { icon: newIcon })
-  }
-
-  private updatePageComponentName = (pageId: string, newComponentName: TabComponentNameEnum) => {
-    this.updatePageItem(pageId, { componentName: newComponentName })
-  }
-
-  private updatePageComponentProps = (pageId: string, newComponentProps: LocationComponentProps) => {
-    this.updatePageItem(pageId, { componentProps: newComponentProps })
   }
 
   private handleDragEnd = (event: DragEndEvent) => {
@@ -216,10 +199,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
             <TabPage
               activeItemId={activeItemId}
               activeItem={activeItem}
-              setPageTitle={this.updatePageTitle}
-              setPageIcon={this.updatePageIcon}
-              setPageComponentName={this.updatePageComponentName}
-              setPageComponentProps={this.updatePageComponentProps}
+              updatePageData={this.updatePageData}
             />
           )}
         </div>

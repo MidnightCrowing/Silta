@@ -4,6 +4,8 @@ import {
   CalendarWeekStartRegular,
   FolderFilled,
   FolderRegular,
+  TabDesktopNewPageFilled,
+  TabDesktopNewPageRegular,
   TagMultipleFilled,
   TagMultipleRegular,
 } from '@fluentui/react-icons'
@@ -14,7 +16,7 @@ import { FolderPanel, TagsPanel } from '~/panels'
 import type { SidebarItem } from './SidebarLayout'
 import { SidebarLayout } from './SidebarLayout'
 import type { TabItem } from './TabLayout'
-import { TabComponentNameEnum, TabLayout } from './TabLayout'
+import { TabLayout } from './TabLayout'
 
 const SidebarItems: SidebarItem[] = [
   {
@@ -57,29 +59,25 @@ const SidebarItems: SidebarItem[] = [
     position: 'leftBottom',
   },
 ]
+const icon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
 const TabItems: TabItem[] = [
   {
-    label: '新建标签页',
-    componentName: TabComponentNameEnum.SearchPage,
+    title: '新建标签页',
+    icon,
+    history: ['NewPage'],
+    historyIndex: 0,
   },
   {
-    label: '<UNK1>',
-    componentName: TabComponentNameEnum.VideoPage,
+    title: '<UNK1>',
+    icon,
+    history: ['VideoPage'],
+    historyIndex: 0,
   },
   {
-    label: '国产蓝莓为何几年内爆炸式增长？【主播说三农】1',
-    componentName: TabComponentNameEnum.ImageGalleryPage,
-    componentProps: {
-      path: 'C:\\Users\\lenovo\\Downloads\\国产蓝莓为何几年内爆炸式增长？【主播说三农】1',
-    },
-  },
-  {
-    label: '<UNK1>',
-    componentName: TabComponentNameEnum.SinglePreviewPage,
-  },
-  {
-    label: '<UNK1>',
-    componentName: TabComponentNameEnum.SearchListPage,
+    title: '<UNK2>',
+    icon,
+    history: ['ImageGalleryPage?path=C:\\Users\\lenovo\\Downloads\\国产蓝莓为何几年内爆炸式增长？【主播说三农】'],
+    historyIndex: 0,
   },
 ]
 

@@ -27,9 +27,8 @@ import { lazy, Suspense, useMemo, useRef, useState } from 'react'
 import type { VideoCardProps } from '~/components/VideoCard'
 import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
-import { TabComponentNameEnum } from '~/layouts'
 
-import type { VideoPageLocationProps, VideoPageProps } from './VideoPage.types'
+import type { VideoLocationProps, VideoPageProps } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
@@ -85,12 +84,12 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
 }
 
 export default function VideoPage({ className }: VideoPageProps) {
-  const { location, setLocation } = useLocation()
+  const { getProps, setLocation } = useLocation()
   const videoRef = useRef<JoLPlayerRef>(null)
 
   const [visible, setVisible] = useState<boolean>(false)
 
-  const videoPath: string = (location.pageComponentProps as VideoPageLocationProps).src || ''
+  const videoPath: string = getProps<VideoLocationProps>().src || ''
   // const videoPath = 'C:\\Users\\lenovo\\Downloads\\夏日口袋第4集-番剧-高清独家在线观看-bilibili-哔哩哔哩.mp4'
   const videoUrl = convertFileSrc(videoPath)
   // const coverUrl = convertFileSrc('assets/cover-0.avif')
@@ -172,8 +171,8 @@ export default function VideoPage({ className }: VideoPageProps) {
 
           <Button onClick={() => {
             setLocation({
-              pageLabel: 'Search',
-              pageComponentName: TabComponentNameEnum.SearchPage,
+              title: 'Search',
+              url: 'SearchPage',
             })
           }}
           >

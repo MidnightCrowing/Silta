@@ -1,2 +1,2 @@
 export { ImageGalleryPage } from './ImageGalleryPage.lazy'
-export type { ImageGalleryPageLocationProps, ImageGalleryPageProps } from './ImageGalleryPage.types'
+export type { ImageGalleryLocationProps, ImageGalleryPageProps } from './ImageGalleryPage.types'

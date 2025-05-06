@@ -1,71 +1,48 @@
-import type { FluentIcon } from '@fluentui/react-icons'
-import type { ReactNode } from 'react'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 
-import { TabComponentNameEnum } from '~/layouts'
+import type { TabItem } from '~/layouts/TabLayout'
+import { pushTabItemUrl } from '~/layouts/TabLayout'
+import { parseUrlToComponentData } from '~/utils/common.ts'
 
-import type { LocationComponentProps, LocationContextType, LocationState } from './Location.types'
+import type { LocationContextType, LocationProps, LocationProviderProps, LocationState } from './Location.types'
 import { LocationContext } from './LocationContext'
 
-export function LocationProvider({ children, pageLabel, pageIcon, pageComponentName, pageComponentProps }: {
-  children: ReactNode
-  pageLabel?: string
-  pageIcon?: FluentIcon
-  pageComponentName?: TabComponentNameEnum
-  pageComponentProps?: LocationComponentProps
-}) {
-  const [location, setLocationState] = useState<LocationState>({
-    pageLabel: pageLabel || '',
-    pageIcon: pageIcon || undefined,
-    pageComponentName: pageComponentName || TabComponentNameEnum.NewPage,
-    pageComponentProps: pageComponentProps || {},
-  })
+export function LocationProvider({ children, pageId, activeTab, updatePageData }: LocationProviderProps) {
+  const location: LocationState = useMemo(() => ({
+    title: activeTab.title,
+    icon: activeTab.icon,
+    url: activeTab.history[activeTab.historyIndex],
+  }), [activeTab])
 
-  const [locationHistory, setLocationHistory] = useState<LocationState[]>([location])
-  const [historyIndex, setHistoryIndex] = useState<number>(0)
+  const getProps = useCallback(<T extends LocationProps>(): T => {
+    return parseUrlToComponentData(location.url).props as T
+  }, [location])
 
-  const setLocation = useCallback((newState: Partial<LocationState>) => {
-    setLocationState((prevState) => {
-      const updatedLocation = { ...prevState, ...newState }
-      if (newState.pageComponentName && !newState.pageComponentProps) {
-        updatedLocation.pageComponentProps = {}
+  const setLocation = useCallback((partial: Partial<LocationState>) => {
+    updatePageData(pageId, (old: TabItem) => {
+      let updatedTab: TabItem = { ...old }
+
+      if (partial.title) {
+        updatedTab.title = partial.title
       }
 
-      const newHistory = locationHistory.slice(0, historyIndex + 1)
-      newHistory.push(updatedLocation)
-      setLocationHistory(newHistory)
-      setHistoryIndex(newHistory.length - 1)
+      if (partial.icon) {
+        updatedTab.icon = partial.icon
+      }
 
-      return updatedLocation
+      if (partial.url) {
+        updatedTab = pushTabItemUrl(updatedTab, partial.url)
+      }
+
+      return updatedTab
     })
-  }, [locationHistory, historyIndex])
-
-  const locationBack = useCallback(() => {
-    if (historyIndex > 0) {
-      setHistoryIndex(prevIndex => prevIndex - 1)
-      setLocationState(locationHistory[historyIndex - 1])
-    }
-  }, [historyIndex, locationHistory])
-
-  const locationForward = useCallback(() => {
-    if (historyIndex < locationHistory.length - 1) {
-      setHistoryIndex(prevIndex => prevIndex + 1)
-      setLocationState(locationHistory[historyIndex + 1])
-    }
-  }, [historyIndex, locationHistory])
-
-  const isBack = historyIndex > 0
-  const isForward = historyIndex < locationHistory.length - 1
+  }, [pageId, updatePageData])
 
   const value = useMemo<LocationContextType>(() => ({
     location,
-    locationHistory,
-    isBack,
-    isForward,
-    locationBack,
-    locationForward,
+    getProps,
     setLocation,
-  }), [location, locationHistory, isBack, isForward, locationBack, locationForward, setLocation])
+  }), [location, getProps, setLocation])
 
   return (
     <LocationContext.Provider value={value}>

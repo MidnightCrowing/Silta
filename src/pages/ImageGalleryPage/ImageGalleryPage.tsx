@@ -10,14 +10,14 @@ import { useLocation } from '~/contexts/location'
 import type { GalleryImageInfo } from '~/tauri-types.ts'
 
 import { ImageGalleryPageTopBar } from './components'
-import type { ImageGalleryConfig, ImageGalleryPageLocationProps, ImageGalleryPageProps } from './ImageGalleryPage.types'
+import type { ImageGalleryConfig, ImageGalleryLocationProps, ImageGalleryPageProps } from './ImageGalleryPage.types'
 
 export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
   const [imageInfos, setImageInfos] = useState<GalleryImageInfo[]>([])
   const [loadError, setLoadError] = useState<string>('')
-  const { location, setLocation } = useLocation()
+  const { getProps, setLocation } = useLocation()
 
-  const fullPath: string = (location.pageComponentProps as ImageGalleryPageLocationProps).path || ''
+  const fullPath: string = getProps<ImageGalleryLocationProps>().path || ''
 
   // 获取图片列表
   useEffect(() => {
@@ -38,9 +38,9 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
 
   useEffect(() => {
     setLocation({
-      pageLabel: fullPath.split('\\').pop() || '',
+      title: fullPath.split('\\').pop() || '',
     })
-  }, [fullPath])
+  }, [fullPath, setLocation])
 
   const imageTitle = fullPath.split('\\').pop() || ''
   const imageLink = 'https://react-photo-view.vercel.app/'

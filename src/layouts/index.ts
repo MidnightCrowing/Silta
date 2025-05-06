@@ -1,5 +1,3 @@
 export { MainLayout } from './MainLayout'
 export { SidebarLayout } from './SidebarLayout'
-export type { TabItem } from './TabLayout'
 export { TabLayout } from './TabLayout'
-export { TabComponentNameEnum } from './TabLayout/shared/TabItem.types'
