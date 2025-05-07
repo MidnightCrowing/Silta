@@ -16,9 +16,10 @@ export function generateItemId() {
  *
  * @returns 生成的 URL 字符串
  */
-export function generateUrlFromTabItem<T extends TabPageEnum>(
-  { name, props }: { name: T, props: TabPropsMap[T] },
-): string {
+export function generateUrlFromTabItem<T extends TabPageEnum>({ name, props }: {
+  name: T
+  props: TabPropsMap[T]
+}): string {
   const params = new URLSearchParams()
 
   if (props) {

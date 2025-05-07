@@ -5,9 +5,9 @@ export interface breadcrumbPathItem {
 
 export interface ImageGalleryPageTopBarProps {
   /**
-   * @description 图片标题
+   * @description 图片标题，null表示加载失败
    */
-  imageTitle: string
+  imageTitle?: string | null
 
   /**
    * @description 图片链接

@@ -10,14 +10,17 @@ import type { ImageCardProps } from './ImageCard.types'
 export default function ImageCard({ index, imageInfo }: ImageCardProps) {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true)
 
-  const rawImage = convertFileSrc(imageInfo.path)
-
-  // 计算图片的宽高比
+  // 如果未传递 imageInfo，则设置默认值
+  const rawImage = imageInfo ? convertFileSrc(imageInfo.path) : ''
   const aspectRatio = useMemo(() => {
-    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
-    const divisor = gcd(imageInfo.width, imageInfo.height)
-    return `${imageInfo.width / divisor}/${imageInfo.height / divisor}`
-  }, [imageInfo.width, imageInfo.height])
+    if (imageInfo) {
+      const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
+      const divisor = gcd(imageInfo.width, imageInfo.height)
+      return `${imageInfo.width / divisor}/${imageInfo.height / divisor}`
+    }
+    // 默认比例为 9:16
+    return '9/16'
+  }, [imageInfo])
 
   return (
     <div
@@ -39,21 +42,23 @@ export default function ImageCard({ index, imageInfo }: ImageCardProps) {
         />
       )}
       {/* 图片加载后显示 */}
-      <PhotoView src={rawImage}>
-        <Image
-          block
-          className="shadow-xl"
-          src={rawImage}
-          alt={`image ${index + 1}`}
-          shape="rounded"
-          fit="contain"
-          style={{
-            display: isImageLoading ? 'none' : 'block',
-            aspectRatio,
-          }}
-          onLoad={() => setIsImageLoading(false)}
-        />
-      </PhotoView>
+      {imageInfo && (
+        <PhotoView src={rawImage}>
+          <Image
+            block
+            className="shadow-xl"
+            src={rawImage}
+            alt={`image ${index + 1}`}
+            shape="rounded"
+            fit="contain"
+            style={{
+              display: isImageLoading ? 'none' : 'block',
+              aspectRatio,
+            }}
+            onLoad={() => setIsImageLoading(false)}
+          />
+        </PhotoView>
+      )}
 
       {/* 序号 */}
       <div

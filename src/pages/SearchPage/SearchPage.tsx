@@ -6,7 +6,9 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import clsx from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 
+import { TabPageEnum } from '~/constants/tabPage.ts'
 import { useLocation } from '~/contexts/location'
+import { generateUrlFromTabItem } from '~/utils/common.ts'
 
 import type { SearchPageProps } from './SearchPage.types'
 
@@ -32,6 +34,10 @@ export default function SearchPage({ className }: SearchPageProps) {
       inputRef.current.focus()
     }
   }
+
+  const onSearch = () => setLocation({
+    url: generateUrlFromTabItem({ name: TabPageEnum.SearchResultPage, props: { search: inputValue } }),
+  })
 
   return (
     <div className={`search-page ${className}`} relative>
@@ -111,9 +117,7 @@ export default function SearchPage({ className }: SearchPageProps) {
           <Button
             className="w-100px h-38px select-none bg-$colorBrandBackground-20!"
             appearance="primary"
-            onClick={() => setLocation({
-              url: 'https://www.bing.com/search',
-            })}
+            onClick={onSearch}
           >
             搜索
           </Button>

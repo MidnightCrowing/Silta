@@ -63,6 +63,10 @@ export interface LocationContextType {
    */
   location: LocationState
 
+  /**
+   * @description 获取位置状态的属性
+   * @returns 返回位置状态的属性
+   */
   getProps: <T extends LocationProps>() => T
 
   /**

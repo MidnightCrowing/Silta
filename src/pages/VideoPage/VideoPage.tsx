@@ -27,8 +27,9 @@ import { lazy, Suspense, useMemo, useRef, useState } from 'react'
 import type { VideoCardProps } from '~/components/VideoCard'
 import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
+import type { ImageGalleryLocationProps } from '~/pages'
 
-import type { VideoLocationProps, VideoPageProps } from './VideoPage.types'
+import type { VideoPageProps } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
@@ -89,7 +90,8 @@ export default function VideoPage({ className }: VideoPageProps) {
 
   const [visible, setVisible] = useState<boolean>(false)
 
-  const videoPath: string = getProps<VideoLocationProps>().src || ''
+  const props = getProps<ImageGalleryLocationProps>()
+  const videoPath: string = props.src ?? ''
   // const videoPath = 'C:\\Users\\lenovo\\Downloads\\夏日口袋第4集-番剧-高清独家在线观看-bilibili-哔哩哔哩.mp4'
   const videoUrl = convertFileSrc(videoPath)
   // const coverUrl = convertFileSrc('assets/cover-0.avif')

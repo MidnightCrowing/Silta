@@ -2,15 +2,30 @@ import type { LocationProps } from '~/contexts/location'
 
 import type { PageBaseProps } from '../shared/sharedProps.types'
 
+/** 页面属性 */
 export interface ImageGalleryPageProps extends PageBaseProps {
 }
 
+/** 页面位置属性 */
 export interface ImageGalleryLocationProps extends LocationProps {
   // 图片路径
   path: string
 }
 
-export interface ImageGalleryConfig {
+/** 配置文件结构，最新版本配置接口 */
+export type ImageGalleryConfig = ImageGalleryConfigV1
+
+interface ImageGalleryConfigBase {
+  // 版本号，用于标识配置文件的版本
+  version: number
+  // 加载页配置，用于指定使用哪个页面加载
+  pageType: 'ImageGalleryPage'
+}
+
+// V1 配置接口
+export interface ImageGalleryConfigV1 extends ImageGalleryConfigBase {
+  // 版本号，用于标识配置文件的版本
+  version: 1
   // 图片标题
   title: string
   // 爬取链接
