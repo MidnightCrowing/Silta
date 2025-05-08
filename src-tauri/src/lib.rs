@@ -1,10 +1,10 @@
-use tauri::{AppHandle, Manager};
-
 pub mod commands;
 pub mod concurrency;
 pub mod models;
 pub mod services;
 pub mod utils;
+
+use tauri::{AppHandle, Manager};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

@@ -72,13 +72,13 @@ pub async fn get_image_thumbnail(
     result
 }
 
-/// 获取指定路径下的 CONFIG 文件内容。
+/// 获取指定路径下的 CONFIG 文件路径。
 ///
 /// # 参数
-/// - `path`: CONFIG 文件所在的路径。
+/// - `path`: CONFIG 文件所在的目录路径。
 ///
 /// # 返回
-/// - CONFIG 文件内容的字符串，或错误信息。
+/// - CONFIG 文件路径，或错误信息。
 #[tauri::command]
 pub async fn get_images_config(path: PathBuf) -> Result<String, String> {
     let service = create_gallery_service(&path).map_err(|e| e.to_string())?;

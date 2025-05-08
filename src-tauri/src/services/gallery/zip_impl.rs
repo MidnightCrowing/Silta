@@ -1,4 +1,4 @@
-use super::service::GalleryService;
+use super::GalleryService;
 use crate::models::gallery::{GalleryImageInfo, GalleryThumbnailInfo};
 use anyhow::Result;
 

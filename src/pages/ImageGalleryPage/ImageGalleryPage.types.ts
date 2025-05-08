@@ -42,8 +42,8 @@ export interface ImageGalleryConfigV1 extends ImageGalleryConfigBase {
   description: string
   // 标签列表
   tags: string[]
-  // 爬取时间
-  crawlTime: string
+  // 爬取时间，时间戳 Date.now()
+  crawlTime: number
   // 爬取各图片的链接（key为图片名称，值为图片链接）
   imageLinks: Record<string, string>
 }

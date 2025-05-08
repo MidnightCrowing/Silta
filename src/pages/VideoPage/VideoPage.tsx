@@ -4,13 +4,15 @@ import type { OverflowItemProps } from '@fluentui/react-components'
 import {
   Button,
   Caption1,
-  List,
+  Card,
   Menu,
   MenuButton,
   MenuPopover,
   MenuTrigger,
   Overflow,
   OverflowItem,
+  Skeleton,
+  SkeletonItem,
   Subtitle1,
   Tag,
   Tooltip,
@@ -18,18 +20,19 @@ import {
   useOverflowMenu,
 } from '@fluentui/react-components'
 import { ArrowDownloadRegular } from '@fluentui/react-icons'
-import { convertFileSrc } from '@tauri-apps/api/core'
+import { convertFileSrc, invoke } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { readTextFile } from '@tauri-apps/plugin-fs'
 import type { JoLPlayerRef } from 'jol-player'
 import type { FC } from 'react'
-import { lazy, Suspense, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 
 import type { VideoCardProps } from '~/components/VideoCard'
 import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
-import type { ImageGalleryLocationProps } from '~/pages'
 
-import type { VideoPageProps } from './VideoPage.types'
+import { parseVideoConfig } from './configParser.ts'
+import type { VideoConfig, VideoLocationProps, VideoPageProps } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
@@ -85,29 +88,61 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
 }
 
 export default function VideoPage({ className }: VideoPageProps) {
-  const { getProps, setLocation } = useLocation()
-  const videoRef = useRef<JoLPlayerRef>(null)
-
-  const [visible, setVisible] = useState<boolean>(false)
-
-  const props = getProps<ImageGalleryLocationProps>()
+  const { location, getProps, setLocation } = useLocation()
+  const props = getProps<VideoLocationProps>()
   const videoPath: string = props.src ?? ''
-  // const videoPath = 'C:\\Users\\lenovo\\Downloads\\夏日口袋第4集-番剧-高清独家在线观看-bilibili-哔哩哔哩.mp4'
-  const videoUrl = convertFileSrc(videoPath)
-  // const coverUrl = convertFileSrc('assets/cover-0.avif')
-  const videoTitle = '时隔两年～再次翻唱《Ivory Tower》_《最后的旅行》 P1 Ivory Tower'
-  // const tags: string[] = ['发现《IVORY TOWER》', '龙族', '翻唱', '上杉绘梨衣', '龙族卡塞尔之门', '龙族史上最热闹的春节', '龙族首届新春会']
-  const tags: string[] = []
+
+  const videoRef = useRef<JoLPlayerRef>(null)
+  const videoUrl: string = convertFileSrc(videoPath)
+
+  // 页面信息
+  const [videoTitle, setVideoTitle] = useState<string | null | undefined>(undefined)
+  const [tags, setTags] = useState<string[] | undefined>(undefined)
+
   const recs: VideoCardProps[] = useMemo(() => {
-    const count = Math.floor(Math.random() * 11) // 随机生成 0 到 10 的数量
+    const count = Math.floor(Math.random() * 0) // 随机生成 0 到 10 的数量
     return Array.from({ length: count }, (_, i) => ({
       url: `https://example.com/video-${i}`,
       cover: 'https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/realms/MCV_soothingscene_cozyfarm_editorial_1280x768.jpg',
       title: `视频标题 ${i + 1}`,
     }))
   }, [])
-  const hasRecs: boolean = recs.length > 0
   const showDownload: boolean = false
+
+  // 加载页面内容
+  useEffect(() => {
+    const loadVideoConfig = async () => {
+      // 还原默认值
+      setLocation({ title: '正在加载...' })
+      setVideoTitle(undefined)
+      setTags(undefined)
+
+      // 获取视频配置文件内容
+      invoke<string>('get_video_config', { path: videoPath })
+        .then(async configPath => JSON.parse(await readTextFile(configPath)))
+        .then((config: any) => {
+          const parsedConfig: VideoConfig = parseVideoConfig(config)
+
+          // 设置页面信息
+          setLocation({ title: parsedConfig.title })
+          setVideoTitle(parsedConfig.title)
+          setTags(parsedConfig.tags)
+        })
+        .catch((error: any) => {
+          console.error(`加载配置文件路径 ${videoPath} 时发生错误`, error)
+          setLocation({ title: location.url })
+          setVideoTitle(null)
+        })
+    }
+
+    loadVideoConfig().then(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoPath])
+
+  const [titleTooltipVisible, setTitleTooltipVisible] = useState<boolean>(false)
+  const isConfigLoading: boolean = videoTitle === undefined
+  const isConfigError: boolean = videoTitle === null
+  const hasRecs: boolean = recs.length > 0
 
   return (
     <div className={`@container overflow-x-hidden ${className}`}>
@@ -133,61 +168,77 @@ export default function VideoPage({ className }: VideoPageProps) {
             />
           </Suspense>
 
-          <div flex="~ col" gap="10px">
-            <div flex="~ row justify-between items-start" gap="5px">
-              <div flex="~ col" gap="5px">
-                {/* Video Title */}
-                <Tooltip
-                  content={videoTitle}
-                  relationship="label"
-                  positioning="below-start"
-                  visible={videoTitle.length > 50 && visible}
-                  onVisibleChange={(_ev, data) => setVisible(data.visible)}
-                >
-                  <Subtitle1 className="line-clamp-2!">{videoTitle}</Subtitle1>
-                </Tooltip>
+          <Card>
+            <Skeleton aria-label="Loading video info">
+              <div flex="~ col" gap="10px">
+                <div flex="~ row justify-between items-start" gap="5px">
+                  <div flex="~ col" gap="5px" grow>
+                    {/* Video Title */}
+                    <Tooltip
+                      content={videoTitle ?? ''}
+                      relationship="label"
+                      positioning="below-start"
+                      visible={titleTooltipVisible && videoTitle?.length !== undefined && videoTitle.length > 50}
+                      onVisibleChange={(_ev, data) => setTitleTooltipVisible(data.visible)}
+                    >
+                      {
+                        isConfigLoading
+                          ? (
+                              <SkeletonItem className="w-1/2!" size={24} />
+                            )
+                          : (
+                              <Subtitle1
+                                className={`line-clamp-2! ${isConfigError ? 'color-$colorPaletteRedForeground1' : ''}`}
+                              >
+                                {videoTitle ?? 'Error: 获取标题失败'}
+                              </Subtitle1>
+                            )
+                      }
+                    </Tooltip>
 
-                {/* Video Path */}
-                <Caption1 className="text-$colorNeutralForeground3">{videoPath}</Caption1>
+                    {/* Video Path */}
+                    <Caption1 className="text-$colorNeutralForeground3">{videoPath}</Caption1>
+                  </div>
+
+                  {showDownload && <Button shape="circular" icon={<ArrowDownloadRegular />}>下载</Button>}
+                </div>
+
+                {/* Tags */}
+                {tags && tags?.length > 0 && (
+                  <Overflow padding={25}>
+                    <div flex="~ row items-center" gap="5px" overflow-hidden>
+                      {tags.map(tag => (
+                        <OverflowItem key={tag} id={tag}>
+                          <Tag key={tag} appearance="brand" shape="circular">
+                            {tag}
+                          </Tag>
+                        </OverflowItem>
+                      ))}
+                      <OverflowMenu itemIds={tags} />
+                    </div>
+                  </Overflow>
+                )}
               </div>
 
-              {showDownload && <Button shape="circular" icon={<ArrowDownloadRegular />}>下载</Button>}
-            </div>
-
-            {/* Tags */}
-            {tags.length > 0 && (
-              <Overflow padding={25}>
-                <div flex="~ row items-center" gap="5px" overflow-hidden>
-                  {tags.map(tag => (
-                    <OverflowItem key={tag} id={tag}>
-                      <Tag key={tag} appearance="brand" shape="circular">
-                        {tag}
-                      </Tag>
-                    </OverflowItem>
-                  ))}
-                  <OverflowMenu itemIds={tags} />
-                </div>
-              </Overflow>
-            )}
-          </div>
-
-          <Button onClick={() => {
-            setLocation({
-              title: 'Search',
-              url: 'SearchPage',
-            })
-          }}
-          >
-            Back
-          </Button>
+              <Button onClick={() => {
+                setLocation({
+                  title: 'Search',
+                  url: 'SearchPage',
+                })
+              }}
+              >
+                Back
+              </Button>
+            </Skeleton>
+          </Card>
         </div>
 
         {/* 视频推荐列表 */}
         {hasRecs && (
-          <Suspense>
-            <VideoCardList>
-              {/* Video Recommendations */}
-              <List navigationMode="items">
+          <Card className="w-full">
+            <Suspense>
+              <VideoCardList>
+                {/* Video Recommendations */}
                 {recs.map(props => (
                   <VideoCard
                     key={props.url}
@@ -196,9 +247,9 @@ export default function VideoPage({ className }: VideoPageProps) {
                     url={props.url}
                   />
                 ))}
-              </List>
-            </VideoCardList>
-          </Suspense>
+              </VideoCardList>
+            </Suspense>
+          </Card>
         )}
       </div>
     </div>

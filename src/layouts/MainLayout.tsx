@@ -70,7 +70,7 @@ const TabItems: TabItem[] = [
   {
     title: '<UNK1>',
     icon,
-    history: ['VideoPage'],
+    history: ['VideoPage', 'VideoPage?src=C:\\Users\\lenovo\\Downloads\\video\\总之就是非常可爱_第二季第14集-番剧-全集-高清独家在线观看-bilibili-哔哩哔哩.mp4'],
     historyIndex: 0,
   },
   {

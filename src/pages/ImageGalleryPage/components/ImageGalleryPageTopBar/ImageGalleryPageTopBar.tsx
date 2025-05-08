@@ -81,8 +81,8 @@ export function ImageGalleryPageTopBar({
   description,
   tags,
 }: ImageGalleryPageTopBarProps) {
-  const isLoading = imageTitle === undefined
-  const isError = imageTitle == null
+  const isLoading: boolean = imageTitle === undefined
+  const isError: boolean = imageTitle === null
 
   return (
     <div
@@ -102,10 +102,12 @@ export function ImageGalleryPageTopBar({
           {
             isLoading
               ? (
-                  <SkeletonItem />
+                  <SkeletonItem className="w-1/4!" size={20} />
                 )
               : (
-                  <Subtitle2 className={`m-0 line-clamp-2 ${isError ? 'color-$colorPaletteRedForeground1' : ''}`}>
+                  <Subtitle2
+                    className={`m-0 line-clamp-2 ${isError ? 'color-$colorPaletteRedForeground1' : ''}`}
+                  >
                     {imageTitle ?? 'Error: 获取标题失败'}
                   </Subtitle2>
                 )

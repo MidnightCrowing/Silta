@@ -1,13 +1,12 @@
-use super::service::GalleryService;
+use super::GalleryService;
 use crate::models::gallery::{GalleryImageInfo, GalleryThumbnailInfo};
-use crate::utils;
 use crate::utils::cache_paths::get_thumbnail_path;
+use crate::utils::image::{get_image_dimensions, is_supported_image};
 use anyhow::{anyhow, Context, Result};
 use image::{GenericImageView, ImageFormat, ImageReader};
 use natord::compare;
 use std::fs;
 use std::path::Path;
-use utils::image::{get_image_dimensions, is_supported_image};
 
 pub struct FolderGalleryService;
 

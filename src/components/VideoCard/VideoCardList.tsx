@@ -1,4 +1,4 @@
-import { Skeleton } from '@fluentui/react-components'
+import { List, Skeleton } from '@fluentui/react-components'
 import type { ReactNode } from 'react'
 
 export default function VideoCardList({ className = '', children }: {
@@ -10,7 +10,9 @@ export default function VideoCardList({ className = '', children }: {
       className={`grow flex-col gap-2px ${className}`}
       aria-label="Loading video list"
     >
-      {children}
+      <List navigationMode="items">
+        {children}
+      </List>
     </Skeleton>
   )
 }

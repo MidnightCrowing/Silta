@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { TabPageEnum } from '~/constants/tabPage.ts'
 import { useLocation } from '~/contexts/location'
-import { generateUrlFromTabItem } from '~/utils/common.ts'
+import { generateUrlFromTabItem } from '~/utils/urlUtils.ts'
 
 import type { SearchPageProps } from './SearchPage.types'
 

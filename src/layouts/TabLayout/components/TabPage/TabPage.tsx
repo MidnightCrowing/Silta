@@ -3,7 +3,7 @@ import KeepAlive from 'react-activation'
 
 import { componentMap } from '~/constants/tabPage.ts'
 import { LocationProvider, useLocation } from '~/contexts/location'
-import { parseUrlToComponentData } from '~/utils/common.ts'
+import { parseUrlToComponentData } from '~/utils/urlUtils.ts'
 
 import { TabToolbar } from '../TabToolbar'
 import type { TabPageProps } from './TabPage.types'

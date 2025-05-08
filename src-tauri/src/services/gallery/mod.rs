@@ -1,6 +1,6 @@
-pub mod folder_impl;
-pub mod service;
-pub mod zip_impl;
+mod folder_impl;
+mod service;
+mod zip_impl;
 
 pub use folder_impl::FolderGalleryService;
 pub use service::GalleryService;

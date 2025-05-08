@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 
 import type { TabItem } from '~/layouts/TabLayout'
 import { pushTabItemUrl } from '~/layouts/TabLayout'
-import { parseUrlToComponentData } from '~/utils/common.ts'
+import { parseUrlToComponentData } from '~/utils/urlUtils.ts'
 
 import type { LocationContextType, LocationProps, LocationProviderProps, LocationState } from './Location.types'
 import { LocationContext } from './LocationContext'

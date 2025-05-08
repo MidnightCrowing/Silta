@@ -1,4 +1,4 @@
-import { Image, ListItem, SkeletonItem } from '@fluentui/react-components'
+import { Image, ListItem, SkeletonItem, Text } from '@fluentui/react-components'
 import { useState } from 'react'
 
 import type { VideoCardProps } from './VideoCard.types'
@@ -9,8 +9,8 @@ export default function VideoCard({ cover, title }: VideoCardProps) {
   return (
     <ListItem>
       <div
-        bg="hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
-        ring="hover:6 hover:$colorNeutralStroke1Hover active:$colorNeutralStroke1Pressed"
+        bg="hover:$colorSubtleBackgroundHover active:$colorSubtleBackgroundPressed"
+        ring="hover:6 hover:$colorSubtleBackgroundHover active:$colorSubtleBackgroundPressed"
         m="6px"
         w-full
         rounded="3px"
@@ -37,7 +37,7 @@ export default function VideoCard({ cover, title }: VideoCardProps) {
           onLoad={() => setIsImageLoading(false)}
         />
 
-        <div grow line-clamp="3">{title}</div>
+        <Text className="line-clamp-3!" weight="semibold">{title}</Text>
       </div>
     </ListItem>
   )
