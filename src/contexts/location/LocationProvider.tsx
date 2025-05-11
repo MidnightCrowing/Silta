@@ -14,29 +14,35 @@ export function LocationProvider({ children, pageId, activeTab, updatePageData }
     url: activeTab.history[activeTab.historyIndex],
   }), [activeTab])
 
-  const getProps = useCallback(<T extends LocationProps>(): T => {
-    return parseUrlToComponentData(location.url).props as T
-  }, [location])
+  const getProps = useCallback(
+    <T extends LocationProps>(): T => {
+      return parseUrlToComponentData(location.url).props as T
+    },
+    [location],
+  )
 
-  const setLocation = useCallback((partial: Partial<LocationState>) => {
-    updatePageData(pageId, (old: TabItem) => {
-      let updatedTab: TabItem = { ...old }
+  const setLocation = useCallback(
+    (partial: Partial<LocationState>) => {
+      updatePageData(pageId, (old: TabItem) => {
+        let updatedTab: TabItem = { ...old }
 
-      if (partial.title) {
-        updatedTab.title = partial.title
-      }
+        if (partial.title) {
+          updatedTab.title = partial.title
+        }
 
-      if (partial.icon) {
-        updatedTab.icon = partial.icon
-      }
+        if (partial.icon) {
+          updatedTab.icon = partial.icon
+        }
 
-      if (partial.url) {
-        updatedTab = pushTabItemUrl(updatedTab, partial.url)
-      }
+        if (partial.url) {
+          updatedTab = pushTabItemUrl(updatedTab, partial.url)
+        }
 
-      return updatedTab
-    })
-  }, [pageId, updatePageData])
+        return updatedTab
+      })
+    },
+    [pageId, updatePageData],
+  )
 
   const value = useMemo<LocationContextType>(() => ({
     location,

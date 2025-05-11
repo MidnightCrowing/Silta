@@ -9,7 +9,8 @@ describe('sidebarResize', () => {
   it('渲染默认状态', () => {
     const result = render(
       <SidebarResize
-        onMouseDown={() => {}}
+        onMouseDown={() => {
+        }}
         isResizing={false}
       />,
     )
@@ -19,7 +20,8 @@ describe('sidebarResize', () => {
   it('渲染调整大小状态', () => {
     const result = render(
       <SidebarResize
-        onMouseDown={() => {}}
+        onMouseDown={() => {
+        }}
         isResizing
       />,
     )
@@ -42,7 +44,8 @@ describe('sidebarResize', () => {
   it('渲染额外的属性', () => {
     const { container } = render(
       <SidebarResize
-        onMouseDown={() => {}}
+        onMouseDown={() => {
+        }}
         isResizing={false}
         absolute
       />,

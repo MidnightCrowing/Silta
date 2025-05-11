@@ -1,3 +1,5 @@
+// 本地图库
+
 use crate::concurrency::limiter::THUMBNAIL_SEMAPHORE;
 use crate::models::gallery::{GalleryImageInfo, GalleryThumbnailInfo};
 use crate::services::gallery::{FolderGalleryService, GalleryService, ZipGalleryService};
@@ -23,22 +25,22 @@ fn create_gallery_service(path: &Path) -> Result<Box<dyn GalleryService>> {
     }
 }
 
-/// 列出指定路径下的所有图片信息。
+/// 列出指定本地路径下的所有图片信息。
 ///
 /// # 参数
-/// - `path`: 图片所在的路径。
+/// - `path`: 图片集所在的路径。
 ///
 /// # 返回
 /// - 包含图片信息的 `Vec<ImageInfo>`，或错误信息。
 #[tauri::command]
-pub async fn list_images(path: PathBuf) -> Result<Vec<GalleryImageInfo>, String> {
+pub async fn list_local_gallery_images(path: PathBuf) -> Result<Vec<GalleryImageInfo>, String> {
     let service = create_gallery_service(&path).map_err(|e| e.to_string())?;
     service
         .list_images(path.to_string_lossy().as_ref())
         .map_err(|e| e.to_string())
 }
 
-/// 获取指定路径下图片的缩略图信息。
+/// 获取指定本地路径下图片的缩略图信息。
 ///
 /// # 参数
 /// - `path`: 图片的路径。
@@ -47,7 +49,7 @@ pub async fn list_images(path: PathBuf) -> Result<Vec<GalleryImageInfo>, String>
 /// # 返回
 /// - 缩略图信息 `ThumbnailInfo`，或错误信息。
 #[tauri::command]
-pub async fn get_image_thumbnail(
+pub async fn get_local_gallery_thumbnail(
     path: String,
     max_size: Option<i32>,
 ) -> Result<GalleryThumbnailInfo, String> {
@@ -72,7 +74,7 @@ pub async fn get_image_thumbnail(
     result
 }
 
-/// 获取指定路径下的 CONFIG 文件路径。
+/// 获取指定本地路径下的 CONFIG 文件路径。
 ///
 /// # 参数
 /// - `path`: CONFIG 文件所在的目录路径。
@@ -80,7 +82,7 @@ pub async fn get_image_thumbnail(
 /// # 返回
 /// - CONFIG 文件路径，或错误信息。
 #[tauri::command]
-pub async fn get_images_config(path: PathBuf) -> Result<String, String> {
+pub async fn get_local_gallery_config_path(path: PathBuf) -> Result<String, String> {
     let service = create_gallery_service(&path).map_err(|e| e.to_string())?;
     service
         .get_images_config(path.to_string_lossy().as_ref())

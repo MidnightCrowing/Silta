@@ -3,7 +3,7 @@ export interface breadcrumbPathItem {
   link: string
 }
 
-export interface ImageGalleryPageTopBarProps {
+export interface GalleryTopBarProps {
   /**
    * @description 图片标题，null表示加载失败
    */

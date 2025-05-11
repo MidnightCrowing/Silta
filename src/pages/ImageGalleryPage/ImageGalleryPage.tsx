@@ -1,14 +1,14 @@
 import { MessageBar, MessageBarBody, MessageBarTitle } from '@fluentui/react-components'
-import { invoke } from '@tauri-apps/api/core'
 import { readTextFile } from '@tauri-apps/plugin-fs'
 import { Suspense, useEffect, useState } from 'react'
 import { PhotoProvider } from 'react-photo-view'
 
+import { getLocalGalleryConfigPath, listLocalGalleryImages } from '~/api/gallery.ts'
 import { ImageCard, ImageCardList } from '~/components/ImageCard'
 import { useLocation } from '~/contexts/location'
 import type { GalleryImageInfo } from '~/tauri-types.ts'
 
-import { ImageGalleryPageTopBar } from './components'
+import { GalleryTopBar } from './components'
 import { parseImageGalleryConfig } from './configParser.ts'
 import type { ImageGalleryConfig, ImageGalleryLocationProps, ImageGalleryPageProps } from './ImageGalleryPage.types'
 
@@ -48,7 +48,7 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
       setTags(undefined)
 
       // 获取图片集配置文件内容
-      invoke<string>('get_images_config', { path: fullPath })
+      getLocalGalleryConfigPath(fullPath)
         .then(async configPath => JSON.parse(await readTextFile(configPath)))
         .then((config: any) => {
           const parsedConfig: ImageGalleryConfig = parseImageGalleryConfig(config)
@@ -71,7 +71,7 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
           setImageTitle(null)
         })
       // 获取图片列表
-      invoke<GalleryImageInfo[]>('list_images', { path: fullPath })
+      listLocalGalleryImages(fullPath)
         .then(setImageInfos)
         .catch((error: any) => {
           console.error(`加载路径 ${fullPath} 的图片时发生错误`, error)
@@ -85,7 +85,7 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
 
   return (
     <div className={`image-gallery @container relative ${className}`}>
-      <ImageGalleryPageTopBar
+      <GalleryTopBar
         imageTitle={imageTitle}
         imageLink={imageLink}
         breadcrumbPath={breadcrumbPath}

@@ -1,13 +1,15 @@
 import {
+  AppsFilled,
+  AppsRegular,
   bundleIcon,
-  CalendarWeekStartFilled,
-  CalendarWeekStartRegular,
   FolderFilled,
   FolderRegular,
   TabDesktopNewPageFilled,
   TabDesktopNewPageRegular,
   TagMultipleFilled,
   TagMultipleRegular,
+  WindowConsoleFilled,
+  WindowConsoleRegular,
 } from '@fluentui/react-icons'
 
 import Settings from '~/components/Settings'
@@ -34,15 +36,16 @@ const SidebarItems: SidebarItem[] = [
     position: 'leftTop',
   },
   {
-    id: 'tags1',
-    label: '标签',
+    id: 'plugins',
+    label: '插件',
+    icon: bundleIcon(AppsFilled, AppsRegular),
     component: TagsPanel,
-    position: 'rightTop',
+    position: 'leftTop',
   },
   {
-    id: 'log',
-    label: '日志',
-    icon: bundleIcon(CalendarWeekStartFilled, CalendarWeekStartRegular),
+    id: 'terminal',
+    label: '终端',
+    icon: bundleIcon(WindowConsoleFilled, WindowConsoleRegular),
     component: () => <div>Unknown</div>,
     position: 'leftBottom',
   },

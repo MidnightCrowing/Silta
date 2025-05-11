@@ -1,18 +1,8 @@
 import type { ComponentType } from 'react'
 
 import type { LocationProps } from '~/contexts/location'
-import type {
-  ImageGalleryLocationProps,
-  SearchResultLocationProps,
-  VideoLocationProps,
-} from '~/pages'
-import {
-  ImageGalleryPage,
-  SearchPage,
-  SearchResultPage,
-  SinglePreviewPage,
-  VideoPage,
-} from '~/pages'
+import type { ImageGalleryLocationProps, SearchResultLocationProps, VideoLocationProps } from '~/pages'
+import { ImageGalleryPage, SearchPage, SearchResultPage, SinglePreviewPage, VideoPage } from '~/pages'
 
 export enum TabPageEnum {
   NewPage = 'NewPage',

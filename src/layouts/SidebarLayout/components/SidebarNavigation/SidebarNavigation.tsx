@@ -10,6 +10,52 @@ import type { SidebarNavigationProps } from './SidebarNavigation.types'
 const DefaultSidebarIcon = bundleIcon(GridFilled, GridRegular)
 
 export class SidebarNavigation extends Component<SidebarNavigationProps> {
+  render() {
+    const {
+      children,
+      className,
+      position,
+      topItems,
+      bottomItems,
+      topActiveItemId,
+      bottomActiveItemId,
+      setTopActiveItemId,
+      setBottomActiveItemId,
+      ...props
+    } = this.props
+    const { SideBarItemButton } = this
+
+    return (
+      <div
+        className={clsx(
+          position === 'left'
+            ? 'b-r-(solid 1px $colorNeutralBackground5)'
+            : 'b-l-(solid 1px $colorNeutralBackground5)',
+          className,
+        )}
+        flex="~ col justify-between"
+        gap="8px"
+        p="5px"
+        {...props}
+      >
+        {([
+          { position: 'top', items: topItems },
+          { position: 'bottom', items: bottomItems },
+        ] as const).map(({ position, items }) => (
+          <div key={position} flex="~ col" gap="8px">
+            {items?.map(item => (
+              <SideBarItemButton
+                key={item.id}
+                position={position}
+                item={item}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   private changeActiveItem(position: 'top' | 'bottom', id: SidebarActiveItemId) {
     const setActiveItemId = position === 'top' ? this.props.setTopActiveItemId : this.props.setBottomActiveItemId
     setActiveItemId(id)
@@ -47,45 +93,5 @@ export class SidebarNavigation extends Component<SidebarNavigationProps> {
       default:
         throw new Error(`Unknown sidebar item type: ${type}`)
     }
-  }
-
-  render() {
-    const {
-      children,
-      className,
-      position,
-      topItems,
-      bottomItems,
-      topActiveItemId,
-      bottomActiveItemId,
-      setTopActiveItemId,
-      setBottomActiveItemId,
-      ...props
-    } = this.props
-    const { SideBarItemButton } = this
-
-    return (
-      <div
-        className={clsx(
-          position === 'left'
-            ? 'b-r-(solid 1px $colorNeutralBackground5)'
-            : 'b-l-(solid 1px $colorNeutralBackground5)',
-          className,
-        )}
-        flex="~ col justify-between"
-        gap="8px"
-        p="5px"
-        {...props}
-      >
-        {([
-          { position: 'top', items: topItems },
-          { position: 'bottom', items: bottomItems },
-        ] as const).map(({ position, items }) => (
-          <div key={position} flex="~ col" gap="8px">
-            {items?.map(item => <SideBarItemButton key={item.id} position={position} item={item} />)}
-          </div>
-        ))}
-      </div>
-    )
   }
 }

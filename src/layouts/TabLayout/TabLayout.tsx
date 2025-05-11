@@ -30,6 +30,63 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     this.state = this.initializeState(props.items)
   }
 
+  private get activeItem(): TabItem | null {
+    const { activeItemId, items } = this.state
+    return activeItemId ? items[activeItemId] : null
+  }
+
+  render() {
+    const { className, items: propItems, ...props } = this.props
+    const { activeItemId, items } = this.state
+    const { activeItem, DndContextWrapper, AddNewTab, TabDivider } = this
+
+    return (
+      <div className={`tab-layout flex-(~ col items-start) align-start ${className}`} {...props}>
+
+        {/* Tabs */}
+        <DndContextWrapper>
+          <SortableContext items={Object.keys(items)} strategy={verticalListSortingStrategy}>
+            <TabList
+              className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
+              selectedValue={activeItemId}
+              onTabSelect={(_event: SelectTabEvent, data: SelectTabData) => this.onTabSelect(data.value as string)}
+            >
+              {
+                Object.entries(items).map(([id, item]) => {
+                  return (
+                    <Fragment key={id}>
+                      <SortableTab
+                        id={id}
+                        item={item}
+                        isSelect={activeItemId === id}
+                        removeItem={() => {
+                          this.removeItem(id)
+                        }}
+                      />
+                      <TabDivider groupId={id} />
+                    </Fragment>
+                  )
+                })
+              }
+              <AddNewTab />
+            </TabList>
+          </SortableContext>
+        </DndContextWrapper>
+
+        {/* Pages */}
+        <div grow w-full overflow-hidden>
+          {activeItemId && activeItem && (
+            <TabPage
+              activeItemId={activeItemId}
+              activeItem={activeItem}
+              updatePageData={this.updatePageData}
+            />
+          )}
+        </div>
+      </div>
+    )
+  }
+
   private initializeState(items: TabItem[] = []): TabLayoutState {
     const itemsWithId = items.reduce((acc, item) => {
       const id = generateItemId()
@@ -42,11 +99,6 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
       activeItemId: items.length > 0 ? Object.keys(itemsWithId)[0] : null,
       items: itemsWithId,
     }
-  }
-
-  private get activeItem(): TabItem | null {
-    const { activeItemId, items } = this.state
-    return activeItemId ? items[activeItemId] : null
   }
 
   private onTabSelect = (itemId: string) => {
@@ -151,58 +203,10 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
           className="size-30px!"
           icon={<AddRegular />}
           appearance="subtle"
-          onClick={() => { this.addItem() }}
+          onClick={() => {
+            this.addItem()
+          }}
         />
-      </div>
-    )
-  }
-
-  render() {
-    const { className, items: propItems, ...props } = this.props
-    const { activeItemId, items } = this.state
-    const { activeItem, DndContextWrapper, AddNewTab, TabDivider } = this
-
-    return (
-      <div className={`tab-layout flex-(~ col items-start) align-start ${className}`} {...props}>
-
-        {/* Tabs */}
-        <DndContextWrapper>
-          <SortableContext items={Object.keys(items)} strategy={verticalListSortingStrategy}>
-            <TabList
-              className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
-              selectedValue={activeItemId}
-              onTabSelect={(_event: SelectTabEvent, data: SelectTabData) => this.onTabSelect(data.value as string)}
-            >
-              {
-                Object.entries(items).map(([id, item]) => {
-                  return (
-                    <Fragment key={id}>
-                      <SortableTab
-                        id={id}
-                        item={item}
-                        isSelect={activeItemId === id}
-                        removeItem={() => { this.removeItem(id) }}
-                      />
-                      <TabDivider groupId={id} />
-                    </Fragment>
-                  )
-                })
-              }
-              <AddNewTab />
-            </TabList>
-          </SortableContext>
-        </DndContextWrapper>
-
-        {/* Pages */}
-        <div grow w-full overflow-hidden>
-          {activeItemId && activeItem && (
-            <TabPage
-              activeItemId={activeItemId}
-              activeItem={activeItem}
-              updatePageData={this.updatePageData}
-            />
-          )}
-        </div>
       </div>
     )
   }

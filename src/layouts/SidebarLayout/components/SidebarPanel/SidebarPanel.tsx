@@ -39,58 +39,14 @@ const ToolbarFade = createPresenceComponent({
 })
 
 export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState> {
-  private panelRef = createRef<HTMLDivElement>()
-  private animationFrame: number = 0
-
   state: Readonly<SidebarPanelState> = {
     drawerLength: 320,
     drawerIsResizing: false,
     toolbarVisible: false,
   }
 
-  // #region 显示/隐藏工具栏
-  private handlePointerEnter = () => {
-    this.setState({ toolbarVisible: true })
-  }
-
-  private handlePointerLeave = (e: PointerEvent) => {
-    if (!this.panelRef.current?.contains(e.relatedTarget as Node)) {
-      this.setState({ toolbarVisible: false })
-    }
-  }
-  // #endregion
-
-  // #region 调整抽屉大小
-  private resizeDrawer = ({ clientX, clientY }: MouseEvent) => {
-    this.animationFrame = requestAnimationFrame(() => {
-      if (!this.state.drawerIsResizing || !this.panelRef.current)
-        return
-
-      const rect = this.panelRef.current.getBoundingClientRect()
-      const { position } = this.props
-
-      if (position === 'start') {
-        this.setState({ drawerLength: clientX - rect.left })
-      }
-      else if (position === 'end') {
-        this.setState({ drawerLength: rect.right - clientX })
-      }
-      else if (position === 'bottom') {
-        this.setState({ drawerLength: rect.bottom - clientY })
-      }
-    })
-  }
-
-  private startResizingDrawer = () => {
-    this.setState({ drawerIsResizing: true })
-    this.props.setDrawerIsResizing(true)
-  }
-
-  private stopResizingDrawer = () => {
-    this.setState({ drawerIsResizing: false })
-    this.props.setDrawerIsResizing(false)
-  }
-  // #endregion
+  private panelRef = createRef<HTMLDivElement>()
+  private animationFrame: number = 0
 
   // 在组件挂载后添加事件监听
   componentDidMount() {
@@ -108,6 +64,7 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
       this.onClose()
     }
   }
+  // #endregion
 
   // 在组件卸载前移除事件监听并清理动画帧
   componentWillUnmount() {
@@ -117,57 +74,6 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
 
     this.onClose()
   }
-
-  private onOpen = () => {
-    // 在这里执行打开时的逻辑，比如绑定某些事件或初始化状态
-
-    const sidebar = this.panelRef.current
-    if (sidebar) {
-      sidebar.addEventListener('pointerenter', this.handlePointerEnter)
-      sidebar.addEventListener('pointerleave', this.handlePointerLeave)
-    }
-  }
-
-  private onClose = () => {
-    // 在这里执行关闭时的逻辑，比如清理状态或解绑事件
-
-    const sidebar = this.panelRef.current
-    if (sidebar) {
-      sidebar.removeEventListener('pointerenter', this.handlePointerEnter)
-      sidebar.removeEventListener('pointerleave', this.handlePointerLeave)
-    }
-  }
-
-  private MoreOptionsButton: FC = () => (
-    <Menu>
-      <MenuTrigger disableButtonEnhancement>
-        <Tooltip content="选项" relationship="label">
-          <MenuButton
-            aria-label="More options"
-            appearance="subtle"
-            icon={<MoreVertical24Regular />}
-          />
-        </Tooltip>
-      </MenuTrigger>
-      <MenuPopover>
-        <MenuList>
-          <MenuItem>Item a</MenuItem>
-          <MenuItem>Item b</MenuItem>
-        </MenuList>
-      </MenuPopover>
-    </Menu>
-  )
-
-  private HideButton: FC = () => (
-    <Tooltip content="隐藏" relationship="label">
-      <ToolbarButton
-        aria-label="Close panel"
-        appearance="subtle"
-        icon={<Subtract24Regular />}
-        onClick={this.props.hidePanel}
-      />
-    </Tooltip>
-  )
 
   render() {
     const { children, className, position, activeItem, open, setDrawerIsResizing, hidePanel, ...props } = this.props
@@ -261,4 +167,98 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
       </div>
     )
   }
+
+  // #region 显示/隐藏工具栏
+  private handlePointerEnter = () => {
+    this.setState({ toolbarVisible: true })
+  }
+  // #endregion
+
+  private handlePointerLeave = (e: PointerEvent) => {
+    if (!this.panelRef.current?.contains(e.relatedTarget as Node)) {
+      this.setState({ toolbarVisible: false })
+    }
+  }
+
+  // #region 调整抽屉大小
+  private resizeDrawer = ({ clientX, clientY }: MouseEvent) => {
+    this.animationFrame = requestAnimationFrame(() => {
+      if (!this.state.drawerIsResizing || !this.panelRef.current)
+        return
+
+      const rect = this.panelRef.current.getBoundingClientRect()
+      const { position } = this.props
+
+      if (position === 'start') {
+        this.setState({ drawerLength: clientX - rect.left })
+      }
+      else if (position === 'end') {
+        this.setState({ drawerLength: rect.right - clientX })
+      }
+      else if (position === 'bottom') {
+        this.setState({ drawerLength: rect.bottom - clientY })
+      }
+    })
+  }
+
+  private startResizingDrawer = () => {
+    this.setState({ drawerIsResizing: true })
+    this.props.setDrawerIsResizing(true)
+  }
+
+  private stopResizingDrawer = () => {
+    this.setState({ drawerIsResizing: false })
+    this.props.setDrawerIsResizing(false)
+  }
+
+  private onOpen = () => {
+    // 在这里执行打开时的逻辑，比如绑定某些事件或初始化状态
+
+    const sidebar = this.panelRef.current
+    if (sidebar) {
+      sidebar.addEventListener('pointerenter', this.handlePointerEnter)
+      sidebar.addEventListener('pointerleave', this.handlePointerLeave)
+    }
+  }
+
+  private onClose = () => {
+    // 在这里执行关闭时的逻辑，比如清理状态或解绑事件
+
+    const sidebar = this.panelRef.current
+    if (sidebar) {
+      sidebar.removeEventListener('pointerenter', this.handlePointerEnter)
+      sidebar.removeEventListener('pointerleave', this.handlePointerLeave)
+    }
+  }
+
+  private MoreOptionsButton: FC = () => (
+    <Menu>
+      <MenuTrigger disableButtonEnhancement>
+        <Tooltip content="选项" relationship="label">
+          <MenuButton
+            aria-label="More options"
+            appearance="subtle"
+            icon={<MoreVertical24Regular />}
+          />
+        </Tooltip>
+      </MenuTrigger>
+      <MenuPopover>
+        <MenuList>
+          <MenuItem>Item a</MenuItem>
+          <MenuItem>Item b</MenuItem>
+        </MenuList>
+      </MenuPopover>
+    </Menu>
+  )
+
+  private HideButton: FC = () => (
+    <Tooltip content="隐藏" relationship="label">
+      <ToolbarButton
+        aria-label="Close panel"
+        appearance="subtle"
+        icon={<Subtract24Regular />}
+        onClick={this.props.hidePanel}
+      />
+    </Tooltip>
+  )
 }

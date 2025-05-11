@@ -37,7 +37,7 @@ export default function VideoCard({ cover, title }: VideoCardProps) {
           onLoad={() => setIsImageLoading(false)}
         />
 
-        <Text className="line-clamp-3!" weight="semibold">{title}</Text>
+        <Text className="line-clamp-3! break-words" weight="semibold">{title}</Text>
       </div>
     </ListItem>
   )

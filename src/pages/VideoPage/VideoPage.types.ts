@@ -28,6 +28,8 @@ export interface VideoConfigV1 extends VideoConfigBase {
   version: 1
   // 视频标题
   title: string
+  // 爬取链接
+  link: string
   // 标签列表
   tags: string[]
   // 爬取时间

@@ -121,7 +121,8 @@ describe('sidebarNavigation', () => {
 
   it('应该在传入未知类型时抛出错误', () => {
     // 屏蔽 console.error 以避免控制台输出 React 捕获的错误
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+    })
 
     const invalidItems: any[] = [{
       id: 'invalid',

@@ -8,18 +8,16 @@ import { useEffect, useRef, useState } from 'react'
 
 import { TabPageEnum } from '~/constants/tabPage.ts'
 import { useLocation } from '~/contexts/location'
+import { getBackgroundFilePath } from '~/settings/background.ts'
 import { generateUrlFromTabItem } from '~/utils/urlUtils.ts'
 
+import type { SearchPageSettings } from './components'
+import { SearchBackground, SearchSettingsPopover } from './components'
 import type { SearchPageProps } from './SearchPage.types'
 
-const searchBg: boolean = false // 是否显示搜索标签页背景图片
-const bgUrl = convertFileSrc('assets/background.jpg')
 const logoUrl = convertFileSrc('assets/logo.svg')
 
 export default function SearchPage({ className }: SearchPageProps) {
-  const [isFocused, setIsFocused] = useState<boolean>(false)
-  const [inputValue, setInputValue] = useState<string>('')
-  const inputRef = useRef<HTMLInputElement>(null)
   const { location, setLocation } = useLocation()
 
   useEffect(() => {
@@ -27,6 +25,24 @@ export default function SearchPage({ className }: SearchPageProps) {
       setLocation({ title: '搜索 - Silta' })
     }
   }, [location.title, setLocation])
+
+  // 页面设置
+  const [showBackground, setShowBackground] = useState<boolean>(false)
+  const [backgroundUrl, setBackgroundUrl] = useState<string>('')
+
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isFocused, setIsFocused] = useState<boolean>(false)
+  const [inputValue, setInputValue] = useState<string>('')
+
+  // 更新背景图片
+  useEffect(() => {
+    if (showBackground) {
+      getBackgroundFilePath('searchPage')
+        .then((bgPath) => {
+          setBackgroundUrl(bgPath ? convertFileSrc(bgPath) : '')
+        })
+    }
+  }, [showBackground])
 
   const clearInputAndFocus = () => {
     setInputValue('')
@@ -39,20 +55,23 @@ export default function SearchPage({ className }: SearchPageProps) {
     url: generateUrlFromTabItem({ name: TabPageEnum.SearchResultPage, props: { search: inputValue } }),
   })
 
+  const onSettingsChange = (settings: Partial<SearchPageSettings>) => {
+    if (settings.showBackground !== undefined) {
+      setShowBackground(settings.showBackground)
+    }
+    if (settings.backgroundUrl !== undefined) {
+      setBackgroundUrl(settings.backgroundUrl)
+    }
+  }
+
   return (
     <div className={`search-page ${className}`} relative>
       {/* Background image */}
-      {searchBg && (
-        <div absolute inset-0 select-none>
-          <img absolute size-full object="center cover" src={bgUrl} alt="background image" />
-          <div absolute inset-0 bg="$homepage-bg-mask" />
-          <div
-            className={`absolute inset-0 bg-black transition-(bg duration-300) ${
-              isFocused ? 'bg-opacity-60' : 'bg-opacity-0'
-            }`}
-          />
-        </div>
-      )}
+      <SearchBackground
+        showBackground={showBackground}
+        backgroundUrl={backgroundUrl}
+        isFocused={isFocused}
+      />
 
       <div flex="~ col items-center justify-end" gap="42px" absolute inset-0 translate-y="-45%">
         {/* logo */}
@@ -123,6 +142,15 @@ export default function SearchPage({ className }: SearchPageProps) {
           </Button>
         </div>
       </div>
+
+      <SearchSettingsPopover
+        className="absolute z-1 right-24px top-10px"
+        pageSettings={{
+          showBackground,
+          backgroundUrl,
+        }}
+        onSettingsChange={onSettingsChange}
+      />
     </div>
   )
 }

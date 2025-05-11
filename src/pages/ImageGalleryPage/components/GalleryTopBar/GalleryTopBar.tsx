@@ -1,4 +1,4 @@
-import './ImageGalleryPageTopBar.scss'
+import './GalleryTopBar.scss'
 
 import type { OverflowItemProps } from '@fluentui/react-components'
 import {
@@ -26,7 +26,7 @@ import { bundleIcon, ChevronDown20Regular, Pin20Filled, Pin20Regular } from '@fl
 import type { FC } from 'react'
 import { Fragment } from 'react'
 
-import type { breadcrumbPathItem, ImageGalleryPageTopBarProps } from './ImageGalleryPageTopBar.types'
+import type { breadcrumbPathItem, GalleryTopBarProps } from './GalleryTopBar.types.ts'
 
 const PinIcon = bundleIcon(Pin20Filled, Pin20Regular)
 
@@ -70,7 +70,7 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
   )
 }
 
-export function ImageGalleryPageTopBar({
+export function GalleryTopBar({
   imageTitle,
   imageLink,
   breadcrumbPath,
@@ -80,7 +80,7 @@ export function ImageGalleryPageTopBar({
   imageCount,
   description,
   tags,
-}: ImageGalleryPageTopBarProps) {
+}: GalleryTopBarProps) {
   const isLoading: boolean = imageTitle === undefined
   const isError: boolean = imageTitle === null
 

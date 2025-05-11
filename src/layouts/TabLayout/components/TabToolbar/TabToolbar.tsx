@@ -9,12 +9,7 @@ import {
 import { useEffect, useMemo, useState } from 'react'
 
 import AddressBar from './AddressBar.tsx'
-import type {
-  BackButtonProps,
-  ForwardButtonProps,
-  RefreshButtonProps,
-  TabToolbarProps,
-} from './TabToolbar.types'
+import type { BackButtonProps, ForwardButtonProps, RefreshButtonProps, TabToolbarProps } from './TabToolbar.types'
 
 function BackButton({ activeItemId, activeItem, updatePageData }: BackButtonProps) {
   const isBack: boolean = useMemo(

@@ -1,2 +1,2 @@
-export type { ImageGalleryPageTopBarProps } from './ImageGalleryPageTopBar'
-export { ImageGalleryPageTopBar } from './ImageGalleryPageTopBar'
+export type { GalleryTopBarProps } from './GalleryTopBar'
+export { GalleryTopBar } from './GalleryTopBar'

@@ -20,13 +20,14 @@ import {
   useOverflowMenu,
 } from '@fluentui/react-components'
 import { ArrowDownloadRegular } from '@fluentui/react-icons'
-import { convertFileSrc, invoke } from '@tauri-apps/api/core'
+import { convertFileSrc } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { readTextFile } from '@tauri-apps/plugin-fs'
 import type { JoLPlayerRef } from 'jol-player'
 import type { FC } from 'react'
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 
+import { getLocalVideoConfigPath } from '~/api/video.ts'
 import type { VideoCardProps } from '~/components/VideoCard'
 import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
@@ -118,7 +119,7 @@ export default function VideoPage({ className }: VideoPageProps) {
       setTags(undefined)
 
       // 获取视频配置文件内容
-      invoke<string>('get_video_config', { path: videoPath })
+      getLocalVideoConfigPath(videoPath)
         .then(async configPath => JSON.parse(await readTextFile(configPath)))
         .then((config: any) => {
           const parsedConfig: VideoConfig = parseVideoConfig(config)
@@ -135,7 +136,8 @@ export default function VideoPage({ className }: VideoPageProps) {
         })
     }
 
-    loadVideoConfig().then(() => {})
+    loadVideoConfig().then(() => {
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoPath])
 
@@ -200,7 +202,8 @@ export default function VideoPage({ className }: VideoPageProps) {
                     <Caption1 className="text-$colorNeutralForeground3">{videoPath}</Caption1>
                   </div>
 
-                  {showDownload && <Button shape="circular" icon={<ArrowDownloadRegular />}>下载</Button>}
+                  {showDownload
+                    && <Button shape="circular" icon={<ArrowDownloadRegular />}>下载</Button>}
                 </div>
 
                 {/* Tags */}

@@ -18,5 +18,6 @@ export const ThemeContext = createContext<{
 }>({
       theme: teamsDarkTheme, // 默认主题
       themeName: 'teamsDark',
-      setTheme: () => {},
+      setTheme: () => {
+      },
     })
