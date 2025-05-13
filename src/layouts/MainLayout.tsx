@@ -11,13 +11,14 @@ import {
   WindowConsoleFilled,
   WindowConsoleRegular,
 } from '@fluentui/react-icons'
+import { v4 as uuidv4 } from 'uuid'
 
 import Settings from '~/components/Settings'
-import { FolderPanel, TagsPanel } from '~/panels'
+import { FolderPanel, PluginsPanel, TagsPanel, TerminalPanel } from '~/panels'
 
 import type { SidebarItem } from './SidebarLayout'
 import { SidebarLayout } from './SidebarLayout'
-import type { TabItem } from './TabLayout'
+import type { TabItemTypes } from './TabLayout'
 import { TabLayout } from './TabLayout'
 
 const SidebarItems: SidebarItem[] = [
@@ -39,18 +40,18 @@ const SidebarItems: SidebarItem[] = [
     id: 'plugins',
     label: '插件',
     icon: bundleIcon(AppsFilled, AppsRegular),
-    component: TagsPanel,
+    component: PluginsPanel,
     position: 'leftTop',
   },
   {
     id: 'terminal',
     label: '终端',
     icon: bundleIcon(WindowConsoleFilled, WindowConsoleRegular),
-    component: () => <div>Unknown</div>,
+    component: TerminalPanel,
     position: 'leftBottom',
   },
   {
-    id: 'divider2',
+    id: uuidv4(),
     type: 'divider',
     position: 'leftBottom',
   },
@@ -63,7 +64,7 @@ const SidebarItems: SidebarItem[] = [
   },
 ]
 const icon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
-const TabItems: TabItem[] = [
+const TabItems: TabItemTypes[] = [
   {
     title: '新建标签页',
     icon,
@@ -88,6 +89,7 @@ function MainLayout() {
   return (
     <SidebarLayout
       items={SidebarItems}
+      leftTopActiveItemId="plugins"
       size-full
       overflow-hidden
     >

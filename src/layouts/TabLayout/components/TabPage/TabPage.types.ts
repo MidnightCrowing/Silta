@@ -1,6 +1,6 @@
 import type { updatePageData } from '~/layouts/TabLayout'
 
-import type { TabItem } from '../../shared/TabItem.types'
+import type { TabItemTypes } from '../../shared/TabItem.types'
 
 export interface TabPageProps {
   /**
@@ -11,7 +11,7 @@ export interface TabPageProps {
   /**
    * @description 当前激活的项目
    */
-  activeItem: TabItem
+  activeItem: TabItemTypes
 
   /**
    * @description 更新页面数据

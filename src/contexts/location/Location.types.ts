@@ -1,7 +1,7 @@
 import type { FluentIcon } from '@fluentui/react-icons'
 import type { ReactNode } from 'react'
 
-import type { TabItem, updatePageData } from '~/layouts/TabLayout'
+import type { TabItemTypes, updatePageData } from '~/layouts/TabLayout'
 
 export interface LocationProps {
   [p: string]: any
@@ -44,7 +44,7 @@ export interface LocationProviderProps {
   /**
    * @description 当前激活的标签
    */
-  activeTab: TabItem
+  activeTab: TabItemTypes
 
   /**
    * @description 更新页面数据的函数

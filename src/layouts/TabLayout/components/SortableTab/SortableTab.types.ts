@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 
-import type { TabItem } from '../../shared/TabItem.types'
+import type { TabItemTypes } from '../../shared/TabItem.types'
 
 export interface SortableTabProps extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -11,7 +11,7 @@ export interface SortableTabProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 标签页项目
    */
-  item: TabItem
+  item: TabItemTypes
 
   /**
    * @description 是否选中

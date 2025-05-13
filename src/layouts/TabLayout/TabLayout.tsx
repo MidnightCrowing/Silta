@@ -7,16 +7,15 @@ import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/r
 import { AddRegular, bundleIcon, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import type { FC, ReactNode } from 'react'
 import { Component, Fragment } from 'react'
-
-import { generateItemId } from '~/utils/common'
+import { v4 as uuidv4 } from 'uuid'
 
 import { SortableTab, TabPage } from './components'
-import type { TabItem } from './shared/TabItem.types.ts'
+import type { TabItemTypes } from './shared/TabItem.types.ts'
 import type { TabLayoutProps, TabLayoutState, updatePageData } from './TabLayout.types'
 
 const DefaultTabIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
 
-const newTabTemplate: TabItem = {
+const newTabTemplate: TabItemTypes = {
   title: '新建标签页',
   icon: DefaultTabIcon,
   history: ['NewPage'],
@@ -30,7 +29,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     this.state = this.initializeState(props.items)
   }
 
-  private get activeItem(): TabItem | null {
+  private get activeItem(): TabItemTypes | null {
     const { activeItemId, items } = this.state
     return activeItemId ? items[activeItemId] : null
   }
@@ -87,13 +86,13 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     )
   }
 
-  private initializeState(items: TabItem[] = []): TabLayoutState {
+  private initializeState(items: TabItemTypes[] = []): TabLayoutState {
     const itemsWithId = items.reduce((acc, item) => {
-      const id = generateItemId()
+      const id = uuidv4()
       item.showAddAnimation = false
       acc[id] = item
       return acc
-    }, {} as { [id: string]: TabItem })
+    }, {} as { [id: string]: TabItemTypes })
 
     return {
       activeItemId: items.length > 0 ? Object.keys(itemsWithId)[0] : null,
@@ -105,8 +104,8 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     this.setState({ activeItemId: itemId })
   }
 
-  private addItem = (newItem: TabItem = newTabTemplate, active: boolean = true) => {
-    const id = generateItemId()
+  private addItem = (newItem: TabItemTypes = newTabTemplate, active: boolean = true) => {
+    const id = uuidv4()
     this.setState(prevState => ({
       items: { ...prevState.items, [id]: newItem },
       activeItemId: active ? id : prevState.activeItemId,
@@ -151,7 +150,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
           .reduce((acc, [id, item]) => {
             acc[id] = item
             return acc
-          }, {} as { [id: string]: TabItem })
+          }, {} as { [id: string]: TabItemTypes })
 
         return {
           items: newItems,

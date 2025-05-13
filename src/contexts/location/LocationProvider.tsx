@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import type { TabItem } from '~/layouts/TabLayout'
+import type { TabItemTypes } from '~/layouts/TabLayout'
 import { pushTabItemUrl } from '~/layouts/TabLayout'
 import { parseUrlToComponentData } from '~/utils/urlUtils.ts'
 
@@ -23,8 +23,8 @@ export function LocationProvider({ children, pageId, activeTab, updatePageData }
 
   const setLocation = useCallback(
     (partial: Partial<LocationState>) => {
-      updatePageData(pageId, (old: TabItem) => {
-        let updatedTab: TabItem = { ...old }
+      updatePageData(pageId, (old: TabItemTypes) => {
+        let updatedTab: TabItemTypes = { ...old }
 
         if (partial.title) {
           updatedTab.title = partial.title

@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Component, createElement, Fragment } from 'react'
+import { Component, createElement, createRef, Fragment } from 'react'
 
 import { SidebarNavigation, SidebarPanel, SidebarResize } from './components'
 import type {
@@ -9,6 +9,7 @@ import type {
   SidebarNavItem,
   SidebarPosition,
 } from './shared/SidebarItem.types'
+import type { SidebarPanelRef } from './shared/SidebarPanel.types.ts'
 import type { SidebarLayoutProps, SidebarLayoutState } from './SidebarLayout.types'
 
 export default class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
@@ -20,6 +21,11 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
     drawerIsResizing: false,
     bottomDrawersIsResizing: false,
   }
+
+  leftTopActiveItemRef = createRef<SidebarPanelRef>()
+  leftBottomActiveItemRef = createRef<SidebarPanelRef>()
+  rightTopActiveItemRef = createRef<SidebarPanelRef>()
+  rightBottomActiveItemRef = createRef<SidebarPanelRef>()
 
   constructor(props: SidebarLayoutProps) {
     super(props)
@@ -53,11 +59,9 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
       rightTop: [],
       rightBottom: [],
     }
-
     items?.forEach((item) => {
       itemGroups[item.position].push(item)
     })
-
     const {
       leftTop: leftTopItems,
       leftBottom: leftBottomItems,
@@ -65,10 +69,28 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
       rightBottom: rightBottomItems,
     } = itemGroups
 
+    const leftTopElement = leftTopActiveItem?.component ?? Fragment
+    const leftBottomElement = leftBottomActiveItem?.component ?? Fragment
+    const rightTopElement = rightTopActiveItem?.component ?? Fragment
+    const rightBottomElement = rightBottomActiveItem?.component ?? Fragment
+
     const leftTopPanelOpen = this.isPanelOpen(leftTopActiveItem)
     const leftBottomPanelOpen = this.isPanelOpen(leftBottomActiveItem)
     const rightTopPanelOpen = this.isPanelOpen(rightTopActiveItem)
     const rightBottomPanelOpen = this.isPanelOpen(rightBottomActiveItem)
+
+    const leftTopCustomMenu = typeof this.leftTopActiveItemRef.current?.customMenu === 'function'
+      ? this.leftTopActiveItemRef.current.customMenu()
+      : null
+    const leftBottomCustomMenu = typeof this.leftBottomActiveItemRef.current?.customMenu === 'function'
+      ? this.leftBottomActiveItemRef.current.customMenu()
+      : null
+    const rightTopCustomMenu = typeof this.rightTopActiveItemRef.current?.customMenu === 'function'
+      ? this.rightTopActiveItemRef.current.customMenu()
+      : null
+    const rightBottomCustomMenu = typeof this.rightBottomActiveItemRef.current?.customMenu === 'function'
+      ? this.rightBottomActiveItemRef.current.customMenu()
+      : null
 
     return (
       <div
@@ -99,10 +121,14 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="start"
               activeItem={leftTopActiveItem}
               open={leftTopPanelOpen}
+              customMenu={leftTopCustomMenu}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftTopPanel}
             >
-              {createElement(leftTopActiveItem?.component ?? Fragment)}
+              {createElement(
+                leftTopElement,
+                leftTopElement === Fragment ? undefined : { ref: this.leftTopActiveItemRef },
+              )}
             </SidebarPanel>
 
             {children}
@@ -112,10 +138,14 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="end"
               activeItem={rightTopActiveItem}
               open={rightTopPanelOpen}
+              customMenu={rightTopCustomMenu}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightTopPanel}
             >
-              {createElement(rightTopActiveItem?.component ?? Fragment)}
+              {createElement(
+                rightTopElement,
+                rightTopElement === Fragment ? undefined : { ref: this.rightTopActiveItemRef },
+              )}
             </SidebarPanel>
           </div>
 
@@ -126,10 +156,14 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="bottom"
               activeItem={leftBottomActiveItem}
               open={leftBottomPanelOpen}
+              customMenu={leftBottomCustomMenu}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftBottomPanel}
             >
-              {createElement(leftBottomActiveItem?.component ?? Fragment)}
+              {createElement(
+                leftBottomElement,
+                leftBottomElement === Fragment ? undefined : { ref: this.leftBottomActiveItemRef },
+              )}
             </SidebarPanel>
 
             {leftBottomPanelOpen && rightBottomPanelOpen && (
@@ -148,10 +182,14 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="bottom"
               activeItem={rightBottomActiveItem}
               open={rightBottomPanelOpen}
+              customMenu={rightBottomCustomMenu}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightBottomPanel}
             >
-              {createElement(rightBottomActiveItem?.component ?? Fragment)}
+              {createElement(
+                rightBottomElement,
+                rightBottomElement === Fragment ? undefined : { ref: this.rightBottomActiveItemRef },
+              )}
             </SidebarPanel>
           </div>
         </div>

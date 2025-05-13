@@ -1,9 +1,10 @@
 import type { PopoverProps } from '@fluentui/react-components'
 import { Button, FluentProvider, Popover, PopoverSurface, PopoverTrigger } from '@fluentui/react-components'
 import { SettingsRegular } from '@fluentui/react-icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useTheme, useThemeByMode } from '~/contexts/theme'
+import { getSearchConfig, updateSearchConfig } from '~/settings'
 
 import type { SearchPageSettingsPopoverProps } from './SearchSettingsPopover.types.ts'
 import { SettingsContent } from './SettingsContent.tsx'
@@ -16,6 +17,19 @@ export function SearchSettingsPopover({ className, pageSettings, onSettingsChang
   const themeByMode = useThemeByMode(backgroundIsDark)
   const { theme } = useTheme()
   const triggerTheme = pageSettings.showBackground ? themeByMode : theme
+
+  // 从配置文件中获取设置
+  useEffect(() => {
+    getSearchConfig()
+      .then((config) => {
+        setBackgroundIsDark(config.bgIsDark)
+      })
+  }, [])
+
+  const setBgIsDark = async (isDark: boolean) => {
+    setBackgroundIsDark(isDark)
+    await updateSearchConfig('bgIsDark', isDark)
+  }
 
   return (
     <Popover positioning="below-end" size="small" open={open} onOpenChange={handleOpenChange}>
@@ -35,7 +49,7 @@ export function SearchSettingsPopover({ className, pageSettings, onSettingsChang
         <SettingsContent
           onClose={() => { setOpen(false) }}
           backgroundIsDark={backgroundIsDark}
-          setBackgroundIsDark={setBackgroundIsDark}
+          setBackgroundIsDark={setBgIsDark}
           pageSettings={pageSettings}
           onSettingsChange={onSettingsChange}
         />

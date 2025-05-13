@@ -1,7 +1,17 @@
 import { Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
 import { Folder20Regular, Image20Regular, VideoClip20Regular } from '@fluentui/react-icons'
+import { forwardRef, useImperativeHandle } from 'react'
 
-export default function FolderPanel() {
+import type { SidebarPanelRef } from '~/layouts/SidebarLayout'
+
+const FolderPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
+  // 向外暴露方法
+  useImperativeHandle(ref, () => ({
+    customMenu() {
+      return (<div>2</div>)
+    },
+  }))
+
   return (
     <Tree className="select-none!" aria-label="Default">
       <TreeItem itemType="branch">
@@ -36,4 +46,6 @@ export default function FolderPanel() {
       </TreeItem>
     </Tree>
   )
-}
+})
+
+export default FolderPanel

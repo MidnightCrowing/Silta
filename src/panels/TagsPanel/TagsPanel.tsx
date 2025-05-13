@@ -1,10 +1,17 @@
 import { CounterBadge, Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
+import { forwardRef, useImperativeHandle } from 'react'
+
+import type { SidebarPanelRef } from '~/layouts/SidebarLayout'
 
 function AsideContent({ count }: { count: number }) {
   return <CounterBadge count={count} appearance="ghost" size="small" />
 }
 
-export default function TagsPanel() {
+const TagsPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
+  // 向外暴露方法
+  useImperativeHandle(ref, () => ({
+  }))
+
   return (
     <Tree aria-label="Default">
       <TreeItem itemType="branch">
@@ -39,4 +46,6 @@ export default function TagsPanel() {
       </TreeItem>
     </Tree>
   )
-}
+})
+
+export default TagsPanel

@@ -1,4 +1,4 @@
-import { Fade, FadeSnappy } from '@fluentui/react-motion-components-preview'
+import { Fade, FadeRelaxed } from '@fluentui/react-motion-components-preview'
 import { useEffect, useState } from 'react'
 
 import type { SearchBackgroundProps } from './SearchBackground.types.ts'
@@ -21,7 +21,7 @@ export function SearchBackground({ showBackground, backgroundUrl: currentBgUrl, 
   }, [currentBgUrl])
 
   return (
-    <FadeSnappy visible={showBackground} unmountOnExit>
+    <FadeRelaxed visible={showBackground} unmountOnExit>
       <div absolute inset-0 select-none>
         {/* 上一张图 */}
         {currentBgUrl !== lastBgUrl && lastBgUrl !== '' && (
@@ -57,6 +57,6 @@ export function SearchBackground({ showBackground, backgroundUrl: currentBgUrl, 
           }`}
         />
       </div>
-    </FadeSnappy>
+    </FadeRelaxed>
   )
 }

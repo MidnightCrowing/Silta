@@ -1,0 +1,270 @@
+import type { AccordionToggleEventHandler, SelectionItemId } from '@fluentui/react-components'
+import { Accordion, Divider } from '@fluentui/react-components'
+import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
+
+import type { SidebarPanelRef } from '~/layouts/SidebarLayout'
+
+import { CustomAccordionItem, PluginCard } from './components'
+import type { PluginItemTypes } from './shared/PluginItem.types.ts'
+
+const DEFAULT_OPEN_ITEMS = ['Enabled']
+
+const plugins: PluginItemTypes[] = [
+  {
+    id: '1',
+    name: 'Plugin Alpha',
+    description: 'Alpha plugin for testing',
+    icon: 'alpha.png',
+    version: '2.1.0',
+    isEnabled: true,
+  },
+  {
+    id: '2',
+    name: 'Plugin Beta',
+    description: 'Beta plugin with advanced features',
+    icon: 'beta.png',
+    version: '1.5.3',
+    isEnabled: false,
+  },
+  {
+    id: '3',
+    name: 'Plugin Gamma',
+    description: 'Gamma plugin for analytics',
+    icon: 'gamma.png',
+    version: '3.0.0',
+    isEnabled: true,
+  },
+  {
+    id: '4',
+    name: 'Plugin Delta',
+    description: 'Delta plugin for debugging',
+    icon: 'delta.png',
+    version: '1.2.1',
+    isEnabled: false,
+  },
+  {
+    id: '5',
+    name: 'Plugin Epsilon',
+    description: 'Epsilon plugin for optimization',
+    icon: 'epsilon.png',
+    version: '4.0.0',
+    isEnabled: true,
+  },
+  {
+    id: '6',
+    name: 'Plugin Zeta',
+    description: 'Zeta plugin for monitoring',
+    icon: 'zeta.png',
+    version: '1.0.0',
+    isEnabled: false,
+  },
+  {
+    id: '7',
+    name: 'Plugin Eta',
+    description: 'Eta plugin for security',
+    icon: 'eta.png',
+    version: '2.3.4',
+    isEnabled: true,
+  },
+  {
+    id: '8',
+    name: 'Plugin Theta',
+    description: 'Theta plugin for performance',
+    icon: 'theta.png',
+    version: '3.1.2',
+    isEnabled: false,
+  },
+  {
+    id: '9',
+    name: 'Plugin Iota',
+    description: 'Iota plugin for integration',
+    icon: 'iota.png',
+    version: '4.5.6',
+    isEnabled: true,
+  },
+  {
+    id: '10',
+    name: 'Plugin Kappa',
+    description: 'Kappa plugin for testing',
+    icon: 'kappa.png',
+    version: '1.0.1',
+    isEnabled: false,
+  },
+  {
+    id: '11',
+    name: 'Plugin Lambda',
+    description: 'Lambda plugin for automation',
+    icon: 'lambda.png',
+    version: '2.2.2',
+    isEnabled: true,
+  },
+  {
+    id: '12',
+    name: 'Plugin Mu',
+    description: 'Mu plugin for data processing',
+    icon: 'mu.png',
+    version: '3.3.3',
+    isEnabled: false,
+  },
+  {
+    id: '13',
+    name: 'Plugin Nu',
+    description: 'Nu plugin for visualization',
+    icon: 'nu.png',
+    version: '4.4.4',
+    isEnabled: true,
+  },
+  {
+    id: '14',
+    name: 'Plugin Xi',
+    description: 'Xi plugin for debugging',
+    icon: 'xi.png',
+    version: '1.1.1',
+    isEnabled: false,
+  },
+  {
+    id: '15',
+    name: 'Plugin Omicron',
+    description: 'Omicron plugin for analytics',
+    icon: 'omicron.png',
+    version: '2.0.0',
+    isEnabled: true,
+  },
+  {
+    id: '16',
+    name: 'Plugin Pi',
+    description: 'Pi plugin for optimization',
+    icon: 'pi.png',
+    version: '3.0.1',
+    isEnabled: false,
+  },
+  {
+    id: '17',
+    name: 'Plugin Rho',
+    description: 'Rho plugin for monitoring',
+    icon: 'rho.png',
+    version: '4.1.0',
+    isEnabled: true,
+  },
+  {
+    id: '18',
+    name: 'Plugin Sigma',
+    description: 'Sigma plugin for security',
+    icon: 'sigma.png',
+    version: '1.2.3',
+    isEnabled: false,
+  },
+  {
+    id: '19',
+    name: 'Plugin Tau',
+    description: 'Tau plugin for performance',
+    icon: 'tau.png',
+    version: '2.3.4',
+    isEnabled: true,
+  },
+  {
+    id: '20',
+    name: 'Plugin Upsilon',
+    description: 'Upsilon plugin for integration',
+    icon: 'upsilon.png',
+    version: '3.4.5',
+    isEnabled: false,
+  },
+]
+
+const PluginsPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
+  // 向外暴露方法
+  useImperativeHandle(ref, () => ({
+    customMenu() {
+      return (<div>1</div>)
+    },
+  }))
+
+  // 即时更新的打开状态（用于 Accordion 控制）
+  const [pendingOpenItems, setPendingOpenItems] = useState(DEFAULT_OPEN_ITEMS)
+
+  // 延迟应用的打开状态（用于控制布局伸缩动画）
+  const [committedOpenItems, setCommittedOpenItems] = useState(DEFAULT_OPEN_ITEMS)
+
+  // 延迟同步 committedOpenItems，以配合 flex-1 动画
+  const handleAccordionToggle: AccordionToggleEventHandler<string> = (_, data) => {
+    setPendingOpenItems(data.openItems)
+    setTimeout(() => setCommittedOpenItems(data.openItems), 100)
+  }
+
+  const enabledPlugins = plugins.filter(item => item.isEnabled)
+  const disabledPlugins = plugins.filter(item => !item.isEnabled)
+
+  const [selectedItems, setSelectedItems] = useState<SelectionItemId[]>([])
+  const onSelectedItem = useCallback((value: string) => {
+    setSelectedItems([value as SelectionItemId])
+  }, [])
+
+  // useEffect(() => {
+  //   setCustomMenu(<button onClick={() => alert('子组件按钮')}>子组件按钮</button>)
+  // }, [setCustomMenu])
+
+  return (
+    <Accordion
+      className="h-full flex-(~ col) overflow-hidden"
+      multiple
+      collapsible
+      openItems={pendingOpenItems}
+      onToggle={handleAccordionToggle}
+    >
+      <CustomAccordionItem
+        value="Enabled"
+        title="已启用"
+        count={enabledPlugins.length}
+        committedOpenItems={committedOpenItems}
+      >
+        {enabledPlugins.map(item => (
+          <PluginCard
+            key={item.id}
+            item={item}
+            isSelect={selectedItems.includes(item.id)}
+            onSelectedItem={() => { onSelectedItem(item.id) }}
+          />
+        ))}
+      </CustomAccordionItem>
+
+      <Divider className="grow-0!" />
+
+      <CustomAccordionItem
+        value="Disabled"
+        title="已禁用"
+        count={disabledPlugins.length}
+        committedOpenItems={committedOpenItems}
+      >
+        {disabledPlugins.map(item => (
+          <PluginCard
+            key={item.id}
+            item={item}
+            isSelect={selectedItems.includes(item.id)}
+            onSelectedItem={() => { onSelectedItem(item.id) }}
+          />
+        ))}
+      </CustomAccordionItem>
+
+      <Divider className="grow-0!" />
+
+      <CustomAccordionItem
+        value="Installed"
+        title="已安装"
+        count={plugins.length}
+        committedOpenItems={committedOpenItems}
+      >
+        {plugins.map(item => (
+          <PluginCard
+            key={item.id}
+            item={item}
+            isSelect={selectedItems.includes(item.id)}
+            onSelectedItem={() => { onSelectedItem(item.id) }}
+          />
+        ))}
+      </CustomAccordionItem>
+    </Accordion>
+  )
+})
+
+export default PluginsPanel

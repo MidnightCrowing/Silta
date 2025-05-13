@@ -1,12 +1,12 @@
 import type { HTMLAttributes } from 'react'
 
-import type { TabItem } from '~/layouts/TabLayout'
+import type { TabItemTypes } from '~/layouts/TabLayout'
 
 export interface TabLayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'items'> {
   /**
    * @description 标签页项目列表
    */
-  items?: TabItem[]
+  items?: TabItemTypes[]
 }
 
 export interface TabLayoutState {
@@ -18,7 +18,7 @@ export interface TabLayoutState {
   /**
    * @description 标签页项目映射
    */
-  items: { [id: string]: TabItem }
+  items: { [id: string]: TabItemTypes }
 }
 
-export type updatePageData = (pageId: string, updater: (oldTab: TabItem) => TabItem) => void
+export type updatePageData = (pageId: string, updater: (oldTab: TabItemTypes) => TabItemTypes) => void

@@ -5,23 +5,18 @@ import {
   DrawerHeaderNavigation,
   DrawerHeaderTitle,
   InlineDrawer,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  MenuPopover,
-  MenuTrigger,
   motionTokens,
   Toolbar,
   ToolbarButton,
   ToolbarGroup,
   Tooltip,
 } from '@fluentui/react-components'
-import { MoreVertical24Regular, Subtract24Regular } from '@fluentui/react-icons'
+import { Subtract24Regular } from '@fluentui/react-icons'
 import type { FC } from 'react'
 import { Component, createRef, Suspense } from 'react'
 import KeepAlive from 'react-activation'
 
+import { SidebarPanelMenu } from '../SidebarPanelMenu'
 import { SidebarResize } from '../SidebarResize'
 import type { SidebarPanelProps, SidebarPanelState } from './SidebarPanel.types'
 
@@ -76,9 +71,19 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
   }
 
   render() {
-    const { children, className, position, activeItem, open, setDrawerIsResizing, hidePanel, ...props } = this.props
+    const {
+      children,
+      className,
+      position,
+      activeItem,
+      open,
+      customMenu,
+      setDrawerIsResizing,
+      hidePanel,
+      ...props
+    } = this.props
     const { drawerLength, drawerIsResizing, toolbarVisible } = this.state
-    const { MoreOptionsButton, HideButton } = this
+    const { HideButton } = this
     const isBottom = position === 'bottom'
 
     return (
@@ -110,16 +115,16 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
         )}
 
         <InlineDrawer
+          ref={this.panelRef}
           surfaceMotion={null}
           className={
             isBottom
               ? 'w-full! min-h-50px'
               : 'h-full! min-w-50px'
           }
+          open={open}
           position={position}
           separator
-          ref={this.panelRef}
-          open={open}
           style={
             isBottom
               ? { height: `min(${drawerLength}px, calc(100vh - 43px))` }
@@ -135,7 +140,7 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
               <ToolbarFade visible={toolbarVisible}>
                 <Toolbar>
                   <ToolbarGroup className="flex">
-                    <MoreOptionsButton />
+                    <SidebarPanelMenu customMenu={customMenu} />
                     <HideButton />
                   </ToolbarGroup>
                 </Toolbar>
@@ -143,7 +148,7 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
             </DrawerHeaderNavigation>
           </DrawerHeader>
 
-          <DrawerBody className="p-(x-10px! b-11px!)">
+          <DrawerBody className="p-0!">
             <KeepAlive cacheKey={activeItem?.id.toString()}>
               <Suspense>
                 {children}
@@ -230,26 +235,6 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
       sidebar.removeEventListener('pointerleave', this.handlePointerLeave)
     }
   }
-
-  private MoreOptionsButton: FC = () => (
-    <Menu>
-      <MenuTrigger disableButtonEnhancement>
-        <Tooltip content="选项" relationship="label">
-          <MenuButton
-            aria-label="More options"
-            appearance="subtle"
-            icon={<MoreVertical24Regular />}
-          />
-        </Tooltip>
-      </MenuTrigger>
-      <MenuPopover>
-        <MenuList>
-          <MenuItem>Item a</MenuItem>
-          <MenuItem>Item b</MenuItem>
-        </MenuList>
-      </MenuPopover>
-    </Menu>
-  )
 
   private HideButton: FC = () => (
     <Tooltip content="隐藏" relationship="label">

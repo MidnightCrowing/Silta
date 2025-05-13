@@ -28,6 +28,9 @@
       "identifier": "fs:allow-write"
     },
     {
+      "identifier": "fs:allow-write-text-file"
+    },
+    {
       "identifier": "fs:allow-remove"
     },
     "dialog:default"

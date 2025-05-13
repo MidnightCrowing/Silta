@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { TabPageEnum } from '~/constants/tabPage.ts'
 import { useLocation } from '~/contexts/location'
-import { getBackgroundFilePath } from '~/settings/background.ts'
+import { getBackgroundFilePath, getSearchConfig, saveSearchConfigToDisk, updateSearchConfig } from '~/settings'
 import { generateUrlFromTabItem } from '~/utils/urlUtils.ts'
 
 import type { SearchPageSettings } from './components'
@@ -34,6 +34,14 @@ export default function SearchPage({ className }: SearchPageProps) {
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
 
+  // 从配置文件中获取设置
+  useEffect(() => {
+    getSearchConfig()
+      .then((config) => {
+        setShowBackground(config.showBg)
+      })
+  }, [])
+
   // 更新背景图片
   useEffect(() => {
     if (showBackground) {
@@ -55,13 +63,15 @@ export default function SearchPage({ className }: SearchPageProps) {
     url: generateUrlFromTabItem({ name: TabPageEnum.SearchResultPage, props: { search: inputValue } }),
   })
 
-  const onSettingsChange = (settings: Partial<SearchPageSettings>) => {
+  const onSettingsChange = async (settings: Partial<SearchPageSettings>) => {
     if (settings.showBackground !== undefined) {
       setShowBackground(settings.showBackground)
+      await updateSearchConfig('showBg', settings.showBackground, false)
     }
     if (settings.backgroundUrl !== undefined) {
       setBackgroundUrl(settings.backgroundUrl)
     }
+    await saveSearchConfigToDisk()
   }
 
   return (

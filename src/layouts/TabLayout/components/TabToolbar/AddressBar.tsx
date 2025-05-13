@@ -3,7 +3,7 @@ import { LockOpen16Regular } from '@fluentui/react-icons'
 import type { FormEvent, KeyboardEvent, ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import type { TabItem } from '~/layouts/TabLayout'
+import type { TabItemTypes } from '~/layouts/TabLayout'
 import { pushTabItemUrl } from '~/layouts/TabLayout'
 
 import type { AddressBarProps } from './TabToolbar.types.ts'
@@ -60,7 +60,7 @@ function AddressBar({ activeItemId, activeItem, updatePageData }: AddressBarProp
       return
     }
     event.preventDefault() // 阻止默认换行行为
-    updatePageData(activeItemId, (old: TabItem) => pushTabItemUrl(old, text))
+    updatePageData(activeItemId, (old: TabItemTypes) => pushTabItemUrl(old, text))
   }
 
   return (

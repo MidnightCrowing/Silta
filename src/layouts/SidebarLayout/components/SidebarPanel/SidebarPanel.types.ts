@@ -24,6 +24,11 @@ export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
   open: boolean
 
   /**
+   * @description 自定义菜单
+   */
+  customMenu: ReactNode
+
+  /**
    * @description 设置抽屉是否正在调整大小的状态
    * @param state 状态
    */

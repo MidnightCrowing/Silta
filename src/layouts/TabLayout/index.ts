@@ -1,5 +1,5 @@
 // TabItem
-export type { TabItem } from './shared/TabItem.types'
+export type { TabItemTypes } from './shared/TabItem.types'
 export { pushTabItemUrl } from './shared/TabItem.util'
 
 // TabLayout

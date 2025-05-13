@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 
-import type { TabItem } from '../../shared/TabItem.types'
+import type { TabItemTypes } from '../../shared/TabItem.types'
 import type { updatePageData } from '../../TabLayout.types.ts'
 
 export interface BackButtonProps extends HTMLAttributes<HTMLDivElement> {
@@ -12,7 +12,7 @@ export interface BackButtonProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 当前激活的项目
    */
-  activeItem: TabItem | null
+  activeItem: TabItemTypes | null
 
   /**
    * @description 更新页面数据
@@ -31,7 +31,7 @@ export interface ForwardButtonProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 当前激活的项目
    */
-  activeItem: TabItem | null
+  activeItem: TabItemTypes | null
 
   /**
    * @description 更新页面数据
@@ -57,7 +57,7 @@ export interface AddressBarProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 当前激活的项目
    */
-  activeItem: TabItem | null
+  activeItem: TabItemTypes | null
 
   /**
    * @description 更新页面数据
@@ -76,7 +76,7 @@ export interface TabToolbarProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 当前激活的项目
    */
-  activeItem: TabItem | null
+  activeItem: TabItemTypes | null
 
   /**
    * @description 更新页面数据

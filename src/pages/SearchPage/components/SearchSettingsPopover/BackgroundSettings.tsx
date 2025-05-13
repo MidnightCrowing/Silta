@@ -6,7 +6,7 @@ import type { ChangeEvent } from 'react'
 import { useCallback } from 'react'
 
 import { isImageDark } from '~/api/image.ts'
-import { getBackgroundFilePath, setBackgroundImage } from '~/settings/background.ts'
+import { getBackgroundFilePath, setBackgroundImage } from '~/settings'
 
 import type { BackgroundSettingsProps } from './SearchSettingsPopover.types.ts'
 
