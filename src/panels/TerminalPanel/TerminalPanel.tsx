@@ -1,13 +1,13 @@
 import { Tab, TabList, Textarea } from '@fluentui/react-components'
-import { forwardRef, useImperativeHandle } from 'react'
 
-import type { SidebarPanelRef } from '~/layouts/SidebarLayout'
+import type { SidebarPanelPropsBase } from '~/layouts'
+import { SidebarPanel } from '~/layouts'
 
-const TerminalPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
-  // 向外暴露方法
-  useImperativeHandle(ref, () => ({
-    customStaticToolbar() {
-      return (
+export default function TerminalPanel({ ...props }: SidebarPanelPropsBase) {
+  return (
+    <SidebarPanel
+      title="文件"
+      staticToolbar={(
         <TabList
           appearance="subtle"
           size="small"
@@ -18,16 +18,13 @@ const TerminalPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
           <Tab value="tab3">Third Tab</Tab>
           <Tab value="tab4">Fourth Tab</Tab>
         </TabList>
-      )
-    },
-  }))
-
-  return (
-    <Textarea
-      className="size-full"
-      appearance="filled-darker"
-    />
+      )}
+      {...props}
+    >
+      <Textarea
+        className="size-full"
+        appearance="filled-darker"
+      />
+    </SidebarPanel>
   )
-})
-
-export default TerminalPanel
+}

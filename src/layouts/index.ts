@@ -1,3 +1,4 @@
 export { MainLayout } from './MainLayout'
-export { SidebarLayout } from './SidebarLayout'
+export type { SidebarPanelPropsBase } from './SidebarLayout'
+export { SidebarLayout, SidebarPanel } from './SidebarLayout'
 export { TabLayout } from './TabLayout'

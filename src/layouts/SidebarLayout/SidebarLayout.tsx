@@ -1,7 +1,7 @@
 import clsx from 'clsx'
-import { Component, createElement, createRef, Fragment } from 'react'
+import { Component, createElement, Fragment } from 'react'
 
-import { SidebarNavigation, SidebarPanel, SidebarResize } from './components'
+import { SidebarNavigation, SidebarPanelWrapper, SidebarResize } from './components'
 import type {
   SidebarActiveItem,
   SidebarActiveItemId,
@@ -9,7 +9,6 @@ import type {
   SidebarNavItem,
   SidebarPosition,
 } from './shared/SidebarItem.types'
-import type { SidebarPanelRef } from './shared/SidebarPanel.types.ts'
 import type { SidebarLayoutProps, SidebarLayoutState } from './SidebarLayout.types'
 
 export default class SidebarLayout extends Component<SidebarLayoutProps, SidebarLayoutState> {
@@ -21,11 +20,6 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
     drawerIsResizing: false,
     bottomDrawersIsResizing: false,
   }
-
-  leftTopActiveItemRef = createRef<SidebarPanelRef>()
-  leftBottomActiveItemRef = createRef<SidebarPanelRef>()
-  rightTopActiveItemRef = createRef<SidebarPanelRef>()
-  rightBottomActiveItemRef = createRef<SidebarPanelRef>()
 
   constructor(props: SidebarLayoutProps) {
     super(props)
@@ -104,54 +98,54 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
         <div flex="~ col" grow overflow-hidden>
           <div flex="~ row" grow overflow-hidden>
             {/* Left Sidebar Panel */}
-            <SidebarPanel
+            <SidebarPanelWrapper
               position="start"
               activeItem={leftTopActiveItem}
               open={leftTopPanelOpen}
-              childrenRef={this.leftTopActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftTopPanel}
             >
-              {createElement(
-                leftTopElement,
-                leftTopElement === Fragment ? undefined : { ref: this.leftTopActiveItemRef },
-              )}
-            </SidebarPanel>
+              {(hidePanel, pointerEnter) =>
+                createElement(
+                  leftTopElement,
+                  leftTopElement === Fragment ? undefined : { hidePanel, pointerEnter },
+                )}
+            </SidebarPanelWrapper>
 
             {children}
 
             {/* Right Sidebar Panel */}
-            <SidebarPanel
+            <SidebarPanelWrapper
               position="end"
               activeItem={rightTopActiveItem}
               open={rightTopPanelOpen}
-              childrenRef={this.rightTopActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightTopPanel}
             >
-              {createElement(
-                rightTopElement,
-                rightTopElement === Fragment ? undefined : { ref: this.rightTopActiveItemRef },
-              )}
-            </SidebarPanel>
+              {(hidePanel, pointerEnter) =>
+                createElement(
+                  rightTopElement,
+                  rightTopElement === Fragment ? undefined : { hidePanel, pointerEnter },
+                )}
+            </SidebarPanelWrapper>
           </div>
 
           {/* Bottom Sidebar Panel */}
           <div flex="~ row">
-            <SidebarPanel
+            <SidebarPanelWrapper
               className="has-[.fui-InlineDrawer]:flex-1"
               position="bottom"
               activeItem={leftBottomActiveItem}
               open={leftBottomPanelOpen}
-              childrenRef={this.leftBottomActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftBottomPanel}
             >
-              {createElement(
-                leftBottomElement,
-                leftBottomElement === Fragment ? undefined : { ref: this.leftBottomActiveItemRef },
-              )}
-            </SidebarPanel>
+              {(hidePanel, pointerEnter) =>
+                createElement(
+                  leftBottomElement,
+                  leftBottomElement === Fragment ? undefined : { hidePanel, pointerEnter },
+                )}
+            </SidebarPanelWrapper>
 
             {leftBottomPanelOpen && rightBottomPanelOpen && (
               <SidebarResize
@@ -164,20 +158,20 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               />
             )}
 
-            <SidebarPanel
+            <SidebarPanelWrapper
               className="has-[.fui-InlineDrawer]:flex-1"
               position="bottom"
               activeItem={rightBottomActiveItem}
               open={rightBottomPanelOpen}
-              childrenRef={this.rightBottomActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightBottomPanel}
             >
-              {createElement(
-                rightBottomElement,
-                rightBottomElement === Fragment ? undefined : { ref: this.rightBottomActiveItemRef },
-              )}
-            </SidebarPanel>
+              {(hidePanel, pointerEnter) =>
+                createElement(
+                  rightBottomElement,
+                  rightBottomElement === Fragment ? undefined : { hidePanel, pointerEnter },
+                )}
+            </SidebarPanelWrapper>
           </div>
         </div>
 

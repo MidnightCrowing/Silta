@@ -1,59 +1,50 @@
-import type { HTMLAttributes, ReactNode, RefObject } from 'react'
-
-import type { SidebarActiveItem } from '../../shared/SidebarItem.types'
-import type { SidebarPanelRef } from '../../shared/SidebarPanel.types'
+import type { HTMLAttributes, ReactNode } from 'react'
 
 export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
   /**
-   * @description 子组件
+   * 要在侧边栏面板中渲染的内容。
    */
   children: ReactNode
 
   /**
-   * @description 侧边栏位置，开始、结束或底部
+   * 侧边栏面板的标题。
    */
-  position: 'start' | 'end' | 'bottom'
+  title: string
 
   /**
-   * @description 当前激活的项目
+   * 可选的静态工具栏内容，将显示在面板中。
    */
-  activeItem: SidebarActiveItem
+  staticToolbar?: ReactNode
 
   /**
-   * @description 是否打开抽屉面板
+   * 可选的渐隐工具栏内容，将显示在面板中。
    */
-  open: boolean
+  fadeToolbar?: ReactNode
 
   /**
-   * @description 子组件的引用
+   * 可选的自定义菜单内容，将显示在面板中。
    */
-  childrenRef: RefObject<SidebarPanelRef>
+  customMenu?: ReactNode
 
   /**
-   * @description 设置抽屉是否正在调整大小的状态
-   * @param state 状态
+   * 指示指针是否当前悬停在面板上。
    */
-  setDrawerIsResizing: (state: boolean) => void
+  pointerEnter: boolean
 
   /**
-   * @description 隐藏面板
+   * 隐藏侧边栏面板的函数。
    */
   hidePanel: () => void
 }
 
-export interface SidebarPanelState {
+export interface SidebarPanelPropsBase {
   /**
-   * @description 抽屉长度
+   * 指示指针是否当前悬停在面板上。
    */
-  drawerLength: number
+  pointerEnter: boolean
 
   /**
-   * @description 抽屉是否正在调整大小
+   * 隐藏侧边栏面板的函数。
    */
-  drawerIsResizing: boolean
-
-  /**
-   * @description 工具栏是否可见
-   */
-  toolbarVisible: boolean
+  hidePanel: () => void
 }

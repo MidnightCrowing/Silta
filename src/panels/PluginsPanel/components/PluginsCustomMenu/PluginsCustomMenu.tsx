@@ -1,21 +1,17 @@
 import type { MenuProps } from '@fluentui/react-components'
 import { Menu, MenuItem, MenuItemCheckbox, MenuList, MenuPopover, MenuTrigger } from '@fluentui/react-components'
-import { useState } from 'react'
 
 import type { AccordionItem } from '../../PluginsPanel.types.ts'
 import type { PluginsCustomMenuProps, ViewMenuProps } from './PluginsCustomMenu.types.ts'
 
-function ViewMenu({ initialVisibleItems, onVisibleItemsChange }: ViewMenuProps) {
-  const [selectedItems, setSelectedItems] = useState<AccordionItem[]>(initialVisibleItems)
-
+function ViewMenu({ visibleItems, setVisibleItems }: ViewMenuProps) {
   const onChange: MenuProps['onCheckedValueChange'] = (_e, { checkedItems }) => {
-    setSelectedItems(checkedItems as AccordionItem[])
-    onVisibleItemsChange(checkedItems as AccordionItem[])
+    setVisibleItems(checkedItems as AccordionItem[])
   }
 
   return (
     <Menu
-      checkedValues={{ viewOptions: selectedItems }}
+      checkedValues={{ viewOptions: visibleItems }}
       onCheckedValueChange={onChange}
     >
       <MenuTrigger disableButtonEnhancement>
@@ -36,8 +32,8 @@ function ViewMenu({ initialVisibleItems, onVisibleItemsChange }: ViewMenuProps) 
 export function PluginsCustomMenu({ visibleItems, setVisibleItems }: PluginsCustomMenuProps) {
   return (
     <ViewMenu
-      initialVisibleItems={visibleItems}
-      onVisibleItemsChange={setVisibleItems}
+      visibleItems={visibleItems}
+      setVisibleItems={setVisibleItems}
     />
   )
 }

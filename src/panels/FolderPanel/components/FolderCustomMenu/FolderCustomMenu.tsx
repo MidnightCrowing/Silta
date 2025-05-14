@@ -1,23 +1,19 @@
 import type { MenuProps } from '@fluentui/react-components'
 import { Menu, MenuGroup, MenuGroupHeader, MenuItem, MenuItemCheckbox, MenuItemRadio, MenuList, MenuPopover, MenuTrigger } from '@fluentui/react-components'
-import { useState } from 'react'
 
 import type { ShowGroup, SortBy } from '../../FolderPanel.types'
 
-function AppearanceMenu({ initialShowGroup, onShowGroupChange }: {
-  initialShowGroup: ShowGroup[]
+function AppearanceMenu({ showGroup, onShowGroupChange }: {
+  showGroup: ShowGroup[]
   onShowGroupChange: (showGroup: ShowGroup[]) => void
 }) {
-  const [selectedGroup, setSelectedGroup] = useState<ShowGroup[]>(initialShowGroup)
-
   const onChange: MenuProps['onCheckedValueChange'] = (_e, { checkedItems }) => {
-    setSelectedGroup(checkedItems as ShowGroup[])
     onShowGroupChange(checkedItems as ShowGroup[])
   }
 
   return (
     <Menu
-      checkedValues={{ appearance: selectedGroup }}
+      checkedValues={{ appearance: showGroup }}
       onCheckedValueChange={onChange}
     >
       <MenuTrigger disableButtonEnhancement>
@@ -38,20 +34,17 @@ function AppearanceMenu({ initialShowGroup, onShowGroupChange }: {
   )
 }
 
-function SortByMenu({ initialSortBy, onSortByChange }: {
-  initialSortBy: SortBy
-  onSortByChange: (sortBy: SortBy) => void
+function SortByMenu({ sortBy, onSortByChange }: {
+  sortBy: SortBy[]
+  onSortByChange: (sortBy: SortBy[]) => void
 }) {
-  const [selected, setSelected] = useState<SortBy[]>([initialSortBy])
-
   const onChange: MenuProps['onCheckedValueChange'] = (_e, { checkedItems }) => {
-    setSelected(checkedItems as SortBy[])
-    onSortByChange(checkedItems[0] as SortBy)
+    onSortByChange(checkedItems as SortBy[])
   }
 
   return (
     <Menu
-      checkedValues={{ sort: selected }}
+      checkedValues={{ sort: sortBy }}
       onCheckedValueChange={onChange}
     >
       <MenuTrigger disableButtonEnhancement>
@@ -72,17 +65,17 @@ function SortByMenu({ initialSortBy, onSortByChange }: {
 export function FolderCustomMenu({ showGroup, setShowGroup, sortBy, setSortBy }: {
   showGroup: ShowGroup[]
   setShowGroup: (showGroup: ShowGroup[]) => void
-  sortBy: SortBy
-  setSortBy: (sortBy: SortBy) => void
+  sortBy: SortBy[]
+  setSortBy: (sortBy: SortBy[]) => void
 }) {
   return (
     <>
       <AppearanceMenu
-        initialShowGroup={showGroup}
+        showGroup={showGroup}
         onShowGroupChange={setShowGroup}
       />
       <SortByMenu
-        initialSortBy={sortBy}
+        sortBy={sortBy}
         onSortByChange={setSortBy}
       />
     </>
