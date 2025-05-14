@@ -89,7 +89,7 @@ function MainLayout() {
   return (
     <SidebarLayout
       items={SidebarItems}
-      leftTopActiveItemId="plugins"
+      leftTopActiveItemId="folder"
       size-full
       overflow-hidden
     >

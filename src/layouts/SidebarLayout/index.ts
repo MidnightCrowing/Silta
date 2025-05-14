@@ -1,3 +1,7 @@
+// SidebarPanel
+export type { SidebarPanelPropsBase } from './components'
+export { SidebarPanel } from './components'
+
 // SidebarItem
 export type {
   SidebarButton,
@@ -7,9 +11,6 @@ export type {
   SidebarNavItem,
   SidebarPosition,
 } from './shared/SidebarItem.types'
-
-// SidebarPanel
-export type { SidebarPanelRef } from './shared/SidebarPanel.types'
 
 // SidebarLayout
 export { SidebarLayout } from './SidebarLayout.lazy'

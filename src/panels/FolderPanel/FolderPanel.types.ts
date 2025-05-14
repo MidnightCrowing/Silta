@@ -1,0 +1,11 @@
+// member: 成员
+// excluded: 排除的文件
+// temporary: 临时文件
+// details: 文件详细信息
+export type ShowGroup = 'member' | 'excluded' | 'temporary' | 'details'
+
+// 名称
+// 类型
+// 修改时间(从新到旧)
+// 修改时间(从旧到新)
+export type SortBy = 'name' | 'type' | 'dateAsc' | 'dateDesc'
