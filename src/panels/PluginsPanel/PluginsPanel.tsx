@@ -4,7 +4,8 @@ import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
 
 import type { SidebarPanelRef } from '~/layouts/SidebarLayout'
 
-import { CustomAccordionItem, PluginCard } from './components'
+import { CustomAccordionItem, PluginCard, PluginsCustomMenu } from './components'
+import type { AccordionItem } from './PluginsPanel.types.ts'
 import type { PluginItemTypes } from './shared/PluginItem.types.ts'
 
 const DEFAULT_OPEN_ITEMS = ['Enabled']
@@ -173,10 +174,12 @@ const plugins: PluginItemTypes[] = [
 ]
 
 const PluginsPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
+  const [visibleItems, setVisibleItems] = useState<AccordionItem[]>(['Enabled', 'Disabled', 'Installed'])
+
   // 向外暴露方法
   useImperativeHandle(ref, () => ({
     customMenu() {
-      return (<div>1</div>)
+      return <PluginsCustomMenu visibleItems={visibleItems} setVisibleItems={setVisibleItems} />
     },
   }))
 
@@ -195,14 +198,11 @@ const PluginsPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
   const enabledPlugins = plugins.filter(item => item.isEnabled)
   const disabledPlugins = plugins.filter(item => !item.isEnabled)
 
+  // 选中项
   const [selectedItems, setSelectedItems] = useState<SelectionItemId[]>([])
   const onSelectedItem = useCallback((value: string) => {
     setSelectedItems([value as SelectionItemId])
   }, [])
-
-  // useEffect(() => {
-  //   setCustomMenu(<button onClick={() => alert('子组件按钮')}>子组件按钮</button>)
-  // }, [setCustomMenu])
 
   return (
     <Accordion
@@ -212,57 +212,69 @@ const PluginsPanel = forwardRef<SidebarPanelRef>((_props, ref) => {
       openItems={pendingOpenItems}
       onToggle={handleAccordionToggle}
     >
-      <CustomAccordionItem
-        value="Enabled"
-        title="已启用"
-        count={enabledPlugins.length}
-        committedOpenItems={committedOpenItems}
-      >
-        {enabledPlugins.map(item => (
-          <PluginCard
-            key={item.id}
-            item={item}
-            isSelect={selectedItems.includes(item.id)}
-            onSelectedItem={() => { onSelectedItem(item.id) }}
-          />
-        ))}
-      </CustomAccordionItem>
+      {visibleItems.includes('Enabled') && (
+        <CustomAccordionItem
+          value="Enabled"
+          title="已启用"
+          count={enabledPlugins.length}
+          committedOpenItems={committedOpenItems}
+        >
+          {enabledPlugins.map(item => (
+            <PluginCard
+              key={item.id}
+              item={item}
+              isSelect={selectedItems.includes(item.id)}
+              onSelectedItem={() => {
+                onSelectedItem(item.id)
+              }}
+            />
+          ))}
+        </CustomAccordionItem>
+      )}
 
-      <Divider className="grow-0!" />
+      {['Enabled', 'Disabled'].every(item => visibleItems.includes(item as AccordionItem)) && (
+        <Divider className="grow-0!" />
+      )}
 
-      <CustomAccordionItem
-        value="Disabled"
-        title="已禁用"
-        count={disabledPlugins.length}
-        committedOpenItems={committedOpenItems}
-      >
-        {disabledPlugins.map(item => (
-          <PluginCard
-            key={item.id}
-            item={item}
-            isSelect={selectedItems.includes(item.id)}
-            onSelectedItem={() => { onSelectedItem(item.id) }}
-          />
-        ))}
-      </CustomAccordionItem>
+      {visibleItems.includes('Disabled') && (
+        <CustomAccordionItem
+          value="Disabled"
+          title="已禁用"
+          count={disabledPlugins.length}
+          committedOpenItems={committedOpenItems}
+        >
+          {disabledPlugins.map(item => (
+            <PluginCard
+              key={item.id}
+              item={item}
+              isSelect={selectedItems.includes(item.id)}
+              onSelectedItem={() => { onSelectedItem(item.id) }}
+            />
+          ))}
+        </CustomAccordionItem>
+      )}
 
-      <Divider className="grow-0!" />
+      {['Disabled', 'Installed'].every(item => visibleItems.includes(item as AccordionItem)) && (
+        <Divider className="grow-0!" />
+      )}
 
-      <CustomAccordionItem
-        value="Installed"
-        title="已安装"
-        count={plugins.length}
-        committedOpenItems={committedOpenItems}
-      >
-        {plugins.map(item => (
-          <PluginCard
-            key={item.id}
-            item={item}
-            isSelect={selectedItems.includes(item.id)}
-            onSelectedItem={() => { onSelectedItem(item.id) }}
-          />
-        ))}
-      </CustomAccordionItem>
+      {visibleItems.includes('Installed') && (
+        <CustomAccordionItem
+          value="Installed"
+          title="已安装"
+          count={plugins.length}
+          committedOpenItems={committedOpenItems}
+        >
+          {plugins.map(item => (
+            <PluginCard
+              key={item.id}
+              item={item}
+              isSelect={selectedItems.includes(item.id)}
+              onSelectedItem={() => { onSelectedItem(item.id) }}
+            />
+          ))}
+        </CustomAccordionItem>
+      )}
     </Accordion>
   )
 })

@@ -77,7 +77,7 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
       position,
       activeItem,
       open,
-      customMenu,
+      childrenRef,
       setDrawerIsResizing,
       hidePanel,
       ...props
@@ -85,6 +85,16 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
     const { drawerLength, drawerIsResizing, toolbarVisible } = this.state
     const { HideButton } = this
     const isBottom = position === 'bottom'
+
+    const customStaticToolbar = typeof childrenRef.current?.customStaticToolbar === 'function'
+      ? childrenRef.current.customStaticToolbar()
+      : null
+    const customFadeToolbar = typeof childrenRef.current?.customFadeToolbar === 'function'
+      ? childrenRef.current.customFadeToolbar()
+      : null
+    const customMenu = typeof childrenRef.current?.customMenu === 'function'
+      ? childrenRef.current.customMenu()
+      : null
 
     return (
       <div className={className} relative {...props}>
@@ -114,48 +124,51 @@ export class SidebarPanel extends Component<SidebarPanelProps, SidebarPanelState
           />
         )}
 
-        <InlineDrawer
-          ref={this.panelRef}
-          surfaceMotion={null}
-          className={
-            isBottom
-              ? 'w-full! min-h-50px'
-              : 'h-full! min-w-50px'
-          }
-          open={open}
-          position={position}
-          separator
-          style={
-            isBottom
-              ? { height: `min(${drawerLength}px, calc(100vh - 43px))` }
-              : { width: `min(${drawerLength}px, calc(100vw - 43px))` }
-          }
-        >
-          <DrawerHeader className="p-(t-15px! x-5px!)">
-            <DrawerHeaderNavigation className="flex justify-between m-(l-10px! r-0!)">
-              <DrawerHeaderTitle>
-                {activeItem?.label}
-              </DrawerHeaderTitle>
+        <KeepAlive cacheKey={activeItem?.id.toString()}>
+          <InlineDrawer
+            ref={this.panelRef}
+            surfaceMotion={null}
+            className={
+              isBottom
+                ? 'w-full! min-h-50px'
+                : 'h-full! min-w-50px'
+            }
+            open={open}
+            position={position}
+            separator
+            style={
+              isBottom
+                ? { height: `min(${drawerLength}px, calc(100vh - 43px))` }
+                : { width: `min(${drawerLength}px, calc(100vw - 43px))` }
+            }
+          >
+            <DrawerHeader className="p-(t-15px! x-5px!)">
+              <DrawerHeaderNavigation className="flex items-center justify-start gap-5px m-(l-10px! r-0!)">
+                <DrawerHeaderTitle>
+                  {activeItem?.label}
+                </DrawerHeaderTitle>
 
-              <ToolbarFade visible={toolbarVisible}>
-                <Toolbar>
-                  <ToolbarGroup className="flex">
-                    <SidebarPanelMenu customMenu={customMenu} />
-                    <HideButton />
-                  </ToolbarGroup>
-                </Toolbar>
-              </ToolbarFade>
-            </DrawerHeaderNavigation>
-          </DrawerHeader>
+                {customStaticToolbar}
 
-          <DrawerBody className="p-0!">
-            <KeepAlive cacheKey={activeItem?.id.toString()}>
+                <ToolbarFade visible={toolbarVisible}>
+                  <Toolbar className="ml-auto">
+                    <ToolbarGroup className="flex items-center gap-2px">
+                      {customFadeToolbar}
+                      <SidebarPanelMenu customMenu={customMenu} />
+                      <HideButton />
+                    </ToolbarGroup>
+                  </Toolbar>
+                </ToolbarFade>
+              </DrawerHeaderNavigation>
+            </DrawerHeader>
+
+            <DrawerBody className="p-0!">
               <Suspense>
                 {children}
               </Suspense>
-            </KeepAlive>
-          </DrawerBody>
-        </InlineDrawer>
+            </DrawerBody>
+          </InlineDrawer>
+        </KeepAlive>
 
         {/* Right panel resize component */}
         {open && position === 'start' && (

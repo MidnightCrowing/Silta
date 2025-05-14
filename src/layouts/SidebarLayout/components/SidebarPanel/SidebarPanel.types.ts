@@ -1,6 +1,7 @@
-import type { HTMLAttributes, ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode, RefObject } from 'react'
 
 import type { SidebarActiveItem } from '../../shared/SidebarItem.types'
+import type { SidebarPanelRef } from '../../shared/SidebarPanel.types'
 
 export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -24,9 +25,9 @@ export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
   open: boolean
 
   /**
-   * @description 自定义菜单
+   * @description 子组件的引用
    */
-  customMenu: ReactNode
+  childrenRef: RefObject<SidebarPanelRef>
 
   /**
    * @description 设置抽屉是否正在调整大小的状态

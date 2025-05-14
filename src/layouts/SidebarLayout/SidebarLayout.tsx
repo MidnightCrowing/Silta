@@ -79,19 +79,6 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
     const rightTopPanelOpen = this.isPanelOpen(rightTopActiveItem)
     const rightBottomPanelOpen = this.isPanelOpen(rightBottomActiveItem)
 
-    const leftTopCustomMenu = typeof this.leftTopActiveItemRef.current?.customMenu === 'function'
-      ? this.leftTopActiveItemRef.current.customMenu()
-      : null
-    const leftBottomCustomMenu = typeof this.leftBottomActiveItemRef.current?.customMenu === 'function'
-      ? this.leftBottomActiveItemRef.current.customMenu()
-      : null
-    const rightTopCustomMenu = typeof this.rightTopActiveItemRef.current?.customMenu === 'function'
-      ? this.rightTopActiveItemRef.current.customMenu()
-      : null
-    const rightBottomCustomMenu = typeof this.rightBottomActiveItemRef.current?.customMenu === 'function'
-      ? this.rightBottomActiveItemRef.current.customMenu()
-      : null
-
     return (
       <div
         className={clsx(
@@ -121,7 +108,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="start"
               activeItem={leftTopActiveItem}
               open={leftTopPanelOpen}
-              customMenu={leftTopCustomMenu}
+              childrenRef={this.leftTopActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftTopPanel}
             >
@@ -138,7 +125,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="end"
               activeItem={rightTopActiveItem}
               open={rightTopPanelOpen}
-              customMenu={rightTopCustomMenu}
+              childrenRef={this.rightTopActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightTopPanel}
             >
@@ -156,7 +143,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="bottom"
               activeItem={leftBottomActiveItem}
               open={leftBottomPanelOpen}
-              customMenu={leftBottomCustomMenu}
+              childrenRef={this.leftBottomActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideLeftBottomPanel}
             >
@@ -182,7 +169,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
               position="bottom"
               activeItem={rightBottomActiveItem}
               open={rightBottomPanelOpen}
-              customMenu={rightBottomCustomMenu}
+              childrenRef={this.rightBottomActiveItemRef}
               setDrawerIsResizing={this.setDrawerIsResizing}
               hidePanel={this.hideRightBottomPanel}
             >

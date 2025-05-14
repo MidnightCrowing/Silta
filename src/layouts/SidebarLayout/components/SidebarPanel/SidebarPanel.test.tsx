@@ -2,6 +2,7 @@ import '@testing-library/jest-dom'
 
 import { FluentProvider, webLightTheme } from '@fluentui/react-components'
 import { act, fireEvent, render, screen } from '@testing-library/react'
+import { createRef } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { SidebarNavItem } from '../../shared/SidebarItem.types'
@@ -25,6 +26,8 @@ const mockProps: SidebarPanelProps = {
   setDrawerIsResizing: vi.fn(),
   hidePanel: vi.fn(),
   children: undefined,
+  // eslint-disable-next-line react/no-create-ref
+  childrenRef: createRef(),
 }
 
 const drawerLength: number = 320
