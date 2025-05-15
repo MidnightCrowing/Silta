@@ -1,2 +1,2 @@
 export { SidebarPanel } from './SidebarPanel'
-export type { SidebarPanelProps, SidebarPanelPropsBase } from './SidebarPanel.types'
+export type { SidebarPanelProps } from './SidebarPanel.types'

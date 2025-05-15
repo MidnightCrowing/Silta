@@ -1,15 +1,35 @@
-import { CounterBadge, Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
+import { CounterBadge, ToolbarButton, Tooltip, Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
+import { ChevronDownUpRegular, ChevronUpDownRegular } from '@fluentui/react-icons'
 
-import type { SidebarPanelPropsBase } from '~/layouts'
 import { SidebarPanel } from '~/layouts'
 
 function AsideContent({ count }: { count: number }) {
   return <CounterBadge count={count} appearance="ghost" size="small" />
 }
 
-export default function TagsPanel({ ...props }: SidebarPanelPropsBase) {
+export default function TagsPanel() {
   return (
-    <SidebarPanel title="插件" {...props}>
+    <SidebarPanel
+      title="标签"
+      fadeToolbar={(
+        <>
+          <Tooltip content="扩展所选" relationship="label">
+            <ToolbarButton
+              aria-label="Expand selected"
+              appearance="subtle"
+              icon={<ChevronUpDownRegular />}
+            />
+          </Tooltip>
+          <Tooltip content="全部收起" relationship="label">
+            <ToolbarButton
+              aria-label="Collapse all"
+              appearance="subtle"
+              icon={<ChevronDownUpRegular />}
+            />
+          </Tooltip>
+        </>
+      )}
+    >
       <Tree aria-label="Default">
         <TreeItem itemType="branch">
           <TreeItemLayout aside={<AsideContent count={3} />}>level 1, item 1</TreeItemLayout>

@@ -2,14 +2,13 @@ import type { AccordionToggleEventHandler, SelectionItemId } from '@fluentui/rea
 import { Accordion, Divider } from '@fluentui/react-components'
 import { useCallback, useState } from 'react'
 
-import type { SidebarPanelPropsBase } from '~/layouts'
 import { SidebarPanel } from '~/layouts'
 
 import { CustomAccordionItem, PluginCard, PluginsCustomMenu } from './components'
 import type { AccordionItem } from './PluginsPanel.types.ts'
 import type { PluginItemTypes } from './shared/PluginItem.types.ts'
 
-const DEFAULT_OPEN_ITEMS = ['Enabled']
+const DEFAULT_OPEN_ITEMS: AccordionItem[] = ['Enabled']
 
 const plugins: PluginItemTypes[] = [
   {
@@ -174,17 +173,17 @@ const plugins: PluginItemTypes[] = [
   },
 ]
 
-export default function PluginsPanel({ ...props }: SidebarPanelPropsBase) {
+export default function PluginsPanel() {
   const [visibleItems, setVisibleItems] = useState<AccordionItem[]>(['Enabled', 'Disabled', 'Installed'])
 
   // 即时更新的打开状态（用于 Accordion 控制）
-  const [pendingOpenItems, setPendingOpenItems] = useState(DEFAULT_OPEN_ITEMS)
+  const [pendingOpenItems, setPendingOpenItems] = useState<AccordionItem[]>(DEFAULT_OPEN_ITEMS)
 
   // 延迟应用的打开状态（用于控制布局伸缩动画）
-  const [committedOpenItems, setCommittedOpenItems] = useState(DEFAULT_OPEN_ITEMS)
+  const [committedOpenItems, setCommittedOpenItems] = useState<AccordionItem[]>(DEFAULT_OPEN_ITEMS)
 
   // 延迟同步 committedOpenItems，以配合 flex-1 动画
-  const handleAccordionToggle: AccordionToggleEventHandler<string> = (_, data) => {
+  const handleAccordionToggle: AccordionToggleEventHandler<AccordionItem> = (_, data) => {
     setPendingOpenItems(data.openItems)
     setTimeout(() => setCommittedOpenItems(data.openItems), 100)
   }
@@ -194,15 +193,14 @@ export default function PluginsPanel({ ...props }: SidebarPanelPropsBase) {
 
   // 选中项
   const [selectedItems, setSelectedItems] = useState<SelectionItemId[]>([])
-  const onSelectedItem = useCallback((value: string) => {
-    setSelectedItems([value as SelectionItemId])
+  const onSelectedItem = useCallback((value: SelectionItemId) => {
+    setSelectedItems([value])
   }, [])
 
   return (
     <SidebarPanel
       title="插件"
       customMenu={<PluginsCustomMenu visibleItems={visibleItems} setVisibleItems={setVisibleItems} />}
-      {...props}
     >
       <Accordion
         className="h-full flex-(~ col) overflow-hidden"

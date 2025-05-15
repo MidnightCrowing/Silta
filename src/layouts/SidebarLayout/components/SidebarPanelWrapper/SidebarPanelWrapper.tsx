@@ -1,17 +1,22 @@
 import { InlineDrawer } from '@fluentui/react-components'
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
-import KeepAlive from 'react-activation'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import type { SidebarPosition } from '../../shared/SidebarItem.types.ts'
 import { SidebarResize } from '../SidebarResize'
 import type { SidebarPanelWrapperProps } from './SidebarPanelWrapper.types.ts'
+import type { SidebarPanelWrapperContextType } from './SidebarPanelWrapperContext.ts'
+import { SidebarPanelWrapperContext } from './SidebarPanelWrapperContext.ts'
 
 export function SidebarPanelWrapper({
   className,
   children,
   position,
   activeItem,
+  isFadeTopbarPinned,
   open,
   setDrawerIsResizing,
+  setFadeTopbarPinned,
+  setItemPosition,
   hidePanel,
   ...props
 }: SidebarPanelWrapperProps) {
@@ -19,7 +24,7 @@ export function SidebarPanelWrapper({
   const animationFrame = useRef<number>(0)
   const [isResizing, setIsResizing] = useState<boolean>(false)
   const [drawerLength, setDrawerLength] = useState<number>(320)
-  const [pointerEnter, setPointerEnter] = useState(false)
+  const [pointerEnter, setPointerEnter] = useState<boolean>(false)
 
   const startResizingDrawer = useCallback(() => {
     setDrawerIsResizing(true)
@@ -38,13 +43,13 @@ export function SidebarPanelWrapper({
 
       const rect = sidebarRef.current.getBoundingClientRect()
 
-      if (position === 'start') {
+      if (position === 'leftTop') {
         setDrawerLength(clientX - rect.left)
       }
-      else if (position === 'end') {
+      else if (position === 'rightTop') {
         setDrawerLength(rect.right - clientX)
       }
-      else if (position === 'bottom') {
+      else {
         setDrawerLength(rect.bottom - clientY)
       }
     })
@@ -86,12 +91,40 @@ export function SidebarPanelWrapper({
     }
   }, [handlePointerEnter, handlePointerLeave, open])
 
-  const isBottom = position === 'bottom'
+  const drawerPosition = useMemo<'start' | 'end' | 'bottom'>(() => {
+    switch (position) {
+      case 'leftTop':
+        return 'start'
+      case 'rightTop':
+        return 'end'
+      default:
+        return 'bottom'
+    }
+  }, [position])
+
+  const isBottom: boolean = useMemo(() => {
+    return position === 'leftBottom' || position === 'rightBottom'
+  }, [position])
+
+  const setPosition = useCallback((newPosition: SidebarPosition) => {
+    if (activeItem) {
+      setItemPosition(activeItem?.id, newPosition)
+    }
+  }, [activeItem, setItemPosition])
+
+  const contextValue: SidebarPanelWrapperContextType = useMemo(() => ({
+    position,
+    pointerEnter,
+    hidePanel,
+    isFadeTopbarPinned,
+    setPosition,
+    setFadeTopbarPinned,
+  }), [position, pointerEnter, hidePanel, isFadeTopbarPinned, setPosition, setFadeTopbarPinned])
 
   return (
     <div className={className} relative {...props}>
       {/* Left panel resize component */}
-      {open && position === 'end' && (
+      {open && position === 'rightTop' && (
         <SidebarResize
           absolute
           pos="top-0 bottom-0 left-0"
@@ -104,7 +137,7 @@ export function SidebarPanelWrapper({
       )}
 
       {/* Bottom panel resize component */}
-      {open && position === 'bottom' && (
+      {open && isBottom && (
         <SidebarResize
           absolute
           pos="top-0 left-0 right-0"
@@ -125,7 +158,7 @@ export function SidebarPanelWrapper({
             : 'h-full! min-w-50px'
         }
         open={open}
-        position={position}
+        position={drawerPosition}
         separator
         style={
           isBottom
@@ -133,15 +166,15 @@ export function SidebarPanelWrapper({
             : { width: `min(${drawerLength}px, calc(100vw - 43px))` }
         }
       >
-        <KeepAlive cacheKey={activeItem?.id.toString()}>
+        <SidebarPanelWrapperContext.Provider value={contextValue}>
           <Suspense>
-            {children(hidePanel, pointerEnter)}
+            {children}
           </Suspense>
-        </KeepAlive>
+        </SidebarPanelWrapperContext.Provider>
       </InlineDrawer>
 
       {/* Right panel resize component */}
-      {open && position === 'start' && (
+      {open && position === 'leftTop' && (
         <SidebarResize
           absolute
           pos="top-0 bottom-0 right-0"

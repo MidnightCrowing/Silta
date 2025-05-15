@@ -1,12 +1,11 @@
 import { Tab, TabList, Textarea } from '@fluentui/react-components'
 
-import type { SidebarPanelPropsBase } from '~/layouts'
 import { SidebarPanel } from '~/layouts'
 
-export default function TerminalPanel({ ...props }: SidebarPanelPropsBase) {
+export default function TerminalPanel() {
   return (
     <SidebarPanel
-      title="文件"
+      title="终端"
       staticToolbar={(
         <TabList
           appearance="subtle"
@@ -19,7 +18,6 @@ export default function TerminalPanel({ ...props }: SidebarPanelPropsBase) {
           <Tab value="tab4">Fourth Tab</Tab>
         </TabList>
       )}
-      {...props}
     >
       <Textarea
         className="size-full"

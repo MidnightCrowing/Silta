@@ -47,7 +47,7 @@ function AddressBar({ activeItemId, activeItem, updatePageData }: AddressBarProp
         displayElement.removeEventListener('click', handleClick)
       }
     }
-  }, [])
+  })
 
   const handleInput = (event: FormEvent<HTMLTextAreaElement>) => {
     // 处理按下Enter事件，阻止换行

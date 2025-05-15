@@ -24,7 +24,7 @@ export function SearchSettingsPopover({ className, pageSettings, onSettingsChang
       .then((config) => {
         setBackgroundIsDark(config.bgIsDark)
       })
-  }, [])
+  })
 
   const setBgIsDark = async (isDark: boolean) => {
     setBackgroundIsDark(isDark)

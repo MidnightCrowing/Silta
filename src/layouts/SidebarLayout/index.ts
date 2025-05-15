@@ -1,5 +1,4 @@
 // SidebarPanel
-export type { SidebarPanelPropsBase } from './components'
 export { SidebarPanel } from './components'
 
 // SidebarItem

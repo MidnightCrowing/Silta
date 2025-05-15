@@ -25,26 +25,4 @@ export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
    * 可选的自定义菜单内容，将显示在面板中。
    */
   customMenu?: ReactNode
-
-  /**
-   * 指示指针是否当前悬停在面板上。
-   */
-  pointerEnter: boolean
-
-  /**
-   * 隐藏侧边栏面板的函数。
-   */
-  hidePanel: () => void
-}
-
-export interface SidebarPanelPropsBase {
-  /**
-   * 指示指针是否当前悬停在面板上。
-   */
-  pointerEnter: boolean
-
-  /**
-   * 隐藏侧边栏面板的函数。
-   */
-  hidePanel: () => void
 }

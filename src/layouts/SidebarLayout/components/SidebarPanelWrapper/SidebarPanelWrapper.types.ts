@@ -1,27 +1,22 @@
-import type { ReactNode } from 'react'
+import type { HTMLAttributes } from 'react'
 
-import type { SidebarActiveItem } from '../../shared/SidebarItem.types.ts'
+import type { SidebarActiveItem, SidebarActiveItemId, SidebarPosition } from '../../shared/SidebarItem.types.ts'
 
-export interface SidebarPanelWrapperProps {
+export interface SidebarPanelWrapperProps extends HTMLAttributes<HTMLDivElement> {
   /**
-   * @description 自定义类名
+   * @description 侧边栏位置
    */
-  className?: string
-
-  /**
-   * @description 子组件
-   */
-  children: (hidePanel: () => void, pointerEnter: boolean) => ReactNode
-
-  /**
-   * @description 侧边栏位置，开始、结束或底部
-   */
-  position: 'start' | 'end' | 'bottom'
+  position: SidebarPosition
 
   /**
    * @description 当前激活的项目
    */
   activeItem: SidebarActiveItem
+
+  /**
+   * @description 是否固定Fade顶部栏
+   */
+  isFadeTopbarPinned: boolean
 
   /**
    * @description 是否打开抽屉面板
@@ -33,6 +28,18 @@ export interface SidebarPanelWrapperProps {
    * @param state 状态
    */
   setDrawerIsResizing: (state: boolean) => void
+
+  /**
+   * @description 设置是否Fade固定顶部栏
+   * @param value 是否固定Fade顶部栏
+   */
+  setFadeTopbarPinned: (value: boolean) => void
+
+  /**
+   * @description 设置当前激活项目的位置
+   * @param itemId 项目ID
+   */
+  setItemPosition: (itemId: SidebarActiveItemId, newPosition: SidebarPosition) => void
 
   /**
    * @description 隐藏面板

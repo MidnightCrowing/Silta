@@ -97,8 +97,8 @@ export default function VideoPage({ className }: VideoPageProps) {
   const videoUrl: string = convertFileSrc(videoPath)
 
   // 页面信息
-  const [videoTitle, setVideoTitle] = useState<string | null | undefined>(undefined)
-  const [tags, setTags] = useState<string[] | undefined>(undefined)
+  const [videoTitle, setVideoTitle] = useState<string | null>()
+  const [tags, setTags] = useState<string[]>()
 
   const recs: VideoCardProps[] = useMemo(() => {
     const count = Math.floor(Math.random() * 0) // 随机生成 0 到 10 的数量

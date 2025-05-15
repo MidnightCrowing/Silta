@@ -19,6 +19,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
     rightBottomActiveItem: null,
     drawerIsResizing: false,
     bottomDrawersIsResizing: false,
+    isFadeTopbarPinned: false,
   }
 
   constructor(props: SidebarLayoutProps) {
@@ -45,6 +46,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
       rightBottomActiveItem,
       drawerIsResizing,
       bottomDrawersIsResizing,
+      isFadeTopbarPinned,
     } = this.state
 
     const itemGroups: Record<SidebarItem['position'], SidebarItem[]> = {
@@ -99,34 +101,32 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
           <div flex="~ row" grow overflow-hidden>
             {/* Left Sidebar Panel */}
             <SidebarPanelWrapper
-              position="start"
+              position="leftTop"
               activeItem={leftTopActiveItem}
+              isFadeTopbarPinned={isFadeTopbarPinned}
               open={leftTopPanelOpen}
               setDrawerIsResizing={this.setDrawerIsResizing}
+              setFadeTopbarPinned={this.setFadeTopbarPinned}
+              setItemPosition={this.setItemPosition}
               hidePanel={this.hideLeftTopPanel}
             >
-              {(hidePanel, pointerEnter) =>
-                createElement(
-                  leftTopElement,
-                  leftTopElement === Fragment ? undefined : { hidePanel, pointerEnter },
-                )}
+              {createElement(leftTopElement)}
             </SidebarPanelWrapper>
 
             {children}
 
             {/* Right Sidebar Panel */}
             <SidebarPanelWrapper
-              position="end"
+              position="rightTop"
               activeItem={rightTopActiveItem}
+              isFadeTopbarPinned={isFadeTopbarPinned}
               open={rightTopPanelOpen}
               setDrawerIsResizing={this.setDrawerIsResizing}
+              setFadeTopbarPinned={this.setFadeTopbarPinned}
+              setItemPosition={this.setItemPosition}
               hidePanel={this.hideRightTopPanel}
             >
-              {(hidePanel, pointerEnter) =>
-                createElement(
-                  rightTopElement,
-                  rightTopElement === Fragment ? undefined : { hidePanel, pointerEnter },
-                )}
+              { createElement(rightTopElement)}
             </SidebarPanelWrapper>
           </div>
 
@@ -134,17 +134,16 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
           <div flex="~ row">
             <SidebarPanelWrapper
               className="has-[.fui-InlineDrawer]:flex-1"
-              position="bottom"
+              position="leftBottom"
               activeItem={leftBottomActiveItem}
+              isFadeTopbarPinned={isFadeTopbarPinned}
               open={leftBottomPanelOpen}
               setDrawerIsResizing={this.setDrawerIsResizing}
+              setFadeTopbarPinned={this.setFadeTopbarPinned}
+              setItemPosition={this.setItemPosition}
               hidePanel={this.hideLeftBottomPanel}
             >
-              {(hidePanel, pointerEnter) =>
-                createElement(
-                  leftBottomElement,
-                  leftBottomElement === Fragment ? undefined : { hidePanel, pointerEnter },
-                )}
+              {createElement(leftBottomElement)}
             </SidebarPanelWrapper>
 
             {leftBottomPanelOpen && rightBottomPanelOpen && (
@@ -160,19 +159,19 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
 
             <SidebarPanelWrapper
               className="has-[.fui-InlineDrawer]:flex-1"
-              position="bottom"
+              position="rightBottom"
               activeItem={rightBottomActiveItem}
+              isFadeTopbarPinned={isFadeTopbarPinned}
               open={rightBottomPanelOpen}
               setDrawerIsResizing={this.setDrawerIsResizing}
+              setFadeTopbarPinned={this.setFadeTopbarPinned}
+              setItemPosition={this.setItemPosition}
               hidePanel={this.hideRightBottomPanel}
             >
-              {(hidePanel, pointerEnter) =>
-                createElement(
-                  rightBottomElement,
-                  rightBottomElement === Fragment ? undefined : { hidePanel, pointerEnter },
-                )}
+              { createElement(rightBottomElement)}
             </SidebarPanelWrapper>
           </div>
+
         </div>
 
         {/* Right Sidebar Navigation */}
@@ -258,5 +257,35 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
 
   private startResizingBottomDrawers = () => {
     this.setState({ bottomDrawersIsResizing: true })
+  }
+
+  private setFadeTopbarPinned = (value: boolean) => {
+    this.setState({ isFadeTopbarPinned: value })
+  }
+
+  private setItemPosition = (itemId: SidebarActiveItemId, newPosition: SidebarPosition) => {
+    const item = this.props.items?.find(item => item.id === itemId)
+    if (item !== undefined) {
+      item.position = newPosition
+
+      this.setState((prevState) => {
+        const newState: Partial<SidebarLayoutState> = {}
+
+        if (itemId === prevState.leftTopActiveItem?.id || newPosition === 'leftTop') {
+          newState.leftTopActiveItem = newPosition === 'leftTop' ? (item as SidebarNavItem) : null
+        }
+        if (itemId === prevState.leftBottomActiveItem?.id || newPosition === 'leftBottom') {
+          newState.leftBottomActiveItem = newPosition === 'leftBottom' ? (item as SidebarNavItem) : null
+        }
+        if (itemId === prevState.rightTopActiveItem?.id || newPosition === 'rightTop') {
+          newState.rightTopActiveItem = newPosition === 'rightTop' ? (item as SidebarNavItem) : null
+        }
+        if (itemId === prevState.rightBottomActiveItem?.id || newPosition === 'rightBottom') {
+          newState.rightBottomActiveItem = newPosition === 'rightBottom' ? (item as SidebarNavItem) : null
+        }
+
+        return { ...prevState, ...newState }
+      })
+    }
   }
 }

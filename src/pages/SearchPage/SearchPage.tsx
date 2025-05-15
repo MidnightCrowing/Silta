@@ -40,7 +40,7 @@ export default function SearchPage({ className }: SearchPageProps) {
       .then((config) => {
         setShowBackground(config.showBg)
       })
-  }, [])
+  })
 
   // 更新背景图片
   useEffect(() => {

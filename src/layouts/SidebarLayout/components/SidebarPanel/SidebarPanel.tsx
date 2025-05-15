@@ -7,12 +7,12 @@ import {
   motionTokens,
   Toolbar,
   ToolbarButton,
-  ToolbarGroup,
   Tooltip,
 } from '@fluentui/react-components'
 import { Subtract24Regular } from '@fluentui/react-icons'
 
 import { SidebarPanelMenu } from '../SidebarPanelMenu'
+import { useSidebarPanelWrapperContext } from '../SidebarPanelWrapper'
 import type { SidebarPanelProps } from './SidebarPanel.types'
 
 const ToolbarFade = createPresenceComponent({
@@ -28,7 +28,9 @@ const ToolbarFade = createPresenceComponent({
   },
 })
 
-function HideButton({ hidePanel }: { hidePanel: () => void }) {
+function HideButton() {
+  const { hidePanel } = useSidebarPanelWrapperContext()
+
   return (
     <Tooltip content="隐藏" relationship="label">
       <ToolbarButton
@@ -47,9 +49,9 @@ export function SidebarPanel({
   staticToolbar,
   fadeToolbar,
   customMenu,
-  pointerEnter,
-  hidePanel,
 }: SidebarPanelProps) {
+  const { pointerEnter, isFadeTopbarPinned } = useSidebarPanelWrapperContext()
+
   return (
     <div flex="~ col" size-full>
       <DrawerHeader className="p-(t-15px! x-5px!)">
@@ -60,13 +62,11 @@ export function SidebarPanel({
 
           {staticToolbar}
 
-          <ToolbarFade visible={pointerEnter}>
+          <ToolbarFade visible={isFadeTopbarPinned || pointerEnter}>
             <Toolbar className="ml-auto">
-              <ToolbarGroup className="flex items-center gap-2px">
-                {fadeToolbar}
-                <SidebarPanelMenu customMenu={customMenu} />
-                <HideButton hidePanel={hidePanel} />
-              </ToolbarGroup>
+              {fadeToolbar}
+              <SidebarPanelMenu customMenu={customMenu} />
+              <HideButton />
             </Toolbar>
           </ToolbarFade>
         </DrawerHeaderNavigation>

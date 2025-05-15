@@ -12,7 +12,7 @@ export default function ImageCard({ index, imageInfo }: ImageCardProps) {
 
   // 如果未传递 imageInfo，则设置默认值
   const rawImage = imageInfo ? convertFileSrc(imageInfo.path) : ''
-  const aspectRatio = useMemo(() => {
+  const aspectRatio = useMemo<string>(() => {
     if (imageInfo) {
       const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
       const divisor = gcd(imageInfo.width, imageInfo.height)

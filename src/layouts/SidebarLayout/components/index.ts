@@ -3,7 +3,7 @@ export type { SidebarNavigationProps } from './SidebarNavigation'
 export { SidebarNavigation } from './SidebarNavigation'
 
 // SidebarPanel
-export type { SidebarPanelProps, SidebarPanelPropsBase } from './SidebarPanel'
+export type { SidebarPanelProps } from './SidebarPanel'
 export { SidebarPanel } from './SidebarPanel'
 
 // SidebarPanelWrapper

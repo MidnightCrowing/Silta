@@ -1,5 +1,4 @@
 import { createElement, Suspense, useMemo, useState } from 'react'
-import KeepAlive from 'react-activation'
 
 import { componentMap } from '~/constants/tabPage.ts'
 import { LocationProvider, useLocation } from '~/contexts/location'
@@ -44,17 +43,15 @@ export function TabPage({
       />
 
       <div grow overflow-auto>
-        <KeepAlive cacheKey={activeItemId}>
-          <LocationProvider
-            pageId={activeItemId}
-            activeTab={activeItem}
-            updatePageData={updatePageData}
-          >
-            {showPageWrapper && (
-              <PageWrapper />
-            )}
-          </LocationProvider>
-        </KeepAlive>
+        <LocationProvider
+          pageId={activeItemId}
+          activeTab={activeItem}
+          updatePageData={updatePageData}
+        >
+          {showPageWrapper && (
+            <PageWrapper />
+          )}
+        </LocationProvider>
       </div>
     </div>
   )

@@ -64,4 +64,9 @@ export interface SidebarLayoutState {
    * @description 底部抽屉是否正在调整大小
    */
   bottomDrawersIsResizing: boolean
+
+  /**
+   * @description 是否总是显示fade顶部栏
+   */
+  isFadeTopbarPinned: boolean
 }

@@ -22,14 +22,14 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
   const [loadError, setLoadError] = useState<string>('')
 
   // 页面信息
-  const [imageTitle, setImageTitle] = useState<string | null | undefined>(undefined)
-  const [imageLink, setImageLink] = useState<string | undefined>(undefined)
-  const [breadcrumbPath, setBreadcrumbPath] = useState<Array<{ title: string, link: string }> | undefined>(undefined)
-  const [publishTime, setPublishTime] = useState<string | undefined>(undefined)
-  const [source, setSource] = useState<string | undefined>(undefined)
-  const [authorName, setAuthorName] = useState<string | undefined>(undefined)
-  const [description, setDescription] = useState<string | undefined>(undefined)
-  const [tags, setTags] = useState<string[] | undefined>(undefined)
+  const [imageTitle, setImageTitle] = useState<string | null>()
+  const [imageLink, setImageLink] = useState<string>()
+  const [breadcrumbPath, setBreadcrumbPath] = useState<Array<{ title: string, link: string }>>()
+  const [publishTime, setPublishTime] = useState<string>()
+  const [source, setSource] = useState<string>()
+  const [authorName, setAuthorName] = useState<string>()
+  const [description, setDescription] = useState<string>()
+  const [tags, setTags] = useState<string[]>()
 
   // 加载页面内容
   useEffect(() => {
