@@ -17,7 +17,7 @@ function LockButton() {
   )
 }
 
-function AddressBar({ activeItemId, activeItem, updatePageData }: AddressBarProps) {
+export function AddressBar({ activeItemId, activeItem, updatePageData }: AddressBarProps) {
   const [text, setText] = useState<string>('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const displayRef = useRef<HTMLDivElement | null>(null)
@@ -108,5 +108,3 @@ function AddressBar({ activeItemId, activeItem, updatePageData }: AddressBarProp
     </div>
   )
 }
-
-export default AddressBar

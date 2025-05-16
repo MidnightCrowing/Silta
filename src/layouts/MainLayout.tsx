@@ -93,7 +93,7 @@ function MainLayout() {
       size-full
       overflow-hidden
     >
-      <TabLayout items={TabItems} grow overflow-hidden />
+      <TabLayout className="grow overflow-hidden" items={TabItems} />
     </SidebarLayout>
   )
 }

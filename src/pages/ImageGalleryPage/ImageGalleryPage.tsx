@@ -1,51 +1,51 @@
 import { MessageBar, MessageBarBody, MessageBarTitle } from '@fluentui/react-components'
 import { readTextFile } from '@tauri-apps/plugin-fs'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect } from 'react'
 import { PhotoProvider } from 'react-photo-view'
 
 import { getLocalGalleryConfigPath, listLocalGalleryImages } from '~/api/gallery.ts'
 import { ImageCard, ImageCardList } from '~/components/ImageCard'
 import { useLocation } from '~/contexts/location'
-import type { GalleryImageInfo } from '~/tauri-types.ts'
 
 import { GalleryTopBar } from './components'
 import { parseImageGalleryConfig } from './configParser.ts'
-import type { ImageGalleryConfig, ImageGalleryLocationProps, ImageGalleryPageProps } from './ImageGalleryPage.types'
+import type {
+  ImageGalleryConfig,
+  ImageGalleryLocationProps,
+  ImageGalleryPageProps,
+  ImageGalleryStore,
+} from './ImageGalleryPage.types'
 
 export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
   // 获取页面位置传参
-  const { location, getProps, setLocation } = useLocation()
-  const props = getProps<ImageGalleryLocationProps>()
+  const {
+    location,
+    props,
+    store,
+    setLocation,
+    setStore,
+  } = useLocation<ImageGalleryLocationProps, ImageGalleryStore>()
   const fullPath: string = props.path ?? ''
 
-  const [imageInfos, setImageInfos] = useState<GalleryImageInfo[]>([])
-  const [loadError, setLoadError] = useState<string>('')
-
-  // 页面信息
-  const [imageTitle, setImageTitle] = useState<string | null>()
-  const [imageLink, setImageLink] = useState<string>()
-  const [breadcrumbPath, setBreadcrumbPath] = useState<Array<{ title: string, link: string }>>()
-  const [publishTime, setPublishTime] = useState<string>()
-  const [source, setSource] = useState<string>()
-  const [authorName, setAuthorName] = useState<string>()
-  const [description, setDescription] = useState<string>()
-  const [tags, setTags] = useState<string[]>()
+  const {
+    imageInfos,
+    loadError,
+    imageTitle,
+    imageLink,
+    breadcrumbPath,
+    publishTime,
+    source,
+    authorName,
+    description,
+    tags,
+  } = store
 
   // 加载页面内容
   useEffect(() => {
     const loadGalleryContent = async () => {
       // 还原默认值
       setLocation({ title: '正在加载...' })
-      setImageInfos([])
-      setLoadError('')
-      setImageTitle(undefined)
-      setImageLink(undefined)
-      setBreadcrumbPath(undefined)
-      setPublishTime(undefined)
-      setSource(undefined)
-      setAuthorName(undefined)
-      setDescription(undefined)
-      setTags(undefined)
+      setStore({ loadError: null })
 
       // 获取图片集配置文件内容
       getLocalGalleryConfigPath(fullPath)
@@ -55,31 +55,39 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
 
           // 设置页面信息
           setLocation({ title: parsedConfig.title })
-          setImageTitle(parsedConfig.title)
-          setImageLink(parsedConfig.link)
-          setBreadcrumbPath(parsedConfig.breadcrumbPath)
-          setPublishTime(parsedConfig.publishTime)
-          setSource(parsedConfig.source)
-          setAuthorName(parsedConfig.authorName)
-          setDescription(parsedConfig.description)
-          setTags(parsedConfig.tags)
+          setStore({
+            imageTitle: parsedConfig.title,
+            imageLink: parsedConfig.link,
+            breadcrumbPath: parsedConfig.breadcrumbPath,
+            publishTime: parsedConfig.publishTime,
+            source: parsedConfig.source,
+            authorName: parsedConfig.authorName,
+            description: parsedConfig.description,
+            tags: parsedConfig.tags,
+          })
         })
         .catch((error: any) => {
           console.error(`加载配置文件路径 ${fullPath} 时发生错误`, error)
-          setLoadError(`无法加载配置文件路径: ${fullPath || null}，错误信息: ${error.message || error}`)
           setLocation({ title: location.url })
-          setImageTitle(null)
+          setStore({
+            loadError: `无法加载配置文件路径: ${fullPath || null}，错误信息: ${error.message || error}`,
+            imageTitle: null,
+          })
         })
       // 获取图片列表
       listLocalGalleryImages(fullPath)
-        .then(setImageInfos)
+        .then(imageInfos => setStore({ imageInfos }))
         .catch((error: any) => {
           console.error(`加载路径 ${fullPath} 的图片时发生错误`, error)
-          setLoadError(`无法加载路径 ${fullPath || null} 的图片，错误信息: ${error.message || error}`)
+          setStore({
+            loadError: `无法加载路径 ${fullPath || null} 的图片，错误信息: ${error.message || error}`,
+          })
         })
     }
 
-    loadGalleryContent().then(() => {})
+    if (store?.loadError === undefined) {
+      loadGalleryContent()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fullPath])
 
@@ -92,7 +100,7 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
         publishTime={publishTime}
         source={source}
         authorName={authorName}
-        imageCount={imageInfos.length}
+        imageCount={imageInfos?.length}
         description={description}
         tags={tags}
       />
@@ -118,7 +126,7 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
               >
                 {/* Loading placeholder */}
                 {
-                  imageInfos.length === 0 && !loadError && (
+                  imageInfos === undefined && !loadError && (
                     Array.from({ length: 12 }, (_, index) => (
                       <Suspense key={index}>
                         <ImageCard index={index} />
@@ -127,7 +135,7 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
                 }
 
                 {/* Image cards */}
-                {imageInfos.map((imageInfo, index) => (
+                {imageInfos?.map((imageInfo, index) => (
                   <Suspense key={imageInfo.name}>
                     <ImageCard
                       index={index}

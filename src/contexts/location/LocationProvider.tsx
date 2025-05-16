@@ -4,20 +4,26 @@ import type { TabItemTypes } from '~/layouts/TabLayout'
 import { pushTabItemUrl } from '~/layouts/TabLayout'
 import { parseUrlToComponentData } from '~/utils/urlUtils.ts'
 
-import type { LocationContextType, LocationProps, LocationProviderProps, LocationState } from './Location.types'
+import type { LocationContextType, LocationProviderProps, LocationState } from './Location.types'
 import { LocationContext } from './LocationContext'
 
-export function LocationProvider({ children, pageId, activeTab, updatePageData }: LocationProviderProps) {
+export function LocationProvider({
+  children,
+  pageId,
+  activeTab,
+  store,
+  setStore,
+  clearStore,
+  updatePageData,
+}: LocationProviderProps) {
   const location: LocationState = useMemo(() => ({
     title: activeTab.title,
     icon: activeTab.icon,
     url: activeTab.history[activeTab.historyIndex],
   }), [activeTab])
 
-  const getProps = useCallback(
-    <T extends LocationProps>(): T => {
-      return parseUrlToComponentData(location.url).props as T
-    },
+  const props = useMemo(
+    () => parseUrlToComponentData(location.url).props,
     [location],
   )
 
@@ -41,14 +47,26 @@ export function LocationProvider({ children, pageId, activeTab, updatePageData }
         return updatedTab
       })
     },
-    [pageId, updatePageData],
+    [pageId, updatePageData, clearStore],
+  )
+
+  const getAliveName = useCallback(
+    (name: string): string => {
+      return `TabPage-${pageId}-${name}`
+    },
+    [pageId],
   )
 
   const value = useMemo<LocationContextType>(() => ({
+    pageId,
     location,
-    getProps,
+    props,
+    store,
     setLocation,
-  }), [location, getProps, setLocation])
+    setStore,
+    clearStore,
+    getAliveName,
+  }), [pageId, location, store, props, setLocation, setStore, clearStore, getAliveName])
 
   return (
     <LocationContext.Provider value={value}>

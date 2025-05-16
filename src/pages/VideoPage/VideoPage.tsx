@@ -25,7 +25,8 @@ import { getCurrentWindow } from '@tauri-apps/api/window'
 import { readTextFile } from '@tauri-apps/plugin-fs'
 import type { JoLPlayerRef } from 'jol-player'
 import type { FC } from 'react'
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import KeepAlive from 'react-activation'
 
 import { getLocalVideoConfigPath } from '~/api/video.ts'
 import type { VideoCardProps } from '~/components/VideoCard'
@@ -33,7 +34,7 @@ import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
 
 import { parseVideoConfig } from './configParser.ts'
-import type { VideoConfig, VideoLocationProps, VideoPageProps } from './VideoPage.types'
+import type { VideoConfig, VideoLocationProps, VideoPageProps, VideoStore } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
@@ -89,25 +90,32 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
 }
 
 export default function VideoPage({ className }: VideoPageProps) {
-  const { location, getProps, setLocation } = useLocation()
-  const props = getProps<VideoLocationProps>()
+  const {
+    location,
+    props,
+    store,
+    setLocation,
+    setStore,
+    getAliveName,
+  } = useLocation<VideoLocationProps, VideoStore>()
   const videoPath: string = props.src ?? ''
 
+  // 页面信息
+  const { videoTitle, tags } = store
+
+  const videoAliveName = getAliveName('video')
   const videoRef = useRef<JoLPlayerRef>(null)
   const videoUrl: string = convertFileSrc(videoPath)
 
-  // 页面信息
-  const [videoTitle, setVideoTitle] = useState<string | null>()
-  const [tags, setTags] = useState<string[]>()
-
-  const recs: VideoCardProps[] = useMemo(() => {
-    const count = Math.floor(Math.random() * 0) // 随机生成 0 到 10 的数量
-    return Array.from({ length: count }, (_, i) => ({
-      url: `https://example.com/video-${i}`,
-      cover: 'https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/realms/MCV_soothingscene_cozyfarm_editorial_1280x768.jpg',
-      title: `视频标题 ${i + 1}`,
-    }))
-  }, [])
+  // const recs: VideoCardProps[] = useMemo(() => {
+  //   const count = Math.floor(Math.random() * 0) // 随机生成 0 到 10 的数量
+  //   return Array.from({ length: count }, (_, i) => ({
+  //     url: `https://example.com/video-${i}`,
+  //     cover: 'https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/realms/MCV_soothingscene_cozyfarm_editorial_1280x768.jpg',
+  //     title: `视频标题 ${i + 1}`,
+  //   }))
+  // }, [])
+  const recs: VideoCardProps[] = []
   const showDownload: boolean = false
 
   // 加载页面内容
@@ -115,8 +123,6 @@ export default function VideoPage({ className }: VideoPageProps) {
     const loadVideoConfig = async () => {
       // 还原默认值
       setLocation({ title: '正在加载...' })
-      setVideoTitle(undefined)
-      setTags(undefined)
 
       // 获取视频配置文件内容
       getLocalVideoConfigPath(videoPath)
@@ -126,18 +132,18 @@ export default function VideoPage({ className }: VideoPageProps) {
 
           // 设置页面信息
           setLocation({ title: parsedConfig.title })
-          setVideoTitle(parsedConfig.title)
-          setTags(parsedConfig.tags)
+          setStore({ videoTitle: config.title, tags: config.tags })
         })
         .catch((error: any) => {
           console.error(`加载配置文件路径 ${videoPath} 时发生错误`, error)
           setLocation({ title: location.url })
-          setVideoTitle(null)
+          setStore({ videoTitle: null })
         })
     }
 
-    loadVideoConfig().then(() => {
-    })
+    if (store?.videoTitle === undefined) {
+      loadVideoConfig()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoPath])
 
@@ -150,25 +156,27 @@ export default function VideoPage({ className }: VideoPageProps) {
     <div className={`@container overflow-x-hidden ${className}`}>
       <div p="x-20px y-10px" flex={`~ col ${hasRecs ? '@[800px]:row' : 'items-center'}`} gap="10px">
         <div className={hasRecs ? '@[800px]:w-70%' : 'w-75%'} shrink-0 flex="~ col" gap="10px">
-          <Suspense>
-            <JoLPlayer
-              ref={videoRef}
-              className="size-unset! rounded-5px shadow-xl overflow-hidden"
-              onEnterFullScreen={async () => await getCurrentWindow().setFullscreen(true)}
-              onExitFullScreen={async () => await getCurrentWindow().setFullscreen(false)}
-              option={{
-                videoSrc: videoUrl,
-                mode: 'widthFix',
-                theme: '#FF0033',
-                language: 'zh',
-                pausePlacement: 'center',
-                isShowScreenshot: false,
-                isShowWebFullScreen: true,
-                isProgressFloat: true,
-                isToast: true,
-              }}
-            />
-          </Suspense>
+          <KeepAlive name={videoAliveName} when>
+            <Suspense>
+              <JoLPlayer
+                ref={videoRef}
+                className="size-unset! rounded-5px shadow-xl overflow-hidden"
+                onEnterFullScreen={async () => await getCurrentWindow().setFullscreen(true)}
+                onExitFullScreen={async () => await getCurrentWindow().setFullscreen(false)}
+                option={{
+                  videoSrc: videoUrl,
+                  mode: 'widthFix',
+                  theme: '#FF0033',
+                  language: 'zh',
+                  pausePlacement: 'center',
+                  isShowScreenshot: false,
+                  isShowWebFullScreen: true,
+                  isProgressFloat: true,
+                  isToast: true,
+                }}
+              />
+            </Suspense>
+          </KeepAlive>
 
           <Card>
             <Skeleton aria-label="Loading video info">

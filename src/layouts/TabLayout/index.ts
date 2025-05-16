@@ -1,3 +1,5 @@
+export { tabPagesReducer } from './components'
+
 // TabItem
 export type { TabItemTypes } from './shared/TabItem.types'
 export { pushTabItemUrl } from './shared/TabItem.util'

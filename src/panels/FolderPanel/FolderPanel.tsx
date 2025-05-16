@@ -7,17 +7,28 @@ import {
   Image20Regular,
   VideoClip20Regular,
 } from '@fluentui/react-icons'
-import { useState } from 'react'
+import { useCallback } from 'react'
 import KeepAlive from 'react-activation'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { SidebarPanel } from '~/layouts'
+import type { RootState } from '~/store'
 
 import { FolderCustomMenu } from './components'
 import type { ShowGroup, SortBy } from './FolderPanel.types.ts'
+import { setShowGroup, setSortBy } from './folderPanelSlice.ts'
 
 export default function FolderPanel() {
-  const [showGroup, setShowGroup] = useState<ShowGroup[]>(['member', 'temporary'])
-  const [sortBy, setSortBy] = useState<SortBy[]>(['name'])
+  const dispatch = useDispatch()
+  const { showGroup, sortBy } = useSelector((state: RootState) => state.folderPanel)
+
+  const handleSetShowGroup = useCallback((newShowGroup: ShowGroup[]) => {
+    dispatch(setShowGroup(newShowGroup))
+  }, [dispatch])
+
+  const handleSetSortBy = useCallback((newSortBy: SortBy) => {
+    dispatch(setSortBy(newSortBy))
+  }, [dispatch])
 
   return (
     <SidebarPanel
@@ -51,9 +62,9 @@ export default function FolderPanel() {
       customMenu={(
         <FolderCustomMenu
           showGroup={showGroup}
-          setShowGroup={setShowGroup}
           sortBy={sortBy}
-          setSortBy={setSortBy}
+          onSetShowGroup={handleSetShowGroup}
+          onSetSortBy={handleSetSortBy}
         />
       )}
     >

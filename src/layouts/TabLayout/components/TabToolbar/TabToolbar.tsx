@@ -1,4 +1,5 @@
-import { Button, Tooltip } from '@fluentui/react-components'
+import type { MenuProps } from '@fluentui/react-components'
+import { Button, Menu, MenuItem, MenuList, MenuPopover, Tooltip } from '@fluentui/react-components'
 import {
   ArrowClockwise20Regular,
   ArrowClockwiseDashes20Regular,
@@ -8,7 +9,7 @@ import {
 } from '@fluentui/react-icons'
 import { useEffect, useMemo, useState } from 'react'
 
-import AddressBar from './AddressBar.tsx'
+import { AddressBar } from './AddressBar.tsx'
 import type { BackButtonProps, ForwardButtonProps, RefreshButtonProps, TabToolbarProps } from './TabToolbar.types'
 
 function BackButton({ activeItemId, activeItem, updatePageData }: BackButtonProps) {
@@ -52,21 +53,31 @@ function ForwardButton({ activeItemId, activeItem, updatePageData }: ForwardButt
 }
 
 function RefreshButton({ refreshPage }: RefreshButtonProps) {
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
-    if (isRefreshing) {
-      const timer = setTimeout(() => {
-        setIsRefreshing(false)
-      }, 300)
-
-      return () => clearTimeout(timer)
-    }
+    if (!isRefreshing)
+      return
+    const timer = setTimeout(() => setIsRefreshing(false), 300)
+    return () => clearTimeout(timer)
   }, [isRefreshing])
 
-  const handleRefresh = () => {
+  const triggerRefresh = (clearCache: boolean) => {
     setIsRefreshing(true)
-    refreshPage()
+    refreshPage(clearCache)
+    setMenuOpen(false)
+  }
+
+  const handleContextMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setAnchorEl(e.currentTarget)
+    setMenuOpen(true)
+  }
+
+  const onOpenChange: MenuProps['onOpenChange'] = (_e, data) => {
+    setMenuOpen(data.open)
   }
 
   const RefreshIcon = isRefreshing
@@ -74,13 +85,29 @@ function RefreshButton({ refreshPage }: RefreshButtonProps) {
     : <ArrowClockwise20Regular />
 
   return (
-    <Tooltip content="刷新" relationship="label" positioning="below">
-      <Button
-        appearance="subtle"
-        icon={RefreshIcon}
-        onClick={handleRefresh}
-      />
-    </Tooltip>
+    <>
+      <Tooltip content="刷新" relationship="label" positioning="below">
+        <Button
+          appearance="subtle"
+          icon={RefreshIcon}
+          onClick={() => triggerRefresh(false)}
+          onContextMenu={handleContextMenu}
+        />
+      </Tooltip>
+
+      <Menu
+        open={menuOpen}
+        onOpenChange={onOpenChange}
+        positioning={{ target: anchorEl }}
+      >
+        <MenuPopover>
+          <MenuList>
+            <MenuItem onClick={() => triggerRefresh(false)}>正常刷新</MenuItem>
+            <MenuItem onClick={() => triggerRefresh(true)}>清空缓存并刷新</MenuItem>
+          </MenuList>
+        </MenuPopover>
+      </Menu>
+    </>
   )
 }
 
@@ -92,7 +119,12 @@ function HistoryButton() {
   )
 }
 
-export function TabToolbar({ activeItemId, activeItem, updatePageData, refreshPage }: TabToolbarProps) {
+export function TabToolbar({
+  activeItemId,
+  activeItem,
+  updatePageData,
+  refreshPage,
+}: TabToolbarProps) {
   return (
     <div
       className="TabLayout TabToolbar @container"

@@ -13,7 +13,7 @@ export function CustomAccordionItem({ value, title, count, committedOpenItems, c
         <CounterBadge count={count} shape="rounded" size="small" />
       </AccordionHeader>
       <AccordionPanel className="h-full mx-0! overflow-(x-hidden! y-scroll!)">
-        <List selectionMode="single" navigationMode="items">
+        <List selectionMode="single" navigationMode="composite">
           {children}
         </List>
       </AccordionPanel>

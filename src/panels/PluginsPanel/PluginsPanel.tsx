@@ -1,14 +1,15 @@
 import type { AccordionToggleEventHandler, SelectionItemId } from '@fluentui/react-components'
 import { Accordion, Divider } from '@fluentui/react-components'
 import { useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { SidebarPanel } from '~/layouts'
+import type { RootState } from '~/store'
 
 import { CustomAccordionItem, PluginCard, PluginsCustomMenu } from './components'
 import type { AccordionItem } from './PluginsPanel.types.ts'
+import { setOpenItems, setVisibleItems } from './pluginsPanelSlice.ts'
 import type { PluginItemTypes } from './shared/PluginItem.types.ts'
-
-const DEFAULT_OPEN_ITEMS: AccordionItem[] = ['Enabled']
 
 const plugins: PluginItemTypes[] = [
   {
@@ -174,19 +175,21 @@ const plugins: PluginItemTypes[] = [
 ]
 
 export default function PluginsPanel() {
-  const [visibleItems, setVisibleItems] = useState<AccordionItem[]>(['Enabled', 'Disabled', 'Installed'])
-
-  // 即时更新的打开状态（用于 Accordion 控制）
-  const [pendingOpenItems, setPendingOpenItems] = useState<AccordionItem[]>(DEFAULT_OPEN_ITEMS)
+  const dispatch = useDispatch()
+  const { visibleItems, openItems } = useSelector((state: RootState) => state.pluginsPanel)
 
   // 延迟应用的打开状态（用于控制布局伸缩动画）
-  const [committedOpenItems, setCommittedOpenItems] = useState<AccordionItem[]>(DEFAULT_OPEN_ITEMS)
+  const [committedOpenItems, setCommittedOpenItems] = useState<AccordionItem[]>(openItems)
+
+  const handleSetVisibleItems = useCallback((newItems: AccordionItem[]) => {
+    dispatch(setVisibleItems(newItems))
+  }, [dispatch])
 
   // 延迟同步 committedOpenItems，以配合 flex-1 动画
-  const handleAccordionToggle: AccordionToggleEventHandler<AccordionItem> = (_, data) => {
-    setPendingOpenItems(data.openItems)
+  const handleAccordionToggle = useCallback<AccordionToggleEventHandler<AccordionItem>>((_, data) => {
+    dispatch(setOpenItems(data.openItems))
     setTimeout(() => setCommittedOpenItems(data.openItems), 100)
-  }
+  }, [dispatch])
 
   const enabledPlugins = plugins.filter(item => item.isEnabled)
   const disabledPlugins = plugins.filter(item => !item.isEnabled)
@@ -200,13 +203,13 @@ export default function PluginsPanel() {
   return (
     <SidebarPanel
       title="插件"
-      customMenu={<PluginsCustomMenu visibleItems={visibleItems} setVisibleItems={setVisibleItems} />}
+      customMenu={<PluginsCustomMenu visibleItems={visibleItems} setVisibleItems={handleSetVisibleItems} />}
     >
       <Accordion
         className="h-full flex-(~ col) overflow-hidden"
         multiple
         collapsible
-        openItems={pendingOpenItems}
+        openItems={openItems}
         onToggle={handleAccordionToggle}
       >
         {visibleItems.includes('Enabled') && (

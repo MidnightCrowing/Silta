@@ -12,6 +12,14 @@ export interface VideoLocationProps extends LocationProps {
   src: string
 }
 
+/** 页面存储属性 */
+export interface VideoStore {
+  // 视频标题
+  videoTitle: string | null
+  // 标签列表
+  tags: string[]
+}
+
 /** 配置文件结构，最新版本配置接口 */
 export type VideoConfig = VideoConfigV1
 

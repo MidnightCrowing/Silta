@@ -45,7 +45,7 @@ export interface RefreshButtonProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 刷新页面
    */
-  refreshPage: () => void
+  refreshPage: (isClearStore: boolean) => void
 }
 
 export interface AddressBarProps extends HTMLAttributes<HTMLDivElement> {
@@ -88,5 +88,5 @@ export interface TabToolbarProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * @description 刷新页面
    */
-  refreshPage: () => void
+  refreshPage: (isClearStore: boolean) => void
 }

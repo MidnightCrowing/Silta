@@ -21,7 +21,10 @@ const mockProps = {
     history: [],
     historyIndex: 0,
   },
+  store: {},
   updatePageData: mockUpdatePageData,
+  setStore: vi.fn(),
+  clearStore: vi.fn(),
 }
 
 // Mock Tauri API

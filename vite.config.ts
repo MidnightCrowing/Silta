@@ -21,7 +21,13 @@ export default defineConfig({
 
   plugins: [
     UnoCSS(), // https://unocss.dev/integrations/vite#react
-    react(),
+    react({
+      babel: {
+        plugins: [
+          ['@babel/plugin-proposal-decorators', { legacy: true }],
+        ],
+      },
+    }),
   ],
 
   css: {

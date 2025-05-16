@@ -32,7 +32,7 @@ export function PluginCard({ item, isSelect, onSelectedItem }: { item: PluginIte
         className={clsx('shrink-0', !item.isEnabled && 'color-$colorNeutralForegroundDisabled')}
       />
 
-      <div flex="~ col" grow overflow-hidden>
+      <div role="gridcell" flex="~ col" grow overflow-hidden>
         <Text
           className={clsx(
             'truncate!',

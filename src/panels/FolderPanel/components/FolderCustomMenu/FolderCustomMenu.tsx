@@ -3,12 +3,12 @@ import { Menu, MenuGroup, MenuGroupHeader, MenuItem, MenuItemCheckbox, MenuItemR
 
 import type { ShowGroup, SortBy } from '../../FolderPanel.types'
 
-function AppearanceMenu({ showGroup, onShowGroupChange }: {
+function AppearanceMenu({ showGroup, onSetShowGroup }: {
   showGroup: ShowGroup[]
-  onShowGroupChange: (showGroup: ShowGroup[]) => void
+  onSetShowGroup: (newShowGroup: ShowGroup[]) => void
 }) {
   const onChange: MenuProps['onCheckedValueChange'] = (_e, { checkedItems }) => {
-    onShowGroupChange(checkedItems as ShowGroup[])
+    onSetShowGroup(checkedItems as ShowGroup[])
   }
 
   return (
@@ -34,17 +34,17 @@ function AppearanceMenu({ showGroup, onShowGroupChange }: {
   )
 }
 
-function SortByMenu({ sortBy, onSortByChange }: {
-  sortBy: SortBy[]
-  onSortByChange: (sortBy: SortBy[]) => void
+function SortByMenu({ sortBy, onSetSortBy }: {
+  sortBy: SortBy
+  onSetSortBy: (newSortBy: SortBy) => void
 }) {
   const onChange: MenuProps['onCheckedValueChange'] = (_e, { checkedItems }) => {
-    onSortByChange(checkedItems as SortBy[])
+    onSetSortBy(checkedItems[0] as SortBy)
   }
 
   return (
     <Menu
-      checkedValues={{ sort: sortBy }}
+      checkedValues={{ sort: [sortBy] }}
       onCheckedValueChange={onChange}
     >
       <MenuTrigger disableButtonEnhancement>
@@ -62,22 +62,21 @@ function SortByMenu({ sortBy, onSortByChange }: {
   )
 }
 
-export function FolderCustomMenu({ showGroup, setShowGroup, sortBy, setSortBy }: {
+export function FolderCustomMenu({
+  showGroup,
+  sortBy,
+  onSetShowGroup,
+  onSetSortBy,
+}: {
   showGroup: ShowGroup[]
-  setShowGroup: (showGroup: ShowGroup[]) => void
-  sortBy: SortBy[]
-  setSortBy: (sortBy: SortBy[]) => void
+  sortBy: SortBy
+  onSetShowGroup: (newShowGroup: ShowGroup[]) => void
+  onSetSortBy: (newSortBy: SortBy) => void
 }) {
   return (
     <>
-      <AppearanceMenu
-        showGroup={showGroup}
-        onShowGroupChange={setShowGroup}
-      />
-      <SortByMenu
-        sortBy={sortBy}
-        onSortByChange={setSortBy}
-      />
+      <AppearanceMenu showGroup={showGroup} onSetShowGroup={onSetShowGroup} />
+      <SortByMenu sortBy={sortBy} onSetSortBy={onSetSortBy} />
     </>
   )
 }

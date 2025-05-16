@@ -7,6 +7,7 @@ import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/r
 import { AddRegular, bundleIcon, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import type { FC, ReactNode } from 'react'
 import { Component, Fragment } from 'react'
+import { withAliveScope } from 'react-activation'
 import { v4 as uuidv4 } from 'uuid'
 
 import { SortableTab, TabPage } from './components'
@@ -22,6 +23,7 @@ const newTabTemplate: TabItemTypes = {
   historyIndex: 0,
 }
 
+@withAliveScope
 export default class TabLayout extends Component<TabLayoutProps, TabLayoutState> {
   constructor(props: TabLayoutProps) {
     super(props)
@@ -35,12 +37,12 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
   }
 
   render() {
-    const { className, items: propItems, ...props } = this.props
+    const { className } = this.props
     const { activeItemId, items } = this.state
     const { activeItem, DndContextWrapper, AddNewTab, TabDivider } = this
 
     return (
-      <div className={`tab-layout flex-(~ col items-start) align-start ${className}`} {...props}>
+      <div className={`tab-layout flex-(~ col items-start) align-start ${className}`}>
 
         {/* Tabs */}
         <DndContextWrapper>
@@ -113,6 +115,9 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
   }
 
   private removeItem = (itemId: string) => {
+    // 删除页面时, 删除页面的组件缓存
+    this.props.dropScope?.(new RegExp(`^TabPage-${itemId}-`))
+
     this.setState((prevState) => {
       const { [itemId]: _, ...newItems } = prevState.items
       let newActiveItemId = prevState.activeItemId
