@@ -1,12 +1,14 @@
-import { ListItem, Menu, MenuButton, MenuItem, MenuList, MenuPopover, MenuTrigger, Text, Tooltip } from '@fluentui/react-components'
-import { Box24Regular, Settings16Regular } from '@fluentui/react-icons'
+import { ListItem, Menu, MenuButton, MenuDivider, MenuItem, MenuList, MenuPopover, MenuTrigger, Text, Tooltip } from '@fluentui/react-components'
+import { Box24Regular, Settings16Regular, SettingsRegular } from '@fluentui/react-icons'
 import clsx from 'clsx'
 import type { FocusEvent } from 'react'
 import { useCallback } from 'react'
 
-import type { PluginItemTypes } from '../../shared/PluginItem.types.ts'
+import type { PluginCardProps } from './PluginCard.types.ts'
 
-export function PluginCard({ item, isSelect, onSelectedItem }: { item: PluginItemTypes, isSelect: boolean, onSelectedItem: () => void }) {
+export function PluginCard({ item, isSelect, onSelectedItem }: PluginCardProps) {
+  const { id, name, description, icon, version, isEnabled } = item
+
   const onFocus = useCallback((event: FocusEvent<HTMLLIElement>) => {
     // Ignore bubbled up events from the children
     if (event.target !== event.currentTarget) {
@@ -22,37 +24,37 @@ export function PluginCard({ item, isSelect, onSelectedItem }: { item: PluginIte
         'hover:bg-$colorSubtleBackgroundHover',
         isSelect && 'bg-$colorSubtleBackgroundSelected',
       )}
-      key={item.id}
-      value={item.id}
-      data-value={item.id}
+      key={id}
+      value={id}
+      data-value={id}
       checkmark={null}
       onFocus={onFocus}
     >
       <Box24Regular
-        className={clsx('shrink-0', !item.isEnabled && 'color-$colorNeutralForegroundDisabled')}
+        className={clsx('shrink-0', !isEnabled && 'color-$colorNeutralForegroundDisabled')}
       />
 
       <div role="gridcell" flex="~ col" grow overflow-hidden>
         <Text
           className={clsx(
             'truncate!',
-            !item.isEnabled && 'color-$colorNeutralForegroundDisabled',
+            !isEnabled && 'color-$colorNeutralForegroundDisabled',
           )}
           weight="semibold"
         >
-          {item.name}
+          {name}
         </Text>
         <Text
           className={clsx(
             'truncate!',
-            !item.isEnabled ? 'color-$colorNeutralForegroundDisabled' : 'color-$colorNeutralForeground3',
+            !isEnabled ? 'color-$colorNeutralForegroundDisabled' : 'color-$colorNeutralForeground3',
           )}
         >
-          {item.description}
+          {description}
         </Text>
       </div>
 
-      <Menu>
+      <Menu hasIcons>
         <MenuTrigger disableButtonEnhancement>
           <Tooltip content="管理" relationship="label">
             <MenuButton
@@ -65,8 +67,10 @@ export function PluginCard({ item, isSelect, onSelectedItem }: { item: PluginIte
         </MenuTrigger>
         <MenuPopover>
           <MenuList>
-            <MenuItem>Item a</MenuItem>
-            <MenuItem>Item b</MenuItem>
+            <MenuItem disabled={isEnabled}>启用</MenuItem>
+            <MenuItem disabled={!isEnabled}>禁用</MenuItem>
+            <MenuDivider />
+            <MenuItem icon={<SettingsRegular />}>插件设置</MenuItem>
           </MenuList>
         </MenuPopover>
       </Menu>

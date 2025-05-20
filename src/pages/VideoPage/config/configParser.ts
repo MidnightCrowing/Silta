@@ -1,6 +1,6 @@
-import type { VideoConfig } from './VideoPage.types'
+import type { VideoConfig } from './index.ts'
 
-export function parseVideoConfig(config: any): VideoConfig {
+export function parseConfig(config: any): VideoConfig {
   if (!config || typeof config !== 'object' || typeof config.version !== 'number') {
     throw new Error('无效的配置文件')
   }

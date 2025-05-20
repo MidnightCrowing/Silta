@@ -33,8 +33,9 @@ import type { VideoCardProps } from '~/components/VideoCard'
 import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
 
-import { parseVideoConfig } from './configParser.ts'
-import type { VideoConfig, VideoLocationProps, VideoPageProps, VideoStore } from './VideoPage.types'
+import type { VideoConfig } from './config'
+import { parseConfig } from './config'
+import type { VideoLocationProps, VideoPageProps, VideoStore } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
@@ -128,7 +129,7 @@ export default function VideoPage({ className }: VideoPageProps) {
       getLocalVideoConfigPath(videoPath)
         .then(async configPath => JSON.parse(await readTextFile(configPath)))
         .then((config: any) => {
-          const parsedConfig: VideoConfig = parseVideoConfig(config)
+          const parsedConfig: VideoConfig = parseConfig(config)
 
           // 设置页面信息
           setLocation({ title: parsedConfig.title })

@@ -1,3 +1,10 @@
+// MainLayout
 export { MainLayout } from './MainLayout'
+
+// SidebarLayout
+export type { SidebarItem, SidebarLayoutProps } from './SidebarLayout'
 export { SidebarLayout, SidebarPanel } from './SidebarLayout'
-export { TabLayout, tabPagesReducer } from './TabLayout'
+
+// TabLayout
+export type { TabHistoryItem, TabItemTypes, TabLayoutProps, updatePageData } from './TabLayout'
+export { pushTabItemUrl, TabLayout, tabPagesReducer } from './TabLayout'

@@ -2,7 +2,7 @@ import { createElement, Suspense, useCallback, useMemo, useState } from 'react'
 
 import { componentMap } from '~/constants/tabPage.ts'
 import { LocationProvider, useLocation } from '~/contexts/location'
-import type { TabItemTypes, updatePageData } from '~/layouts/TabLayout'
+import type { TabItemTypes, updatePageData } from '~/layouts'
 import { parseUrlToComponentData } from '~/utils/urlUtils.ts'
 
 import { TabToolbar } from '../TabToolbar'

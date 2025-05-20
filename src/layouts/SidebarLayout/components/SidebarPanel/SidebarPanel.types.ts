@@ -25,4 +25,14 @@ export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
    * 可选的自定义菜单内容，将显示在面板中。
    */
   customMenu?: ReactNode
+
+  /**
+   * 工具栏的选中值映射，key 为工具栏名称，value 为选中的项数组。
+   */
+  toolbarValve?: any
+
+  /**
+   * 设置工具栏选中值的函数。
+   */
+  setToolbarValve?: (newValve: any) => void
 }

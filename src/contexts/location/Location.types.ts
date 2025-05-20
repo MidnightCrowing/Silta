@@ -1,7 +1,6 @@
-import type { FluentIcon } from '@fluentui/react-icons'
 import type { ReactNode } from 'react'
 
-import type { TabItemTypes, updatePageData } from '~/layouts/TabLayout'
+import type { TabHistoryItem, TabItemTypes, updatePageData } from '~/layouts'
 
 export interface LocationProps {
   [p: string]: any
@@ -10,22 +9,7 @@ export interface LocationProps {
 /**
  * @description 表示页面的状态
  */
-export interface LocationState {
-  /**
-   * @description 页面标签
-   */
-  title: string
-
-  /**
-   * @description 页面图标
-   */
-  icon?: FluentIcon
-
-  /**
-   * @description 页面链接
-   */
-  url: string
-}
+export type LocationState = TabHistoryItem
 
 /**
  * @description 表示位置提供者的属性

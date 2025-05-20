@@ -114,7 +114,7 @@ export function GalleryTopBar({
           }
 
           <div flex="~ row items-center" gap="3px">
-            <ToggleButton className="pin-button hidden!" icon={<PinIcon />} appearance="transparent" />
+            <ToggleButton className="pin-button hidden!" appearance="transparent" icon={<PinIcon />} />
             <div className="chevron-down-wrapper" flex duration="200">
               <ChevronDown20Regular />
             </div>

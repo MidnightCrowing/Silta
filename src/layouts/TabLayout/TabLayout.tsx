@@ -1,10 +1,10 @@
 import type { DragEndEvent } from '@dnd-kit/core'
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToHorizontalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import type { SelectTabData, SelectTabEvent } from '@fluentui/react-components'
 import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/react-components'
-import { AddRegular, bundleIcon, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
+import { AddRegular } from '@fluentui/react-icons'
 import type { FC, ReactNode } from 'react'
 import { Component, Fragment } from 'react'
 import { withAliveScope } from 'react-activation'
@@ -14,12 +14,11 @@ import { SortableTab, TabPage } from './components'
 import type { TabItemTypes } from './shared/TabItem.types.ts'
 import type { TabLayoutProps, TabLayoutState, updatePageData } from './TabLayout.types'
 
-const DefaultTabIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
-
 const newTabTemplate: TabItemTypes = {
-  title: '新建标签页',
-  icon: DefaultTabIcon,
-  history: ['NewPage'],
+  history: [{
+    title: '新建标签页',
+    url: 'NewPage',
+  }],
   historyIndex: 0,
 }
 
@@ -46,7 +45,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
 
         {/* Tabs */}
         <DndContextWrapper>
-          <SortableContext items={Object.keys(items)} strategy={verticalListSortingStrategy}>
+          <SortableContext items={Object.keys(items)} strategy={horizontalListSortingStrategy}>
             <TabList
               className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
               selectedValue={activeItemId}
@@ -196,7 +195,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     }
 
     return (
-      <Divider className="grow-0! p-(x-0 py-12px)" vertical />
+      <Divider className="grow-0! p-(x-0 py-12px) h-1/2 m-y-auto" vertical />
     )
   }
 

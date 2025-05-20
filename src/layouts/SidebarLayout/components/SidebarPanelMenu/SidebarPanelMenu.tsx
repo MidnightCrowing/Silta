@@ -20,11 +20,9 @@ import {
 import { useCallback, useMemo } from 'react'
 
 import { useSidebarPanelWrapperContext } from '../SidebarPanelWrapper'
-import type { SidebarPanelMenuProps } from './SidebarPanelMenu.types.ts'
+import type { MovePanelMenuProps, ResizePanelMenuProps, SidebarPanelMenuProps } from './SidebarPanelMenu.types.ts'
 
-function MovePanelMenu() {
-  const { position, setPosition } = useSidebarPanelWrapperContext()
-
+export function MovePanelMenu({ position, setPosition }: MovePanelMenuProps) {
   return (
     <Menu hasIcons>
       <MenuTrigger disableButtonEnhancement>
@@ -67,9 +65,7 @@ function MovePanelMenu() {
   )
 }
 
-function ResizePanelMenu() {
-  const { position } = useSidebarPanelWrapperContext()
-
+function ResizePanelMenu({ position }: ResizePanelMenuProps) {
   const isBottom: boolean = useMemo(() => {
     return position === 'leftBottom' || position === 'rightBottom'
   }, [position])
@@ -94,7 +90,7 @@ function ResizePanelMenu() {
 }
 
 export function SidebarPanelMenu({ customMenu }: SidebarPanelMenuProps) {
-  const { isFadeTopbarPinned, setFadeTopbarPinned } = useSidebarPanelWrapperContext()
+  const { isFadeTopbarPinned, position, setFadeTopbarPinned, setPosition } = useSidebarPanelWrapperContext()
 
   const onChange: MenuProps['onCheckedValueChange'] = useCallback((_e: any, { name, checkedItems }: any) => {
     if (name === 'alwaysVisible') {
@@ -125,8 +121,8 @@ export function SidebarPanelMenu({ customMenu }: SidebarPanelMenuProps) {
               <MenuDivider />
             </>
           )}
-          <MovePanelMenu />
-          <ResizePanelMenu />
+          <MovePanelMenu position={position} setPosition={setPosition} />
+          <ResizePanelMenu position={position} />
 
           <MenuItemCheckbox name="alwaysVisible" value="always">
             始终显示工具栏

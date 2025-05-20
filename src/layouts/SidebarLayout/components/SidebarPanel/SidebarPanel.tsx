@@ -1,3 +1,6 @@
+import type {
+  ToolbarProps,
+} from '@fluentui/react-components'
 import {
   createPresenceComponent,
   DrawerBody,
@@ -49,8 +52,14 @@ export function SidebarPanel({
   staticToolbar,
   fadeToolbar,
   customMenu,
+  toolbarValve,
+  setToolbarValve,
 }: SidebarPanelProps) {
   const { pointerEnter, isFadeTopbarPinned } = useSidebarPanelWrapperContext()
+
+  const onToolbarValveChange: ToolbarProps['onCheckedValueChange'] = (_e, { name, checkedItems }) => {
+    setToolbarValve?.({ [name]: checkedItems })
+  }
 
   return (
     <div flex="~ col" size-full>
@@ -63,7 +72,11 @@ export function SidebarPanel({
           {staticToolbar}
 
           <ToolbarFade visible={isFadeTopbarPinned || pointerEnter}>
-            <Toolbar className="ml-auto">
+            <Toolbar
+              className="ml-auto"
+              checkedValues={toolbarValve}
+              onCheckedValueChange={onToolbarValveChange}
+            >
               {fadeToolbar}
               <SidebarPanelMenu customMenu={customMenu} />
               <HideButton />

@@ -1,4 +1,4 @@
-import type { ImageGalleryConfig } from './ImageGalleryPage.types'
+import type { ImageGalleryConfig } from './index.ts'
 
 // // 迁移函数：V1 -> V2
 // function migrateV1ToV2(config: ConfigV1): ConfigV2 {
@@ -9,7 +9,7 @@ import type { ImageGalleryConfig } from './ImageGalleryPage.types'
 //   }
 // }
 
-export function parseImageGalleryConfig(config: any): ImageGalleryConfig {
+export function parseConfig(config: any): ImageGalleryConfig {
   if (!config || typeof config !== 'object' || typeof config.version !== 'number') {
     throw new Error('无效的配置文件')
   }

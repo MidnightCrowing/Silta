@@ -1,4 +1,4 @@
-export interface PluginItemTypes {
+export interface PluginItem {
   id: string
   name: string
   description: string

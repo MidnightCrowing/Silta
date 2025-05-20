@@ -1,4 +1,4 @@
-import type { updatePageData } from '~/layouts/TabLayout'
+import type { updatePageData } from '~/layouts'
 
 import type { TabItemTypes } from '../../shared/TabItem.types'
 

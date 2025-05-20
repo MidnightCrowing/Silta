@@ -1,9 +1,24 @@
 import type { FluentIcon } from '@fluentui/react-icons'
 
-export interface TabItemTypes {
+export interface TabHistoryItem {
+  /**
+   * @description 页面标签
+   */
   title: string
-  icon: FluentIcon
-  history: string[] // url列表
+
+  /**
+   * @description 页面图标
+   */
+  icon?: FluentIcon
+
+  /**
+   * @description 页面链接
+   */
+  url: string
+}
+
+export interface TabItemTypes {
+  history: TabHistoryItem[]
   historyIndex: number
 
   /**

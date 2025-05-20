@@ -4,7 +4,10 @@ import type { TabItemTypes } from './TabItem.types.ts'
 
 export function pushTabItemUrl(tabItem: TabItemTypes, url: string): TabItemTypes {
   const newHistory = tabItem.history.slice(0, tabItem.historyIndex + 1)
-  newHistory.push(normalizeUrl(url))
+  newHistory.push({
+    title: url,
+    url: normalizeUrl(url),
+  })
   return {
     ...tabItem,
     history: newHistory,

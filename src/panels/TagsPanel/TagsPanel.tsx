@@ -1,5 +1,5 @@
-import { CounterBadge, ToolbarButton, Tooltip, Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
-import { ChevronDownUpRegular, ChevronUpDownRegular } from '@fluentui/react-icons'
+import { CounterBadge, ToolbarButton, ToolbarDivider, Tooltip, Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
+import { ChevronDownUpRegular, ChevronUpDownRegular, SearchRegular } from '@fluentui/react-icons'
 import KeepAlive from 'react-activation'
 
 import { SidebarPanel } from '~/layouts'
@@ -14,6 +14,14 @@ export default function TagsPanel() {
       title="标签"
       fadeToolbar={(
         <>
+          <Tooltip content="搜索" relationship="label">
+            <ToolbarButton
+              aria-label="Search"
+              appearance="subtle"
+              icon={<SearchRegular />}
+            />
+          </Tooltip>
+          <ToolbarDivider />
           <Tooltip content="扩展所选" relationship="label">
             <ToolbarButton
               aria-label="Expand selected"
@@ -31,7 +39,7 @@ export default function TagsPanel() {
         </>
       )}
     >
-      <KeepAlive name="tags-panel">
+      <KeepAlive name="tags-panel" cacheKey="tags-panel">
         <Tree aria-label="Default">
           <TreeItem itemType="branch">
             <TreeItemLayout aside={<AsideContent count={3} />}>level 1, item 1</TreeItemLayout>

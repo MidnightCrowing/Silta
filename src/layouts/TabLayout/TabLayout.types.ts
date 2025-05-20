@@ -1,7 +1,9 @@
 import type { HTMLAttributes } from 'react'
 import type { AliveController } from 'react-activation'
 
-import type { TabItemTypes } from '~/layouts/TabLayout'
+import type { TabItemTypes } from '~/layouts'
+
+s
 
 export interface TabLayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'items'>, Partial<AliveController> {
   /**

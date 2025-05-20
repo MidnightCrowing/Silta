@@ -1,5 +1,7 @@
+import './TabToolbar.scss'
+
 import type { MenuProps } from '@fluentui/react-components'
-import { Button, Menu, MenuItem, MenuList, MenuPopover, Tooltip } from '@fluentui/react-components'
+import { Button, Menu, MenuDivider, MenuItem, MenuList, MenuPopover, Tooltip } from '@fluentui/react-components'
 import {
   ArrowClockwise20Regular,
   ArrowClockwiseDashes20Regular,
@@ -7,16 +9,22 @@ import {
   ArrowRight20Regular,
   History20Regular,
 } from '@fluentui/react-icons'
+import type { MouseEvent } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
+import { DefaultTabIcon } from '../SortableTab'
 import { AddressBar } from './AddressBar.tsx'
 import type { BackButtonProps, ForwardButtonProps, RefreshButtonProps, TabToolbarProps } from './TabToolbar.types'
 
 function BackButton({ activeItemId, activeItem, updatePageData }: BackButtonProps) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
   const isBack: boolean = useMemo(
     () => activeItem ? activeItem.historyIndex > 0 : false,
     [activeItem],
   )
+
   const setBack = () => {
     updatePageData(activeItemId, old => ({
       ...old,
@@ -24,18 +32,82 @@ function BackButton({ activeItemId, activeItem, updatePageData }: BackButtonProp
     }))
   }
 
+  const handleContextMenu = (e: MouseEvent<HTMLButtonElement>) => {
+    if (isBack) {
+      e.preventDefault()
+      setAnchorEl(e.currentTarget)
+      setMenuOpen(true)
+    }
+  }
+
+  const onOpenChange: MenuProps['onOpenChange'] = (_e, data) => {
+    setMenuOpen(data.open)
+  }
+
   return (
-    <Tooltip content="返回" relationship="label" positioning="below">
-      <Button appearance="subtle" disabled={!isBack} icon={<ArrowLeft20Regular />} onClick={setBack} />
-    </Tooltip>
+    <>
+      <Tooltip content="返回" relationship="label" positioning="below">
+        <Button
+          appearance="subtle"
+          icon={<ArrowLeft20Regular />}
+          onClick={setBack}
+          onContextMenu={handleContextMenu}
+          disabled={!isBack}
+        />
+      </Tooltip>
+
+      <Menu
+        hasIcons
+        open={menuOpen}
+        onOpenChange={onOpenChange}
+        positioning={{ target: anchorEl }}
+      >
+        <MenuPopover>
+          <MenuList>
+            {activeItem?.history
+              ?.slice(
+                Math.max(0, activeItem.historyIndex - 10),
+                activeItem.historyIndex,
+              )
+              .reverse()
+              .map(({ title, icon: Icon = DefaultTabIcon }, idx) => (
+                <MenuItem
+                  className="tab-layout tab-toolbar back-button-menu menu-item"
+                  key={`${title}-${idx.toString()}`}
+                  icon={<Icon />}
+                  onClick={() => {
+                    updatePageData(activeItemId, old => ({
+                      ...old,
+                      historyIndex: activeItem.historyIndex - 1 - idx,
+                    }))
+                  }}
+                >
+                  {title}
+                </MenuItem>
+              ))}
+
+            <MenuDivider />
+            <MenuItem
+              icon={<History20Regular />}
+            >
+              管理历史记录
+            </MenuItem>
+          </MenuList>
+        </MenuPopover>
+      </Menu>
+    </>
   )
 }
 
 function ForwardButton({ activeItemId, activeItem, updatePageData }: ForwardButtonProps) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
   const isForward: boolean = useMemo(
     () => activeItem ? activeItem.historyIndex < activeItem.history.length - 1 : false,
     [activeItem],
   )
+
   const setForward = () => {
     updatePageData(activeItemId, old => ({
       ...old,
@@ -43,11 +115,67 @@ function ForwardButton({ activeItemId, activeItem, updatePageData }: ForwardButt
     }))
   }
 
+  const handleContextMenu = (e: MouseEvent<HTMLButtonElement>) => {
+    if (isForward) {
+      e.preventDefault()
+      setAnchorEl(e.currentTarget)
+      setMenuOpen(true)
+    }
+  }
+
+  const onOpenChange: MenuProps['onOpenChange'] = (_e, data) => {
+    setMenuOpen(data.open)
+  }
+
   return (
     isForward && (
-      <Tooltip content="前进" relationship="label" positioning="below">
-        <Button appearance="subtle" icon={<ArrowRight20Regular />} onClick={setForward} />
-      </Tooltip>
+      <>
+        <Tooltip content="前进" relationship="label" positioning="below">
+          <Button
+            appearance="subtle"
+            icon={<ArrowRight20Regular />}
+            onClick={setForward}
+            onContextMenu={handleContextMenu}
+            disabled={!isForward}
+          />
+        </Tooltip>
+
+        <Menu
+          hasIcons
+          open={menuOpen}
+          onOpenChange={onOpenChange}
+          positioning={{ target: anchorEl }}
+        >
+          <MenuPopover>
+            <MenuList>
+              {activeItem?.history
+                ?.slice(activeItem.historyIndex + 1, activeItem.historyIndex + 11)
+                .map(({ title, icon: Icon = DefaultTabIcon }, idx) => (
+                  <MenuItem
+                    className="tab-layout tab-toolbar forward-button-menu menu-item"
+                    key={`${title}-${idx.toString()}`}
+                    icon={<Icon />}
+                    onClick={() => {
+                      updatePageData(activeItemId, old => ({
+                        ...old,
+                        historyIndex: activeItem.historyIndex + 1 + idx,
+                      }))
+                    }}
+                  >
+                    {title}
+                  </MenuItem>
+                ))}
+
+              <MenuDivider />
+              <MenuItem
+                icon={<History20Regular />}
+              >
+                管理历史记录
+              </MenuItem>
+            </MenuList>
+          </MenuPopover>
+        </Menu>
+      </>
     )
   )
 }
@@ -70,7 +198,7 @@ function RefreshButton({ refreshPage }: RefreshButtonProps) {
     setMenuOpen(false)
   }
 
-  const handleContextMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleContextMenu = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     setAnchorEl(e.currentTarget)
     setMenuOpen(true)

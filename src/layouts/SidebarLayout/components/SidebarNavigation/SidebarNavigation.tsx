@@ -1,13 +1,17 @@
-import { Divider, ToggleButton, Tooltip } from '@fluentui/react-components'
-import { bundleIcon, GridFilled, GridRegular } from '@fluentui/react-icons'
+import { Divider } from '@fluentui/react-components'
 import clsx from 'clsx'
 import type { FC } from 'react'
 import { Component, Fragment } from 'react'
 
-import type { SidebarActiveItemId, SidebarButton, SidebarItem, SidebarNavItem } from '../../shared/SidebarItem.types'
+import type {
+  SidebarActiveItemId,
+  SidebarButton,
+  SidebarItem,
+  SidebarNavItem,
+  SidebarPosition,
+} from '../../shared/SidebarItem.types'
+import { NavigationItem } from './NavigationItem.tsx'
 import type { SidebarNavigationProps } from './SidebarNavigation.types'
-
-const DefaultSidebarIcon = bundleIcon(GridFilled, GridRegular)
 
 export class SidebarNavigation extends Component<SidebarNavigationProps> {
   render() {
@@ -39,14 +43,14 @@ export class SidebarNavigation extends Component<SidebarNavigationProps> {
         {...props}
       >
         {([
-          { position: 'top', items: topItems },
-          { position: 'bottom', items: bottomItems },
-        ] as const).map(({ position, items }) => (
-          <div key={position} flex="~ col" gap="8px">
+          { selfPosition: 'top', items: topItems },
+          { selfPosition: 'bottom', items: bottomItems },
+        ] as const).map(({ selfPosition, items }) => (
+          <div key={selfPosition} flex="~ col" gap="8px">
             {items?.map(item => (
               <SideBarItemButton
                 key={item.id}
-                position={position}
+                selfPosition={selfPosition}
                 item={item}
               />
             ))}
@@ -56,28 +60,27 @@ export class SidebarNavigation extends Component<SidebarNavigationProps> {
     )
   }
 
-  private changeActiveItem(position: 'top' | 'bottom', id: SidebarActiveItemId) {
-    const setActiveItemId = position === 'top' ? this.props.setTopActiveItemId : this.props.setBottomActiveItemId
+  private changeActiveItem(selfPosition: 'top' | 'bottom', id: SidebarActiveItemId) {
+    const setActiveItemId = selfPosition === 'top' ? this.props.setTopActiveItemId : this.props.setBottomActiveItemId
     setActiveItemId(id)
   }
 
-  private SideBarItemButton: FC<{ position: 'top' | 'bottom', item: SidebarItem }> = ({ position, item }) => {
-    const { topActiveItemId, bottomActiveItemId } = this.props
+  private SideBarItemButton: FC<{ selfPosition: 'top' | 'bottom', item: SidebarItem }> = ({ selfPosition, item }) => {
+    const { position, topActiveItemId, bottomActiveItemId, setItemPosition } = this.props
     const { id, type = 'item' } = item
 
     switch (type) {
       case 'item': {
-        const { label, icon: Icon = DefaultSidebarIcon } = item as SidebarNavItem
+        const sidebarPosition = `${position}${selfPosition.charAt(0).toUpperCase()}${selfPosition.slice(1)}` as SidebarPosition
 
         return (
-          <Tooltip content={label} relationship="label" positioning="after" withArrow>
-            <ToggleButton
-              checked={topActiveItemId === id || bottomActiveItemId === id}
-              icon={<Icon />}
-              appearance="subtle"
-              onClick={() => this.changeActiveItem(position, id)}
-            />
-          </Tooltip>
+          <NavigationItem
+            itemPosition={sidebarPosition}
+            item={item as SidebarNavItem}
+            checked={topActiveItemId === id || bottomActiveItemId === id}
+            onClick={() => this.changeActiveItem(selfPosition, id)}
+            setItemPosition={(newPosition) => { setItemPosition(id, newPosition) }}
+          />
         )
       }
 

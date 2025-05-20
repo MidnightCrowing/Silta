@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 
-import type { SidebarActiveItemId, SidebarItem } from '../../shared/SidebarItem.types'
+import type { SidebarActiveItemId, SidebarItem, SidebarNavItem, SidebarPosition } from '../../shared/SidebarItem.types'
 
 export interface SidebarNavigationProps extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -39,4 +39,18 @@ export interface SidebarNavigationProps extends HTMLAttributes<HTMLDivElement> {
    * @param bottomItem 底部项目ID
    */
   setBottomActiveItemId: (bottomItem: SidebarActiveItemId) => void
+
+  /**
+   * @description 设置当前激活项目的位置
+   * @param itemId 项目ID
+   */
+  setItemPosition: (itemId: SidebarActiveItemId, newPosition: SidebarPosition) => void
+}
+
+export interface NavigationItemProps {
+  itemPosition: SidebarPosition
+  item: SidebarNavItem
+  checked: boolean
+  onClick: () => void
+  setItemPosition: (newPosition: SidebarPosition) => void
 }

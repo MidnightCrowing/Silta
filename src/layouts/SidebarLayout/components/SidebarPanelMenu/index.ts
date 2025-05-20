@@ -1,1 +1,1 @@
-export { SidebarPanelMenu } from './SidebarPanelMenu.tsx'
+export { MovePanelMenu, SidebarPanelMenu } from './SidebarPanelMenu.tsx'

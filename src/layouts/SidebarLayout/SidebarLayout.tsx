@@ -94,6 +94,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
             bottomActiveItemId={leftBottomActiveItem?.id ?? null}
             setTopActiveItemId={this.setLeftTopActiveItem}
             setBottomActiveItemId={this.setLeftBottomActiveItem}
+            setItemPosition={this.setItemPosition}
           />
         )}
 
@@ -184,6 +185,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
             bottomActiveItemId={rightBottomActiveItem?.id ?? null}
             setTopActiveItemId={this.setRightTopActiveItem}
             setBottomActiveItemId={this.setRightBottomActiveItem}
+            setItemPosition={this.setItemPosition}
           />
         )}
       </div>

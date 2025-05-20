@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
-import type { TabItemTypes } from '~/layouts/TabLayout'
-import { pushTabItemUrl } from '~/layouts/TabLayout'
+import type { TabItemTypes } from '~/layouts'
+import { pushTabItemUrl } from '~/layouts'
 import { parseUrlToComponentData } from '~/utils/urlUtils.ts'
 
 import type { LocationContextType, LocationProviderProps, LocationState } from './Location.types'
@@ -16,11 +16,7 @@ export function LocationProvider({
   clearStore,
   updatePageData,
 }: LocationProviderProps) {
-  const location: LocationState = useMemo(() => ({
-    title: activeTab.title,
-    icon: activeTab.icon,
-    url: activeTab.history[activeTab.historyIndex],
-  }), [activeTab])
+  const location: LocationState = useMemo(() => activeTab.history[activeTab.historyIndex], [activeTab])
 
   const props = useMemo(
     () => parseUrlToComponentData(location.url).props,
@@ -29,25 +25,32 @@ export function LocationProvider({
 
   const setLocation = useCallback(
     (partial: Partial<LocationState>) => {
-      updatePageData(pageId, (old: TabItemTypes) => {
-        let updatedTab: TabItemTypes = { ...old }
+      updatePageData(pageId, (oldTab: TabItemTypes) => {
+        // 克隆旧的 tab 数据，避免直接修改
+        const updatedTab: TabItemTypes = { ...oldTab }
 
-        if (partial.title) {
-          updatedTab.title = partial.title
+        // 获取当前历史项
+        const currentHistory = updatedTab.history[updatedTab.historyIndex]
+
+        // 更新 title
+        if (partial.title !== undefined) {
+          currentHistory.title = partial.title
         }
 
-        if (partial.icon) {
-          updatedTab.icon = partial.icon
+        // 更新 icon
+        if (partial.icon !== undefined) {
+          currentHistory.icon = partial.icon
         }
 
-        if (partial.url) {
-          updatedTab = pushTabItemUrl(updatedTab, partial.url)
+        // 更新 url（会自动推进历史）
+        if (partial.url !== undefined) {
+          return pushTabItemUrl(updatedTab, partial.url)
         }
 
         return updatedTab
       })
     },
-    [pageId, updatePageData, clearStore],
+    [pageId, updatePageData],
   )
 
   const getAliveName = useCallback(

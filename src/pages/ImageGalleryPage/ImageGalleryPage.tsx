@@ -8,13 +8,9 @@ import { ImageCard, ImageCardList } from '~/components/ImageCard'
 import { useLocation } from '~/contexts/location'
 
 import { GalleryTopBar } from './components'
-import { parseImageGalleryConfig } from './configParser.ts'
-import type {
-  ImageGalleryConfig,
-  ImageGalleryLocationProps,
-  ImageGalleryPageProps,
-  ImageGalleryStore,
-} from './ImageGalleryPage.types'
+import type { ImageGalleryConfig } from './config'
+import { parseConfig } from './config'
+import type { ImageGalleryLocationProps, ImageGalleryPageProps, ImageGalleryStore } from './ImageGalleryPage.types'
 
 export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
   // 获取页面位置传参
@@ -51,7 +47,7 @@ export default function ImageGalleryPage({ className }: ImageGalleryPageProps) {
       getLocalGalleryConfigPath(fullPath)
         .then(async configPath => JSON.parse(await readTextFile(configPath)))
         .then((config: any) => {
-          const parsedConfig: ImageGalleryConfig = parseImageGalleryConfig(config)
+          const parsedConfig: ImageGalleryConfig = parseConfig(config)
 
           // 设置页面信息
           setLocation({ title: parsedConfig.title })

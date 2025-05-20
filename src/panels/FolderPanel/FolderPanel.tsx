@@ -1,26 +1,120 @@
-import { ToolbarButton, ToolbarDivider, Tooltip, Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
-import {
-  ChevronDownUpRegular,
-  ChevronUpDownRegular,
-  DocumentTargetRegular,
-  Folder20Regular,
-  Image20Regular,
-  VideoClip20Regular,
-} from '@fluentui/react-icons'
+import { Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
+import { Document20Regular, Folder20Regular, Image20Regular, VideoClip20Regular } from '@fluentui/react-icons'
+import { Collapse } from '@fluentui/react-motion-components-preview'
 import { useCallback } from 'react'
-import KeepAlive from 'react-activation'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { SidebarPanel } from '~/layouts'
 import type { RootState } from '~/store'
 
-import { FolderCustomMenu } from './components'
-import type { ShowGroup, SortBy } from './FolderPanel.types.ts'
-import { setShowGroup, setSortBy } from './folderPanelSlice.ts'
+import { FolderCustomMenu, FolderFadeToolbar, FolderSearchField } from './components'
+import type { FileSystemNode } from './fileSysyem.types.ts'
+import type { SearchProps, ShowGroup, SortBy, ToolbarValve } from './FolderPanel.types.ts'
+import { setSearchProps, setShowGroup, setSortBy, setToolbarValve } from './folderPanelSlice.ts'
+
+const projectRoot: FileSystemNode[] = [
+  {
+    type: 'directory',
+    name: `showGroup sortBy`, // 来自你代码中的动态文本
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    children: [
+      {
+        type: 'file',
+        name: 'level 2, item 1',
+        extension: 'png', // 假设是图像
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        type: 'file',
+        name: 'level 2, item 2',
+        extension: 'png',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        type: 'file',
+        name: 'level 2, item 3',
+        extension: 'mp4', // 假设是视频
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ],
+  },
+  {
+    type: 'directory',
+    name: 'level 1, item 2',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    children: [
+      {
+        type: 'directory',
+        name: 'level 2, item 1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        children: [
+          {
+            type: 'file',
+            name: 'level 3, item 1',
+            extension: 'mp4',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    type: 'file',
+    name: 'level 1, item 3',
+    extension: 'folder',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+]
+
+function getIconByExtension(ext: string | undefined) {
+  if (!ext)
+    return <Document20Regular />
+  const extLower = ext.toLowerCase()
+  if (['png', 'jpg', 'jpeg', 'gif'].includes(extLower))
+    return <Image20Regular />
+  if (['mp4', 'avi', 'mov'].includes(extLower))
+    return <VideoClip20Regular />
+  return <Document20Regular />
+}
+
+function renderTreeNode(node: FileSystemNode, path: string = ''): React.ReactNode {
+  const key = `${path}/${node.name}`
+  if (node.type === 'directory') {
+    return (
+      <TreeItem key={key} itemType="branch">
+        <TreeItemLayout icon={<Folder20Regular />}>{node.name}</TreeItemLayout>
+        <Tree>
+          {node.children.map(child => renderTreeNode(child, key))}
+        </Tree>
+      </TreeItem>
+    )
+  }
+  else {
+    return (
+      <TreeItem key={key} itemType="leaf">
+        <TreeItemLayout iconBefore={getIconByExtension(node.extension)}>
+          {node.name}
+        </TreeItemLayout>
+      </TreeItem>
+    )
+  }
+}
 
 export default function FolderPanel() {
   const dispatch = useDispatch()
-  const { showGroup, sortBy } = useSelector((state: RootState) => state.folderPanel)
+  const { toolbarValve, showGroup, sortBy, searchProps } = useSelector((state: RootState) => state.folderPanel)
+
+  const handleSetToolbarValve = useCallback((newValue: Partial<ToolbarValve>) => {
+    dispatch(setToolbarValve(newValue))
+  }, [dispatch])
 
   const handleSetShowGroup = useCallback((newShowGroup: ShowGroup[]) => {
     dispatch(setShowGroup(newShowGroup))
@@ -30,35 +124,14 @@ export default function FolderPanel() {
     dispatch(setSortBy(newSortBy))
   }, [dispatch])
 
+  const handleSetSearchProps = useCallback((newProps: Partial<SearchProps>) => {
+    dispatch(setSearchProps(newProps))
+  }, [dispatch])
+
   return (
     <SidebarPanel
       title="文件"
-      fadeToolbar={(
-        <>
-          <Tooltip content="选择打开的文件" relationship="label">
-            <ToolbarButton
-              aria-label="Select open files"
-              appearance="subtle"
-              icon={<DocumentTargetRegular />}
-            />
-          </Tooltip>
-          <ToolbarDivider />
-          <Tooltip content="扩展所选" relationship="label">
-            <ToolbarButton
-              aria-label="Expand selected"
-              appearance="subtle"
-              icon={<ChevronUpDownRegular />}
-            />
-          </Tooltip>
-          <Tooltip content="全部收起" relationship="label">
-            <ToolbarButton
-              aria-label="Collapse all"
-              appearance="subtle"
-              icon={<ChevronDownUpRegular />}
-            />
-          </Tooltip>
-        </>
-      )}
+      fadeToolbar={<FolderFadeToolbar />}
       customMenu={(
         <FolderCustomMenu
           showGroup={showGroup}
@@ -67,45 +140,18 @@ export default function FolderPanel() {
           onSetSortBy={handleSetSortBy}
         />
       )}
+      toolbarValve={toolbarValve}
+      setToolbarValve={handleSetToolbarValve}
     >
-      <KeepAlive name="folder-panel">
-        <Tree className="select-none!" aria-label="Default">
-          <TreeItem itemType="branch">
-            <TreeItemLayout iconBefore={<Folder20Regular />}>
-              {showGroup}
-              {' '}
-              {sortBy}
-            </TreeItemLayout>
-            <Tree>
-              <TreeItem itemType="leaf">
-                <TreeItemLayout iconBefore={<Image20Regular />}>level 2, item 1</TreeItemLayout>
-              </TreeItem>
-              <TreeItem itemType="leaf">
-                <TreeItemLayout iconBefore={<Image20Regular />}>level 2, item 2</TreeItemLayout>
-              </TreeItem>
-              <TreeItem itemType="leaf">
-                <TreeItemLayout iconBefore={<VideoClip20Regular />}>level 2, item 3</TreeItemLayout>
-              </TreeItem>
-            </Tree>
-          </TreeItem>
-          <TreeItem itemType="branch">
-            <TreeItemLayout iconBefore={<Folder20Regular />}>level 1, item 2</TreeItemLayout>
-            <Tree>
-              <TreeItem itemType="branch">
-                <TreeItemLayout iconBefore={<Folder20Regular />}>level 2, item 1</TreeItemLayout>
-                <Tree>
-                  <TreeItem itemType="leaf">
-                    <TreeItemLayout iconBefore={<VideoClip20Regular />}>level 3, item 1</TreeItemLayout>
-                  </TreeItem>
-                </Tree>
-              </TreeItem>
-            </Tree>
-          </TreeItem>
-          <TreeItem itemType="leaf">
-            <TreeItemLayout iconBefore={<Folder20Regular />}>level 1, item 3</TreeItemLayout>
-          </TreeItem>
-        </Tree>
-      </KeepAlive>
+      <Collapse visible={toolbarValve.showSearch.includes('true')} unmountOnExit>
+        <div>
+          <FolderSearchField searchProps={searchProps} setSearchProps={handleSetSearchProps} />
+        </div>
+      </Collapse>
+
+      <Tree className="select-none!" aria-label="Default">
+        {projectRoot.map(child => renderTreeNode(child, ''))}
+      </Tree>
     </SidebarPanel>
   )
 }

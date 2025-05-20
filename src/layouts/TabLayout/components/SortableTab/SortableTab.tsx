@@ -3,7 +3,7 @@ import './SortableTab.scss'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Button } from '@fluentui/react-components'
-import { Dismiss16Regular } from '@fluentui/react-icons'
+import { bundleIcon, Dismiss16Regular, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import { InteractiveTab } from '@fluentui-contrib/react-interactive-tab'
 import clsx from 'clsx'
 import type { FC } from 'react'
@@ -11,8 +11,11 @@ import { useEffect, useState } from 'react'
 
 import type { SortableTabProps } from './SortableTab.types'
 
+export const DefaultTabIcon = bundleIcon(TabDesktopNewPageFilled, TabDesktopNewPageRegular)
+
 export const SortableTab: FC<SortableTabProps> = ({ id, item, isSelect, removeItem }) => {
-  const { title, icon: Icon, showAddAnimation = true } = item
+  const { history, historyIndex, showAddAnimation = true } = item
+  const { title, icon: Icon = DefaultTabIcon } = history[historyIndex]
   const [open, setOpen] = useState<boolean>(!showAddAnimation)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 

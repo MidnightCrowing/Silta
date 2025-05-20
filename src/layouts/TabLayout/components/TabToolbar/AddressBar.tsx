@@ -3,8 +3,8 @@ import { LockOpen16Regular } from '@fluentui/react-icons'
 import type { FormEvent, KeyboardEvent, ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import type { TabItemTypes } from '~/layouts/TabLayout'
-import { pushTabItemUrl } from '~/layouts/TabLayout'
+import type { TabItemTypes } from '~/layouts'
+import { pushTabItemUrl } from '~/layouts'
 
 import type { AddressBarProps } from './TabToolbar.types.ts'
 import { urlToHtmlParts } from './TabToolbar.util.tsx'
@@ -25,7 +25,7 @@ export function AddressBar({ activeItemId, activeItem, updatePageData }: Address
 
   useEffect(() => {
     if (activeItem) {
-      const urlText: string = activeItem.history[activeItem.historyIndex]
+      const urlText: string = activeItem.history[activeItem.historyIndex].url
       setText(decodeURIComponent(urlText))
     }
   }, [activeItem])
