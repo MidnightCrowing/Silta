@@ -40,7 +40,7 @@ export function NavigationItem({ itemPosition, item, checked, onClick, setItemPo
         hasCheckmarks
         open={menuOpen}
         onOpenChange={onOpenChange}
-        positioning={{ target: anchorEl }}
+        positioning={{ position: 'after', align: 'top', target: anchorEl }}
       >
         <MenuPopover>
           <MenuList>

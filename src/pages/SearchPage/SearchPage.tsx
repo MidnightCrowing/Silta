@@ -11,13 +11,13 @@ import { useLocation } from '~/contexts/location'
 import { getBackgroundFilePath, getSearchConfig, saveSearchConfigToDisk, updateSearchConfig } from '~/settings'
 import { generateUrlFromTabItem } from '~/utils/urlUtils.ts'
 
+import type { PageProps } from '../PageProps.ts'
 import type { SearchPageSettings } from './components'
 import { SearchBackground, SearchSettingsPopover } from './components'
-import type { SearchPageProps } from './SearchPage.types'
 
 const logoUrl = convertFileSrc('assets/logo.svg')
 
-export default function SearchPage({ className }: SearchPageProps) {
+export default function SearchPage({ className }: PageProps) {
   const { location, setLocation } = useLocation()
 
   useEffect(() => {

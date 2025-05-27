@@ -18,11 +18,23 @@ export interface TabHistoryItem {
 }
 
 export interface TabItemTypes {
+  /**
+   * @description 历史记录
+   */
   history: TabHistoryItem[]
+
+  /**
+   * @description 当前历史记录索引
+   */
   historyIndex: number
 
   /**
    * @description 是否显示添加动画, false时不显示
    */
   showAddAnimation?: boolean
+
+  /**
+   * @description 是否固定标签页
+   */
+  isPinned?: boolean
 }

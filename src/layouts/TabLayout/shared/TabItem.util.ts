@@ -5,7 +5,7 @@ import type { TabItemTypes } from './TabItem.types.ts'
 export function pushTabItemUrl(tabItem: TabItemTypes, url: string): TabItemTypes {
   const newHistory = tabItem.history.slice(0, tabItem.historyIndex + 1)
   newHistory.push({
-    title: url,
+    title: url || '空页面',
     url: normalizeUrl(url),
   })
   return {

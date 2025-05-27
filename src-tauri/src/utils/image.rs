@@ -4,11 +4,13 @@ use std::path::Path;
 
 /// 检查文件是否为支持的图片格式
 pub fn is_supported_image(path: &Path) -> bool {
-    if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-        ["jpg", "png", "jpeg", "webp"].contains(&ext.to_lowercase().as_str())
-    } else {
-        false
-    }
+    matches!(
+        path.extension()
+            .and_then(|e| e.to_str())
+            .map(str::to_ascii_lowercase)
+            .as_deref(),
+        Some("jpg" | "jpeg" | "png" | "webp")
+    )
 }
 
 /// 获取图片的宽度和高度（不依赖扩展名）

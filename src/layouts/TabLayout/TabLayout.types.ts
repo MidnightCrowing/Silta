@@ -3,8 +3,6 @@ import type { AliveController } from 'react-activation'
 
 import type { TabItemTypes } from '~/layouts'
 
-s
-
 export interface TabLayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'items'>, Partial<AliveController> {
   /**
    * @description 标签页项目列表

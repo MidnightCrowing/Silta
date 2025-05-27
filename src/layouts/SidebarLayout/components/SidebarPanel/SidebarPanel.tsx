@@ -65,7 +65,7 @@ export function SidebarPanel({
     <div flex="~ col" size-full>
       <DrawerHeader className="p-(t-15px! x-5px!)">
         <DrawerHeaderNavigation className="flex items-center justify-start gap-5px m-(l-10px! r-0!)">
-          <DrawerHeaderTitle>
+          <DrawerHeaderTitle className="text-nowrap">
             {title}
           </DrawerHeaderTitle>
 

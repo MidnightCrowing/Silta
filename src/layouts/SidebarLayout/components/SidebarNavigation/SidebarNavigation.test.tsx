@@ -55,6 +55,7 @@ describe('sidebarNavigation', () => {
     bottomActiveItemId: '',
     setTopActiveItemId: vi.fn(),
     setBottomActiveItemId: vi.fn(),
+    setItemPosition: vi.fn(),
   }
 
   it('应该正确渲染所有导航项', () => {

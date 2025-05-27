@@ -1,0 +1,1 @@
+export { SearchResultTextCard } from './SearchResultTextCard'

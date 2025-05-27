@@ -43,7 +43,7 @@ export default function PluginsPanel() {
       customMenu={<PluginsCustomMenu visibleItems={visibleItems} setVisibleItems={handleSetVisibleItems} />}
     >
       <Accordion
-        className="h-full flex-(~ col) overflow-hidden"
+        className="plugins-panel h-full flex-(~ col) overflow-hidden"
         multiple
         collapsible
         openItems={openItems}

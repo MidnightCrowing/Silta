@@ -15,7 +15,9 @@
   }
 
   &.top-bar-effect {
-    @apply bg-$colorNeutralBackground1-60! backdrop-(blur-20px saturate-180% brightness-120%) transform-gpu;
+    @apply bg-$colorNeutralBackground1-60! transform-gpu;
+    @apply backdrop-(blur-20px saturate-180%);
+    @apply light:brightness-120% dark:brightness-120%;
 
     box-shadow:
       0 10px 15px -3px rgb(0 0 0 / 0.2),

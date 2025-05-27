@@ -1,7 +1,7 @@
 import './TabToolbar.scss'
 
 import type { MenuProps } from '@fluentui/react-components'
-import { Button, Menu, MenuDivider, MenuItem, MenuList, MenuPopover, Tooltip } from '@fluentui/react-components'
+import { Avatar, Button, Menu, MenuDivider, MenuItem, MenuList, MenuPopover, Tooltip } from '@fluentui/react-components'
 import {
   ArrowClockwise20Regular,
   ArrowClockwiseDashes20Regular,
@@ -60,7 +60,7 @@ function BackButton({ activeItemId, activeItem, updatePageData }: BackButtonProp
         hasIcons
         open={menuOpen}
         onOpenChange={onOpenChange}
-        positioning={{ target: anchorEl }}
+        positioning={{ position: 'below', align: 'start', target: anchorEl }}
       >
         <MenuPopover>
           <MenuList>
@@ -74,7 +74,7 @@ function BackButton({ activeItemId, activeItem, updatePageData }: BackButtonProp
                 <MenuItem
                   className="tab-layout tab-toolbar back-button-menu menu-item"
                   key={`${title}-${idx.toString()}`}
-                  icon={<Icon />}
+                  icon={<Avatar icon={<Icon />} shape="square" size={20} />}
                   onClick={() => {
                     updatePageData(activeItemId, old => ({
                       ...old,
@@ -144,7 +144,7 @@ function ForwardButton({ activeItemId, activeItem, updatePageData }: ForwardButt
           hasIcons
           open={menuOpen}
           onOpenChange={onOpenChange}
-          positioning={{ target: anchorEl }}
+          positioning={{ position: 'below', align: 'start', target: anchorEl }}
         >
           <MenuPopover>
             <MenuList>
@@ -154,7 +154,7 @@ function ForwardButton({ activeItemId, activeItem, updatePageData }: ForwardButt
                   <MenuItem
                     className="tab-layout tab-toolbar forward-button-menu menu-item"
                     key={`${title}-${idx.toString()}`}
-                    icon={<Icon />}
+                    icon={<Avatar icon={<Icon />} shape="square" size={20} />}
                     onClick={() => {
                       updatePageData(activeItemId, old => ({
                         ...old,
@@ -226,7 +226,7 @@ function RefreshButton({ refreshPage }: RefreshButtonProps) {
       <Menu
         open={menuOpen}
         onOpenChange={onOpenChange}
-        positioning={{ target: anchorEl }}
+        positioning={{ position: 'below', align: 'start', target: anchorEl }}
       >
         <MenuPopover>
           <MenuList>
@@ -255,7 +255,7 @@ export function TabToolbar({
 }: TabToolbarProps) {
   return (
     <div
-      className="TabLayout TabToolbar @container"
+      className="tab-toolbar @container"
       w-full
       flex="~ items-center"
       gap="5px"

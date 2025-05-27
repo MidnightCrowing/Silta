@@ -33,9 +33,10 @@ import type { VideoCardProps } from '~/components/VideoCard'
 import { VideoCard, VideoCardList } from '~/components/VideoCard'
 import { useLocation } from '~/contexts/location'
 
+import type { PageProps } from '../PageProps'
 import type { VideoConfig } from './config'
 import { parseConfig } from './config'
-import type { VideoLocationProps, VideoPageProps, VideoStore } from './VideoPage.types'
+import type { VideoLocationProps, VideoStore } from './VideoPage.types'
 
 const JoLPlayer = lazy(() => import('jol-player'))
 
@@ -90,7 +91,7 @@ const OverflowMenu: FC<{ itemIds: string[] }> = ({ itemIds }) => {
   )
 }
 
-export default function VideoPage({ className }: VideoPageProps) {
+export default function VideoPage({ className }: PageProps) {
   const {
     location,
     props,
@@ -157,7 +158,7 @@ export default function VideoPage({ className }: VideoPageProps) {
     <div className={`@container overflow-x-hidden ${className}`}>
       <div p="x-20px y-10px" flex={`~ col ${hasRecs ? '@[800px]:row' : 'items-center'}`} gap="10px">
         <div className={hasRecs ? '@[800px]:w-70%' : 'w-75%'} shrink-0 flex="~ col" gap="10px">
-          <KeepAlive name={videoAliveName} when>
+          <KeepAlive name={videoAliveName} id={videoAliveName} when>
             <Suspense>
               <JoLPlayer
                 ref={videoRef}

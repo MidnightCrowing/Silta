@@ -30,7 +30,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
 
     const reviceProps = useContext(FlowContext);
 
-    const { propsAttributes, dispatch: contentDispatch } = reviceProps!;
+    const { rootRef, propsAttributes, dispatch: contentDispatch } = reviceProps!;
 
     const revicePropsData = useRef<contextType>(null!);
 
@@ -96,6 +96,7 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
       let longPressTimeout: NodeJS.Timeout | null = null;
 
       const handleKeyDown = (event: KeyboardEvent) => {
+        console.log(1)
         const videoRef = reviceProps.videoRef!;
         switch (event.key) {
           case 'ArrowUp':
@@ -225,14 +226,14 @@ const Index: FC<{ setIsscreenshot: Function; setScreenshotLoading: Function }> =
         }
       };
 
-      window.addEventListener('keydown', handleKeyDown);
-      window.addEventListener('keyup', handleKeyUp);
+      rootRef?.addEventListener('keydown', handleKeyDown);
+      rootRef?.addEventListener('keyup', handleKeyUp);
       if (reviceProps.videoContainerRef) {
         reviceProps.videoContainerRef.addEventListener('wheel', handleWheel);
       }
       return () => {
-        window.removeEventListener('keydown', handleKeyDown);
-        window.removeEventListener('keyup', handleKeyUp);
+        rootRef?.removeEventListener('keydown', handleKeyDown);
+        rootRef?.removeEventListener('keyup', handleKeyUp);
         if (reviceProps.videoContainerRef) {
           reviceProps.videoContainerRef.removeEventListener('wheel', handleWheel);
         }

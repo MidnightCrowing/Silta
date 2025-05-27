@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import type { RootState } from '~/store'
 
-import { clearTabPageData, setTabPageData } from './tabPageSlice'
+import { clearTabPageData, deepMergeTabPageData, setTabPageData } from './tabPageSlice'
 
 // 获取某个页面的 store
 export function useGetTabPageStore<T extends Record<any, any>>(pageId: string): T {
@@ -15,6 +15,14 @@ export function useSetTabPageStore(pageId: string) {
   const dispatch = useDispatch()
   return <T extends Record<any, any>>(data: T) => {
     dispatch(setTabPageData({ pageId, data }))
+  }
+}
+
+// 返回深度合并某个页面 store 的函数
+export function useDeepMergeTabPageStore(pageId: string) {
+  const dispatch = useDispatch()
+  return <T extends Record<any, any>>(key: string, value: T) => {
+    dispatch(deepMergeTabPageData({ pageId, key, value }))
   }
 }
 

@@ -1,0 +1,5 @@
+.search-result-page .top-bar {
+  .search-input.mask-edge {
+    mask-image: linear-gradient(to right, transparent 0%, black 10px, black calc(100% - 10px), transparent 100%)
+  }
+}

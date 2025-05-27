@@ -1,0 +1,1 @@
+export { SearchResultTopTags } from './SearchResultTopTags'

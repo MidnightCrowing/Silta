@@ -1,4 +1,5 @@
-import { createElement, Suspense, useCallback, useMemo, useState } from 'react'
+import { createElement, Suspense, useCallback, useMemo } from 'react'
+import { useAliveController } from 'react-activation'
 
 import { componentMap } from '~/constants/tabPage.ts'
 import { LocationProvider, useLocation } from '~/contexts/location'
@@ -7,12 +8,15 @@ import { parseUrlToComponentData } from '~/utils/urlUtils.ts'
 
 import { TabToolbar } from '../TabToolbar'
 import type { TabPageProps } from './TabPage.types'
-import { useClearTabPageStore, useGetTabPageStore, useSetTabPageStore } from './tabPageHooks'
+import { useClearTabPageStore, useDeepMergeTabPageStore, useGetTabPageStore, useSetTabPageStore } from './tabPageHooks'
 
 function PageWrapper() {
   const { location } = useLocation()
 
   const Component = useMemo(() => {
+    if (!location.url) {
+      return () => <div /> // 返回一个空组件
+    }
     return componentMap[parseUrlToComponentData(location.url).name]
   }, [location])
 
@@ -24,19 +28,34 @@ function PageWrapper() {
 }
 
 export function TabPage({ activeItemId, activeItem, updatePageData }: TabPageProps) {
-  const [showPageWrapper, setShowPageWrapper] = useState<boolean>(true)
-
   const store = useGetTabPageStore(activeItemId)
   const setStore = useSetTabPageStore(activeItemId)
+  const deepMergeStore = useDeepMergeTabPageStore(activeItemId)
   const clearStore = useClearTabPageStore(activeItemId)
+  const { dropScope } = useAliveController()
 
-  const refreshPage = useCallback((isClearStore: boolean) => {
-    setShowPageWrapper(false) // 先卸载组件
+  const refreshPage = useCallback(async (isClearStore: boolean) => {
+    const { history, historyIndex } = activeItem
+
+    updatePageData(activeItemId, _ => ({
+      ...activeItem,
+      history: history.map((entry, index) =>
+        index === historyIndex ? { ...entry, url: '' } : entry,
+      ),
+    }))
+
     if (isClearStore) {
-      clearStore() // 清空页面数据
+      clearStore() // 清空页面Store缓存
+      await dropScope(new RegExp(`^TabPage-${activeItemId}-`)) // 清理KeepAlive缓存
     }
-    setTimeout(() => setShowPageWrapper(true), 10) // 等待一段时间后重新加载组件
-  }, [clearStore])
+    // else {
+    //   await refreshScope(new RegExp(`^TabPage-${activeItemId}-`)) // 刷新KeepAlive缓存
+    // }
+
+    requestAnimationFrame(() => {
+      updatePageData(activeItemId, _ => activeItem)
+    })
+  }, [activeItem, activeItemId, clearStore, dropScope, updatePageData])
 
   const handleUpdatePageData: updatePageData = useCallback(
     (pageId: string, updater: (oldTab: TabItemTypes) => TabItemTypes) => {
@@ -58,6 +77,13 @@ export function TabPage({ activeItemId, activeItem, updatePageData }: TabPagePro
     [updatePageData, activeItemId, clearStore],
   )
 
+  const storeHandlers = useMemo(() => ({
+    store,
+    setStore,
+    deepMergeStore,
+    clearStore,
+  }), [store, setStore, deepMergeStore, clearStore])
+
   return (
     <div size-full flex="~ col">
       <TabToolbar
@@ -71,14 +97,10 @@ export function TabPage({ activeItemId, activeItem, updatePageData }: TabPagePro
         <LocationProvider
           pageId={activeItemId}
           activeTab={activeItem}
-          store={store}
-          setStore={setStore}
-          clearStore={clearStore}
+          storeHandlers={storeHandlers}
           updatePageData={handleUpdatePageData}
         >
-          {showPageWrapper && (
-            <PageWrapper />
-          )}
+          <PageWrapper />
         </LocationProvider>
       </div>
     </div>

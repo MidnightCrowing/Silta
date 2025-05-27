@@ -41,3 +41,7 @@ tauri-plugin-dialog = "2"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-single-instance = "2"
+
+[profile.dev]
+opt-level = 3         # 提升优化等级（0 ~ 3）
+debug = true          # 保留调试信息

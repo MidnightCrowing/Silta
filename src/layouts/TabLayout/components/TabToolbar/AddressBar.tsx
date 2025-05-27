@@ -1,9 +1,8 @@
 import { Button, Tooltip } from '@fluentui/react-components'
 import { LockOpen16Regular } from '@fluentui/react-icons'
-import type { FormEvent, KeyboardEvent, ReactNode } from 'react'
+import type { KeyboardEvent } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import type { TabItemTypes } from '~/layouts'
 import { pushTabItemUrl } from '~/layouts'
 
 import type { AddressBarProps } from './TabToolbar.types.ts'
@@ -18,10 +17,14 @@ function LockButton() {
 }
 
 export function AddressBar({ activeItemId, activeItem, updatePageData }: AddressBarProps) {
+  const [shouldRestoreCursor, setShouldRestoreCursor] = useState<boolean>(false)
   const [text, setText] = useState<string>('')
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-  const displayRef = useRef<HTMLDivElement | null>(null)
-  const parsedUrl: ReactNode = useMemo(() => urlToHtmlParts(text), [text])
+  const parsedUrl = useMemo(() => urlToHtmlParts(text), [text])
+
+  const spanRef = useRef<HTMLSpanElement>(null)
+
+  // 记录字符偏移
+  const cursorOffsetRef = useRef<number>(0)
 
   useEffect(() => {
     if (activeItem) {
@@ -30,42 +33,90 @@ export function AddressBar({ activeItemId, activeItem, updatePageData }: Address
     }
   }, [activeItem])
 
-  // 每次聚焦到隐藏textarea
-  useEffect(() => {
-    const displayElement = displayRef.current
-    const textareaElement = textareaRef.current
+  const handleInput = () => {
+    const selection = window.getSelection()
+    const span = spanRef.current
+    if (span && selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
 
-    if (displayElement && textareaElement) {
-      const handleClick = () => {
-        textareaElement.focus()
-      }
+      const preCaretRange = range.cloneRange()
+      preCaretRange.selectNodeContents(span)
+      preCaretRange.setEnd(range.endContainer, range.endOffset)
 
-      displayElement.addEventListener('click', handleClick)
+      const textBeforeCaret = preCaretRange.toString()
+      cursorOffsetRef.current = textBeforeCaret.length
 
-      // 清理函数，移除事件监听器
-      return () => {
-        displayElement.removeEventListener('click', handleClick)
-      }
+      const newText = span.textContent ?? ''
+      setText(decodeURIComponent(newText))
+
+      setShouldRestoreCursor(true) // 只在输入时触发
     }
-  })
-
-  const handleInput = (event: FormEvent<HTMLTextAreaElement>) => {
-    // 处理按下Enter事件，阻止换行
-    const inputValue = (event.target as HTMLTextAreaElement).value.replace(/\n/g, '') // 移除换行符
-    setText(decodeURIComponent(inputValue))
   }
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key !== 'Enter') {
+  useEffect(() => {
+    const span = spanRef.current
+    if (!span)
       return
+
+    span.innerHTML = parsedUrl
+
+    if (!shouldRestoreCursor)
+      return
+
+    setShouldRestoreCursor(false) // 重置状态
+
+    const setCursorByTextOffset = (el: HTMLElement, offset: number) => {
+      const selection = window.getSelection()
+      const range = document.createRange()
+      let charIndex = 0
+      let found = false
+
+      const nodeWalker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null)
+
+      while (nodeWalker.nextNode()) {
+        const node = nodeWalker.currentNode as Text
+        const nextCharIndex = charIndex + node.length
+
+        if (offset <= nextCharIndex) {
+          range.setStart(node, offset - charIndex)
+          range.collapse(true)
+          selection?.removeAllRanges()
+          selection?.addRange(range)
+          found = true
+          break
+        }
+
+        charIndex = nextCharIndex
+      }
+
+      if (!found) {
+        range.selectNodeContents(el)
+        range.collapse(false)
+        selection?.removeAllRanges()
+        selection?.addRange(range)
+      }
     }
-    event.preventDefault() // 阻止默认换行行为
-    updatePageData(activeItemId, (old: TabItemTypes) => pushTabItemUrl(old, text))
+
+    setCursorByTextOffset(span, cursorOffsetRef.current)
+  }, [parsedUrl])
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLSpanElement>) => {
+    if (event.key !== 'Enter')
+      return
+    event.preventDefault()
+    updatePageData(activeItemId, old => pushTabItemUrl(old, text))
+  }
+
+  const handlePaste = (event: React.ClipboardEvent<HTMLSpanElement>) => {
+    event.preventDefault() // 阻止默认富文本粘贴行为
+
+    const text = event.clipboardData.getData('text/plain') // 获取纯文本
+    document.execCommand('insertText', false, text) // 插入纯文本
   }
 
   return (
     <div
-      className="@[128px]:flex hidden"
+      className="address-bar @[128px]:flex hidden"
       grow
       h-full
       p="l-6px r-3px y-2px"
@@ -79,32 +130,21 @@ export function AddressBar({ activeItemId, activeItem, updatePageData }: Address
       overflow-hidden
     >
       <LockButton />
-      <div relative grow h-full>
-        {/* 可见区 */}
-        <div
-          ref={displayRef}
-          h-full
-          flex="~ row items-center"
-        >
-          {parsedUrl}
-        </div>
-
-        {/* 隐藏的textarea，捕获输入 */}
-        <textarea
-          ref={textareaRef}
-          value={text}
-          onInput={handleInput}
-          onKeyDown={handleKeyDown}
-          absolute
-          opacity-0
-          pos="left-0 top-0"
-          size-full
-          p-0
-          b-0
-          pointer-events-none
-          resize-none
-        />
-      </div>
+      <span
+        ref={spanRef}
+        className="no-scrollbar"
+        grow
+        m="r-5px"
+        outline-none
+        text="$colorNeutralForeground3 nowrap"
+        overflow-x-auto
+        contentEditable
+        suppressContentEditableWarning
+        onInput={handleInput}
+        onKeyDown={handleKeyDown}
+        onPaste={handlePaste}
+        spellCheck={false}
+      />
     </div>
   )
 }

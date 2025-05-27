@@ -37,7 +37,7 @@ export interface GalleryTopBarProps {
   /**
    * @description 图片数量
    */
-  imageCount: number
+  imageCount: number | string
 
   /**
    * @description 描述

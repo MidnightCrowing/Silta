@@ -11,8 +11,12 @@ const TabItems: TabItemTypes[] = [
         title: '新建标签页',
         url: 'NewPage',
       },
+      {
+        title: '',
+        url: 'abab',
+      },
     ],
-    historyIndex: 0,
+    historyIndex: 1,
   },
   {
     history: [

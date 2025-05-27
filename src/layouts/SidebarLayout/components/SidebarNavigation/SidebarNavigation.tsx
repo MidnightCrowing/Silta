@@ -25,6 +25,7 @@ export class SidebarNavigation extends Component<SidebarNavigationProps> {
       bottomActiveItemId,
       setTopActiveItemId,
       setBottomActiveItemId,
+      setItemPosition,
       ...props
     } = this.props
     const { SideBarItemButton } = this

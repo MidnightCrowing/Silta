@@ -193,7 +193,7 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
       return;
     }
     if (muted.current && videoRef.current) {
-      var promise = videoRef.current.play();
+      const promise = videoRef.current.play();
       if (promise !== undefined) {
         promise
           .catch((error) => {
@@ -233,6 +233,7 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
     return Object.assign(
       {},
       {
+        rootRef: videoContainerRef.current,
         videoRef: videoRef.current,
         videoContainerRef: videoContainerRef.current,
         lightOffMaskRef: lightOffMaskRef.current,
@@ -241,7 +242,7 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
         propsAttributes: option,
       },
     );
-  }, [videoRef.current, videoFlow, option]);
+  }, [videoContainerRef.current, videoRef.current, videoFlow, option]);
 
   const toastRef = useRef<ToastHandle>(null);
 
@@ -257,6 +258,7 @@ const JoLPlayer = function JoLPlayer(props: videoparameter, ref: React.Ref<unkno
       ref={videoContainerRef}
       style={style}
       id="JoL-player-container"
+      tabIndex={0}
     >
       <div className="JoL-light-off-mask" ref={lightOffMaskRef}></div>
       <video

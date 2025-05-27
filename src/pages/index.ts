@@ -1,5 +1,5 @@
 // ImageGalleryPage
-export type { ImageGalleryLocationProps, ImageGalleryPageProps } from './ImageGalleryPage'
+export type { ImageGalleryLocationProps } from './ImageGalleryPage'
 export { ImageGalleryPage } from './ImageGalleryPage'
 
 // SearchPage
@@ -13,5 +13,5 @@ export { SearchResultPage } from './SearchResultPage'
 export { SinglePreviewPage } from './SinglePreviewPage'
 
 // VideoPage
-export type { VideoLocationProps, VideoPageProps } from './VideoPage'
+export type { VideoLocationProps } from './VideoPage'
 export { VideoPage } from './VideoPage'

@@ -1,16 +1,14 @@
 import type { DragEndEvent } from '@dnd-kit/core'
-import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
-import { restrictToHorizontalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import type { SelectTabData, SelectTabEvent } from '@fluentui/react-components'
-import { Button, Divider, TabList, useIsOverflowGroupVisible } from '@fluentui/react-components'
+import { Button, TabList } from '@fluentui/react-components'
 import { AddRegular } from '@fluentui/react-icons'
-import type { FC, ReactNode } from 'react'
+import type { FC } from 'react'
 import { Component, Fragment } from 'react'
 import { withAliveScope } from 'react-activation'
 import { v4 as uuidv4 } from 'uuid'
 
-import { SortableTab, TabPage } from './components'
+import { SortableTab, TabDivider, TabDndContextWrapper, TabPage } from './components'
 import type { TabItemTypes } from './shared/TabItem.types.ts'
 import type { TabLayoutProps, TabLayoutState, updatePageData } from './TabLayout.types'
 
@@ -38,13 +36,13 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
   render() {
     const { className } = this.props
     const { activeItemId, items } = this.state
-    const { activeItem, DndContextWrapper, AddNewTab, TabDivider } = this
+    const { activeItem, AddNewTab } = this
 
     return (
       <div className={`tab-layout flex-(~ col items-start) align-start ${className}`}>
 
         {/* Tabs */}
-        <DndContextWrapper>
+        <TabDndContextWrapper onDragEnd={this.handleDragEnd}>
           <SortableContext items={Object.keys(items)} strategy={horizontalListSortingStrategy}>
             <TabList
               className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
@@ -59,9 +57,10 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
                         id={id}
                         item={item}
                         isSelect={activeItemId === id}
-                        removeItem={() => {
-                          this.removeItem(id)
-                        }}
+                        allTabIds={Object.keys(items)}
+                        addItem={this.addItem}
+                        removeItem={updater => this.removeItem(updater)}
+                        updatePageData={this.updatePageData}
                       />
                       <TabDivider groupId={id} />
                     </Fragment>
@@ -71,7 +70,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
               <AddNewTab />
             </TabList>
           </SortableContext>
-        </DndContextWrapper>
+        </TabDndContextWrapper>
 
         {/* Pages */}
         <div grow w-full overflow-hidden>
@@ -105,26 +104,50 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     this.setState({ activeItemId: itemId })
   }
 
-  private addItem = (newItem: TabItemTypes = newTabTemplate, active: boolean = true) => {
+  /**
+   * 添加新 tab item，可指定插入位置（默认末尾）。
+   * @param newItem 新的 TabItemTypes
+   * @param active 是否激活新 tab
+   * @param insertIndex 插入位置（0-based），默认末尾
+   */
+  private addItem = (
+    newItem: TabItemTypes = newTabTemplate,
+    active: boolean = true,
+    insertIndex?: number,
+  ) => {
     const id = uuidv4()
-    this.setState(prevState => ({
-      items: { ...prevState.items, [id]: newItem },
-      activeItemId: active ? id : prevState.activeItemId,
-    }))
+    this.setState((prevState) => {
+      const entries = Object.entries(prevState.items)
+      const index = insertIndex !== undefined
+        ? Math.max(0, Math.min(insertIndex, entries.length))
+        : entries.length
+      // 插入新项
+      entries.splice(index, 0, [id, newItem])
+      const newItems = Object.fromEntries(entries)
+      return {
+        items: newItems,
+        activeItemId: active ? id : prevState.activeItemId,
+      }
+    })
   }
 
-  private removeItem = (itemId: string) => {
-    // 删除页面时, 删除页面的组件缓存
-    this.props.dropScope?.(new RegExp(`^TabPage-${itemId}-`))
-
+  private removeItem = (updater: (items: TabLayoutState['items']) => TabLayoutState['items']) => {
     this.setState((prevState) => {
-      const { [itemId]: _, ...newItems } = prevState.items
-      let newActiveItemId = prevState.activeItemId
+      const oldItems = prevState.items
+      const newItems = updater(oldItems)
 
-      if (prevState.activeItemId === itemId) {
-        const itemIds = Object.keys(prevState.items)
-        const currentIndex = itemIds.indexOf(itemId)
-        newActiveItemId = itemIds[currentIndex + 1] || itemIds[currentIndex - 1] || null
+      // 找出被删除的 tab id
+      const removedIds = Object.keys(oldItems).filter(id => !(id in newItems))
+      // 清理缓存
+      removedIds.forEach((id) => {
+        this.props.dropScope?.(new RegExp(`^TabPage-${id}-`))
+      })
+
+      // 处理 activeId
+      let newActiveItemId = prevState.activeItemId
+      if (removedIds.includes(prevState.activeItemId!)) {
+        const remainIds = Object.keys(newItems)
+        newActiveItemId = remainIds[0] || null
       }
 
       return {
@@ -163,42 +186,6 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
     }
   }
 
-  private DndContextWrapper: FC<{ children: ReactNode }> = ({ children }) => {
-    const sensors = useSensors(
-      useSensor(MouseSensor, {
-        activationConstraint: {
-          distance: 5, // 按住不动移动5px时才进行拖拽, 这样就可以触发点击事件
-        },
-      }),
-    )
-
-    return (
-      <DndContext
-        collisionDetection={closestCenter}
-        onDragEnd={this.handleDragEnd}
-        sensors={sensors}
-        modifiers={[
-          restrictToHorizontalAxis, // 限制只能在水平方向上移动
-          restrictToParentElement, // 不能超出父组件
-        ]}
-      >
-        {children}
-      </DndContext>
-    )
-  }
-
-  private TabDivider: FC<{ groupId: string }> = ({ groupId }) => {
-    const isGroupVisible = useIsOverflowGroupVisible(groupId)
-
-    if (isGroupVisible === 'hidden') {
-      return null
-    }
-
-    return (
-      <Divider className="grow-0! p-(x-0 py-12px) h-1/2 m-y-auto" vertical />
-    )
-  }
-
   private AddNewTab: FC = () => {
     return (
       <div flex="~ items-center" p="x-5px">
@@ -206,9 +193,7 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
           className="size-30px!"
           icon={<AddRegular />}
           appearance="subtle"
-          onClick={() => {
-            this.addItem()
-          }}
+          onClick={() => { this.addItem() }}
         />
       </div>
     )

@@ -77,6 +77,7 @@ export default defineConfig({
     cssCodeSplit: true,
     minify: 'terser', // 使用 Terser 进行代码压缩
     sourcemap: false, // 不生成源映射文件
+    chunkSizeWarningLimit: 2048, // 禁用构建时的 JS 文件体积警告
     terserOptions: {
       mangle: true, // 是否混淆变量名
       compress: {

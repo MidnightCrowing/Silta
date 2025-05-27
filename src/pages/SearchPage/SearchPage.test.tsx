@@ -7,7 +7,6 @@ import { describe, expect, it, vi } from 'vitest'
 import { LocationProvider } from '~/contexts/location'
 
 import SearchPage from './SearchPage'
-import type { SearchPageProps } from './SearchPage.types'
 
 const mockUpdatePageData = vi.fn()
 
@@ -32,10 +31,10 @@ vi.mock('@tauri-apps/api/core', () => ({
   convertFileSrc: (path: string) => path,
 }))
 
-function renderSearchPage(props: Partial<SearchPageProps> = {}) {
+function renderSearchPage() {
   return render(
     <LocationProvider {...mockProps}>
-      <SearchPage className="test-class" {...props} />
+      <SearchPage className="test-class" />
     </LocationProvider>,
   )
 }

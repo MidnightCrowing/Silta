@@ -1,11 +1,12 @@
-import type { ReactNode } from 'react'
-
 /**
  * 将 URL 字符串解析成带标记的对象
  * @param urlString URL 字符串
  * @returns 带标记的对象数组
  */
-function parseStringToUrl(urlString: string): { type: string, text: string }[] {
+function parseStringToUrl(urlString: string): {
+  type: 'protocol' | 'hostname' | 'port' | 'pathname' | 'search' | 'hash' | 'origin'
+  text: string
+}[] {
   try {
     // 尝试用 URL 构造函数解析
     const url = new URL(urlString)
@@ -39,36 +40,26 @@ function parseStringToUrl(urlString: string): { type: string, text: string }[] {
 /**
  * 将url字符串转成带标记的 React 节点
  */
-export function urlToHtmlParts(urlString: string): ReactNode {
-  const typeClassNameMap: Record<string, string> = {
-    protocol: 'text-$colorNeutralForeground3',
-    hostname: 'text-$colorNeutralForeground1',
-    origin: 'text-$colorNeutralForeground1',
-    port: 'text-$colorNeutralForeground3',
-    pathname: 'text-$colorNeutralForeground3',
-    search: 'text-$colorNeutralForeground3',
-    hash: 'text-$colorNeutralForeground3',
-  }
+export function urlToHtmlParts(urlString: string): string {
+  const highlightType = ['hostname', 'origin']
 
   const urlParts = parseStringToUrl(urlString)
 
-  return (
-    <>
-      {urlParts.map(({ type, text }) =>
-        text
-          ? (
-              <span
-                key={type}
-                data-type={type}
-                className={`whitespace-nowrap ${typeClassNameMap[type]}`}
-              >
-                {text}
-              </span>
-            )
-          : null,
-      )}
-    </>
-  )
+  return urlParts
+    .map(({ type, text }) => {
+      if (!text) {
+        return ''
+      }
+
+      if (type === 'protocol' && text === 'https:') {
+        text += '//'
+      }
+
+      return highlightType.includes(type)
+        ? `<span data-type="${type}" class="text-$colorNeutralForeground1">${text}</span>`
+        : text
+    })
+    .join('')
 }
 
 /*

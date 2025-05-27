@@ -22,6 +22,7 @@ export interface VideoStateType<K = boolean, T = number> {
  * @description 永不变的数据
  */
 export interface contextType {
+  rootRef: HTMLElement | null;
   videoRef: HTMLVideoElement | null;
   videoContainerRef: HTMLElement | null;
   lightOffMaskRef: HTMLElement | null;
@@ -40,6 +41,7 @@ export const initialState = {
 };
 
 export const defaultValue = {
+  rootRef: null,
   videoRef: null,
   videoContainerRef: null,
   lightOffMaskRef: null,

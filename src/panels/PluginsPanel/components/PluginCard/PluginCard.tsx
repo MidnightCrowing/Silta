@@ -7,7 +7,7 @@ import { useCallback } from 'react'
 import type { PluginCardProps } from './PluginCard.types.ts'
 
 export function PluginCard({ item, isSelect, onSelectedItem }: PluginCardProps) {
-  const { id, name, description, icon, version, isEnabled } = item
+  const { id, name, description, isEnabled } = item
 
   const onFocus = useCallback((event: FocusEvent<HTMLLIElement>) => {
     // Ignore bubbled up events from the children

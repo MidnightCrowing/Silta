@@ -1,12 +1,6 @@
 import type { LocationProps } from '~/contexts/location'
 import type { GalleryImageInfo } from '~/tauri-types.ts'
 
-import type { PageBaseProps } from '../shared/sharedProps.types'
-
-/** 页面属性 */
-export interface ImageGalleryPageProps extends PageBaseProps {
-}
-
 /** 页面位置属性 */
 export interface ImageGalleryLocationProps extends LocationProps {
   // 图片路径
@@ -16,7 +10,9 @@ export interface ImageGalleryLocationProps extends LocationProps {
 /** 页面存储属性 */
 export interface ImageGalleryStore {
   // 图片列表
-  imageInfos: GalleryImageInfo[]
+  images: string[]
+  // 图片信息（键为images中图片路径，值为图片信息）
+  imageInfos: Record<string, GalleryImageInfo | undefined>
   // 加载错误信息
   loadError: string | null
   // 图片标题
@@ -35,4 +31,6 @@ export interface ImageGalleryStore {
   description: string
   // 标签列表
   tags: string[]
+  // 图片列表滚动位置
+  scrollPosition: number
 }

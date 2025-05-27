@@ -75,6 +75,10 @@ export function parseUrlToComponentData<T extends TabPageEnum>(urlString: string
  * @returns 规范的自定义 URL 字符串
  */
 export function normalizeUrl(url: string): string {
+  if (!url) {
+    return ''
+  }
+
   const [name] = url.split('?')
 
   // 检查 name 是否在 TabPageEnum 中

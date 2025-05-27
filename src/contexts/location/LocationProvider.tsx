@@ -11,9 +11,7 @@ export function LocationProvider({
   children,
   pageId,
   activeTab,
-  store,
-  setStore,
-  clearStore,
+  storeHandlers,
   updatePageData,
 }: LocationProviderProps) {
   const location: LocationState = useMemo(() => activeTab.history[activeTab.historyIndex], [activeTab])
@@ -22,6 +20,8 @@ export function LocationProvider({
     () => parseUrlToComponentData(location.url).props,
     [location],
   )
+
+  const { store, setStore, deepMergeStore, clearStore } = storeHandlers
 
   const setLocation = useCallback(
     (partial: Partial<LocationState>) => {
@@ -33,17 +33,17 @@ export function LocationProvider({
         const currentHistory = updatedTab.history[updatedTab.historyIndex]
 
         // 更新 title
-        if (partial.title !== undefined) {
+        if (partial.title !== undefined && partial.title !== currentHistory.title) {
           currentHistory.title = partial.title
         }
 
         // 更新 icon
-        if (partial.icon !== undefined) {
+        if (partial.icon !== undefined && partial.icon !== currentHistory.icon) {
           currentHistory.icon = partial.icon
         }
 
         // 更新 url（会自动推进历史）
-        if (partial.url !== undefined) {
+        if (partial.url !== undefined && partial.url !== currentHistory.url) {
           return pushTabItemUrl(updatedTab, partial.url)
         }
 
@@ -60,16 +60,9 @@ export function LocationProvider({
     [pageId],
   )
 
-  const value = useMemo<LocationContextType>(() => ({
-    pageId,
-    location,
-    props,
-    store,
-    setLocation,
-    setStore,
-    clearStore,
-    getAliveName,
-  }), [pageId, location, store, props, setLocation, setStore, clearStore, getAliveName])
+  const value = useMemo<LocationContextType>(() => (
+    { pageId, location, props, store, setLocation, setStore, deepMergeStore, clearStore, getAliveName }
+  ), [pageId, location, props, store, setLocation, setStore, deepMergeStore, clearStore, getAliveName])
 
   return (
     <LocationContext.Provider value={value}>

@@ -1,3 +1,16 @@
 .tab-layout.tab-toolbar.menu-item .fui-MenuItem__content {
   @apply truncate;
 }
+
+.tab-layout .tab-toolbar {
+  .address-bar {
+    .no-scrollbar {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE 10+ */
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+  }
+}

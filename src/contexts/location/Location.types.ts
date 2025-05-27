@@ -31,9 +31,32 @@ export interface LocationProviderProps {
   activeTab: TabItemTypes
 
   /**
-   * @description 页面存储
+   * @description 页面存储处理函数
    */
-  store: Record<any, any>
+  storeHandlers: {
+    /**
+     * @description 页面存储
+     */
+    store: Record<any, any>
+
+    /**
+     * @description 设置页面存储
+     * @param data 页面存储数据
+     */
+    setStore: <T extends Record<any, any>>(data: T) => void
+
+    /**
+     * @description 深度合并页面存储
+     * @param key 键名
+     * @param value 值
+     */
+    deepMergeStore: <T extends Record<any, any>>(key: string, value: T) => void
+
+    /**
+     * @description 清空页面存储
+     */
+    clearStore: () => void
+  }
 
   /**
    * @description 更新页面数据的函数
@@ -41,17 +64,6 @@ export interface LocationProviderProps {
    * @param updater 更新函数
    */
   updatePageData: updatePageData
-
-  /**
-   * @description 设置页面存储
-   * @param data 页面存储数据
-   */
-  setStore: <T extends Record<any, any>>(data: T) => void
-
-  /**
-   * @description 清空页面存储
-   */
-  clearStore: () => void
 }
 
 /**
@@ -102,6 +114,13 @@ export interface LocationContextType<
    * @param data 页面存储数据
    */
   setStore: (data: Partial<S>) => void
+
+  /**
+   * @description 深度合并页面存储
+   * @param key 键名
+   * @param value 值
+   */
+  deepMergeStore: <T extends Record<any, any>>(key: keyof S, value: T) => void
 
   /**
    * @description 清空页面存储
