@@ -31,13 +31,3 @@ export async function getLocalGalleryConfigPath(path: string): Promise<string> {
 export async function getLocalGalleryImageInfo(path: string): Promise<GalleryImageInfo> {
   return await invoke('get_local_gallery_image_info', { path })
 }
-
-/**
- * 获取指定本地路径下图片的缩略图信息。
- *
- * @param path - 图片的路径。
- * @returns 缩略图的 Base64 编码字符串，或抛出错误。
- */
-export async function getLocalGalleryThumbnail(path: string): Promise<string> {
-  return await invoke('get_local_gallery_thumbnail', { path })
-}

@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import type { FC } from 'react'
 import { memo } from 'react'
 
@@ -8,9 +7,8 @@ export const SidebarResize: FC<SidebarResizeProps> = memo(({ isResizing, onMouse
   <div
     role="button"
     aria-label="resize panel"
-    className={clsx(
-      isResizing ? 'b-r-(3px $colorNeutralBackground5Pressed)' : '',
-    )}
+    className={isResizing ? 'b-r-(2px! $colorBrandBackgroundHover!)' : undefined}
+    transition="colors duration-100 ease-in-out"
     z="3"
     onMouseDown={onMouseDown}
     {...props}

@@ -18,6 +18,7 @@ export default function TerminalPanel() {
 
   return (
     <SidebarPanel
+      className="terminal-panel"
       title="终端"
       staticToolbar={(
         <TabList
@@ -34,7 +35,7 @@ export default function TerminalPanel() {
       )}
     >
       <Textarea
-        className="size-full"
+        className="size-full bg-$colorNeutralBackground4!"
         appearance="filled-darker"
       />
     </SidebarPanel>

@@ -11,6 +11,7 @@ function AsideContent({ count }: { count: number }) {
 export default function TagsPanel() {
   return (
     <SidebarPanel
+      className="tags-panel"
       title="标签"
       fadeToolbar={(
         <>

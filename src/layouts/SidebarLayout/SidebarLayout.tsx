@@ -78,6 +78,7 @@ export default class SidebarLayout extends Component<SidebarLayoutProps, Sidebar
     return (
       <div
         className={clsx(
+          'bg-$colorNeutralBackground3',
           drawerIsResizing ? 'select-none' : 'select-auto',
           className,
         )}

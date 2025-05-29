@@ -34,7 +34,7 @@ export function SearchResultTextCard() {
   const siteUrl = 'https://www.bvquge.com'
 
   return (
-    <section className="text-card">
+    <section className="search-result-page__text-card">
       <Card>
         <CardHeader
           image={<SiteIcon src={siteicon} />}
@@ -49,7 +49,7 @@ export function SearchResultTextCard() {
           )}
         />
 
-        <Link className="result-title">
+        <Link className="search-result-page__text-card__result-title">
           <Body2>
             天灾信使-
             <strong>笔趣阁</strong>

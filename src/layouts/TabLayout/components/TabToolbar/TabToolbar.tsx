@@ -72,7 +72,7 @@ function BackButton({ activeItemId, activeItem, updatePageData }: BackButtonProp
               .reverse()
               .map(({ title, icon: Icon = DefaultTabIcon }, idx) => (
                 <MenuItem
-                  className="tab-layout tab-toolbar back-button-menu menu-item"
+                  className="tab-layout__tab-toolbar__menu-item back-button-menu "
                   key={`${title}-${idx.toString()}`}
                   icon={<Avatar icon={<Icon />} shape="square" size={20} />}
                   onClick={() => {
@@ -152,7 +152,7 @@ function ForwardButton({ activeItemId, activeItem, updatePageData }: ForwardButt
                 ?.slice(activeItem.historyIndex + 1, activeItem.historyIndex + 11)
                 .map(({ title, icon: Icon = DefaultTabIcon }, idx) => (
                   <MenuItem
-                    className="tab-layout tab-toolbar forward-button-menu menu-item"
+                    className="tab-layout__tab-toolbar__menu-item forward-button-menu"
                     key={`${title}-${idx.toString()}`}
                     icon={<Avatar icon={<Icon />} shape="square" size={20} />}
                     onClick={() => {
@@ -255,11 +255,11 @@ export function TabToolbar({
 }: TabToolbarProps) {
   return (
     <div
-      className="tab-toolbar @container"
+      className="tab-layout__tab-toolbar @container"
       w-full
       flex="~ items-center"
       gap="5px"
-      p="x-5px y-3px"
+      p="5px"
       box-border
     >
       <BackButton activeItemId={activeItemId} activeItem={activeItem} updatePageData={updatePageData} />

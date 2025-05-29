@@ -1,11 +1,13 @@
-.search-result-page .top-tags {
-  .fui-Tab {
-    &.unselect {
-      @apply bg-$colorNeutralBackground3;
-    }
+.search-result-page {
+  & &__top-tags {
+    .fui-Tab {
+      &.unselect {
+        @apply bg-$colorNeutralBackground3;
+      }
 
-    &[disabled] {
-      @apply bg-$colorNeutralBackgroundDisabled;
+      &[disabled] {
+        @apply bg-$colorNeutralBackgroundDisabled;
+      }
     }
   }
 }

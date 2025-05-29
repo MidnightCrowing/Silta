@@ -1,29 +1,28 @@
 import '@testing-library/jest-dom'
 
-import { TabDesktopNewPageRegular } from '@fluentui/react-icons'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
+import type { LocationProviderProps } from '~/contexts/location'
 import { LocationProvider } from '~/contexts/location'
 
 import SearchPage from './SearchPage'
 
 const mockUpdatePageData = vi.fn()
 
-const mockProps = {
+const mockProps: Omit<LocationProviderProps, 'children'> = {
   pageId: 'test-page-id',
   activeTab: {
-    id: 'test-tab-id',
-    title: 'Test Tab',
-    url: 'https://example.com',
-    icon: TabDesktopNewPageRegular,
     history: [],
     historyIndex: 0,
   },
-  store: {},
+  storeHandlers: {
+    store: {},
+    setStore: vi.fn(),
+    deepMergeStore: vi.fn(),
+    clearStore: vi.fn(),
+  },
   updatePageData: mockUpdatePageData,
-  setStore: vi.fn(),
-  clearStore: vi.fn(),
 }
 
 // Mock Tauri API

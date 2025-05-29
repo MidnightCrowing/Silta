@@ -3,9 +3,8 @@ import './SortableTab.scss'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { MenuProps } from '@fluentui/react-components'
-import { Avatar, Button } from '@fluentui/react-components'
+import { Avatar, Button, Text } from '@fluentui/react-components'
 import { bundleIcon, Dismiss16Regular, Pin20Regular, TabDesktopNewPageFilled, TabDesktopNewPageRegular } from '@fluentui/react-icons'
-import { InteractiveTab } from '@fluentui-contrib/react-interactive-tab'
 import clsx from 'clsx'
 import type { FC, MouseEvent } from 'react'
 import { useEffect, useState } from 'react'
@@ -19,9 +18,10 @@ export const SortableTab: FC<SortableTabProps> = ({
   id,
   item,
   isSelect,
+  allTabIds,
+  onSelect,
   addItem,
   removeItem,
-  allTabIds,
   updatePageData,
 }) => {
   const { history, historyIndex, showAddAnimation = true, isPinned = false } = item
@@ -68,43 +68,63 @@ export const SortableTab: FC<SortableTabProps> = ({
       <div
         ref={setNodeRef}
         className={clsx(
-          'tab-layout sortable-tab @container group',
-          'flex-1 overflow-hidden max-w-0 opacity-0',
+          'tab-layout__sortable-tab @container group',
+          'flex-1 overflow-hidden max-w-0 opacity-0 rounded-t-5px p-3px',
           'transition-([max-width,opacity] duration-100 ease-in-out) transform-gpu',
-          open && 'max-w-150px opacity-100',
-          isDragging && 'bg-$colorNeutralBackground1Hover rounded-5px z-1000 cursor-move',
+          open && 'max-w-180px opacity-100',
+          isSelect && 'bg-$colorNeutralBackground1',
+          isDragging && 'bg-transparent z-1000 cursor-move',
         )}
         style={{ transform: CSS.Transform.toString(transform), transition }}
+        onClick={onSelect}
         onDoubleClick={closeTab}
         onContextMenu={handleContextMenu}
         {...attributes}
         {...listeners}
       >
-        <InteractiveTab
-          className="flex! justify-between p-(l-15px! r-10px!) h-full"
-          button={{
-            className: `px-0! shrink! grow justify-start! ${transform && 'cursor-move!'}`,
-          }}
-          icon={<Avatar icon={<Icon />} shape="square" size={28} />}
-          value={id}
-          contentAfter={
+        <div
+          className={
+            isDragging ? 'bg-$colorNeutralBackground1Hover! cursor-move' : undefined
+          }
+          w-full
+          flex="~ row items-center"
+          gap="5px"
+          p="2px"
+          b-0
+          rounded="5px"
+          bg="hover:$colorNeutralBackground1"
+          box-border
+          cursor-pointer
+          select-none
+        >
+          <Avatar
+            icon={<Icon />}
+            shape="square"
+            size={24}
+          />
+          <Text className="text-nowrap! truncate! mr-auto">{title}</Text>
+          {
             isPinned
               ? <Pin20Regular />
               : (
                   <Button
                     role="tab"
-                    className="close-button size-20px min-w-20px! group-hover:flex!"
+                    className="tab-layout__tab-close-button size-20px min-w-20px! group-hover:flex!"
                     size="small"
                     appearance="subtle"
                     icon={<Dismiss16Regular />}
                     data-selected={isSelect}
-                    onClick={closeTab}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      closeTab()
+                    }}
+                    onDoubleClick={(e) => {
+                      e.stopPropagation()
+                    }}
                   />
                 )
           }
-        >
-          {title}
-        </InteractiveTab>
+        </div>
       </div>
 
       <TabMenu

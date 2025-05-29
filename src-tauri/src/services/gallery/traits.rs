@@ -40,17 +40,4 @@ pub trait GalleryService {
     /// # 错误
     /// 如果无法读取图片或获取其信息，将返回错误。
     fn get_image_info(&self, path: &Path) -> Result<GalleryImageInfo>;
-
-    /// 获取指定图片的缩略图信息。
-    ///
-    /// # 参数
-    /// - `path`: 图片文件的路径。
-    /// - `max_size`: 缩略图的最大尺寸（宽或高）。
-    ///
-    /// # 返回值
-    /// 返回一个 `ThumbnailInfo` 对象，包含缩略图的相关信息。
-    ///
-    /// # 错误
-    /// 如果无法生成缩略图或读取图片，将返回错误。
-    fn get_image_thumbnail(&self, path: &Path, max_size: &u32) -> Result<GalleryThumbnailInfo>;
 }

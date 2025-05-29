@@ -116,7 +116,7 @@ export function AddressBar({ activeItemId, activeItem, updatePageData }: Address
 
   return (
     <div
-      className="address-bar @[128px]:flex hidden"
+      className="tab-layout__tab-toolbar__address-bar @[128px]:flex hidden"
       grow
       h-full
       p="l-6px r-3px y-2px"

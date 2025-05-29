@@ -7,6 +7,11 @@ export interface SidebarPanelProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
 
   /**
+   * 侧边栏面板的 CSS 类名, 需要给出组件css名。
+   */
+  className: string
+
+  /**
    * 侧边栏面板的标题。
    */
   title: string

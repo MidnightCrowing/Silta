@@ -1,11 +1,10 @@
 use super::{FolderGalleryService, GalleryService, ZipGalleryService};
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use once_cell::sync::Lazy;
 use std::path::Path;
 use tokio::sync::Semaphore;
 
-pub static INFO_SEMAPHORE: Lazy<Semaphore> = Lazy::new(|| Semaphore::new(5));
-pub static THUMBNAIL_SEMAPHORE: Lazy<Semaphore> = Lazy::new(|| Semaphore::new(5));
+pub static INFO_SEMAPHORE: Lazy<Semaphore> = Lazy::new(|| Semaphore::new(25));
 
 /// 创建一个 `GalleryService` 实例，根据传入的路径类型选择具体的服务实现。
 ///

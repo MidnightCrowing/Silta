@@ -87,7 +87,7 @@ export function GalleryTopBar({
   return (
     <div
       absolute
-      className="image-gallery top-bar top-bar-effect"
+      className="image-gallery-page__top-bar top-bar-effect"
       w="[calc(100%-15px)]"
       max-h="40px"
       p="x-10px"
@@ -106,7 +106,7 @@ export function GalleryTopBar({
                 )
               : (
                   <Subtitle2
-                    className={`m-0 line-clamp-2 ${isError ? 'color-$colorPaletteRedForeground1' : ''}`}
+                    className={`m-0 line-clamp-2 ${isError ? 'color-$colorPaletteRedForeground1' : undefined}`}
                   >
                     {imageTitle ?? 'Error: 获取标题失败'}
                   </Subtitle2>
@@ -114,8 +114,12 @@ export function GalleryTopBar({
           }
 
           <div flex="~ row items-center" gap="3px">
-            <ToggleButton className="pin-button hidden!" appearance="transparent" icon={<PinIcon />} />
-            <div className="chevron-down-wrapper" flex duration="200">
+            <ToggleButton
+              className="image-gallery-page__pin hidden!"
+              appearance="transparent"
+              icon={<PinIcon />}
+            />
+            <div className="image-gallery-page__chevron-wrapper" flex duration="200">
               <ChevronDown20Regular />
             </div>
           </div>

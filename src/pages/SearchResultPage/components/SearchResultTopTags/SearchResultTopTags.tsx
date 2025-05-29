@@ -44,7 +44,7 @@ export function SearchResultTopTags() {
   }
 
   return (
-    <div className="top-tags" flex="~ row items-center" gap="10px">
+    <div className="search-result-page__top-tags" flex="~ row items-center" gap="10px">
       <TabList appearance="subtle-circular" selectedValue={selectedPlatform} onTabSelect={onTagSelectPlatform}>
         <Tab
           className={selectedPlatform === 'all' ? undefined : 'unselect'}

@@ -1,14 +1,10 @@
 import type { DragEndEvent } from '@dnd-kit/core'
-import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
-import type { SelectTabData, SelectTabEvent } from '@fluentui/react-components'
-import { Button, TabList } from '@fluentui/react-components'
-import { AddRegular } from '@fluentui/react-icons'
-import type { FC } from 'react'
-import { Component, Fragment } from 'react'
+import { arrayMove } from '@dnd-kit/sortable'
+import { Component } from 'react'
 import { withAliveScope } from 'react-activation'
 import { v4 as uuidv4 } from 'uuid'
 
-import { SortableTab, TabDivider, TabDndContextWrapper, TabPage } from './components'
+import { CustomTabList, TabPage } from './components'
 import type { TabItemTypes } from './shared/TabItem.types.ts'
 import type { TabLayoutProps, TabLayoutState, updatePageData } from './TabLayout.types'
 
@@ -36,48 +32,28 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
   render() {
     const { className } = this.props
     const { activeItemId, items } = this.state
-    const { activeItem, AddNewTab } = this
+    const { activeItem } = this
 
     return (
       <div className={`tab-layout flex-(~ col items-start) align-start ${className}`}>
-
         {/* Tabs */}
-        <TabDndContextWrapper onDragEnd={this.handleDragEnd}>
-          <SortableContext items={Object.keys(items)} strategy={horizontalListSortingStrategy}>
-            <TabList
-              className="w-full h-44px shrink-0 justify-start b-b-(solid 1px $colorNeutralBackground4)"
-              selectedValue={activeItemId}
-              onTabSelect={(_event: SelectTabEvent, data: SelectTabData) => this.onTabSelect(data.value as string)}
-            >
-              {
-                Object.entries(items).map(([id, item]) => {
-                  return (
-                    <Fragment key={id}>
-                      <SortableTab
-                        id={id}
-                        item={item}
-                        isSelect={activeItemId === id}
-                        allTabIds={Object.keys(items)}
-                        addItem={this.addItem}
-                        removeItem={updater => this.removeItem(updater)}
-                        updatePageData={this.updatePageData}
-                      />
-                      <TabDivider groupId={id} />
-                    </Fragment>
-                  )
-                })
-              }
-              <AddNewTab />
-            </TabList>
-          </SortableContext>
-        </TabDndContextWrapper>
+        <CustomTabList
+          items={items}
+          activeItemId={activeItemId}
+          onTabSelect={this.onTabSelect}
+          onDragEnd={this.handleDragEnd}
+          addItem={this.addItem}
+          removeItem={this.removeItem}
+          updatePageData={this.updatePageData}
+        />
 
-        {/* Pages */}
+        {/* Toolbar && Pages */}
         <div grow w-full overflow-hidden>
           {activeItemId && activeItem && (
             <TabPage
               activeItemId={activeItemId}
               activeItem={activeItem}
+              allTabIds={Object.keys(items)}
               updatePageData={this.updatePageData}
             />
           )}
@@ -184,18 +160,5 @@ export default class TabLayout extends Component<TabLayoutProps, TabLayoutState>
         }
       })
     }
-  }
-
-  private AddNewTab: FC = () => {
-    return (
-      <div flex="~ items-center" p="x-5px">
-        <Button
-          className="size-30px!"
-          icon={<AddRegular />}
-          appearance="subtle"
-          onClick={() => { this.addItem() }}
-        />
-      </div>
-    )
   }
 }

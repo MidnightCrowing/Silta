@@ -138,7 +138,7 @@ export default function ImageGalleryPage({ className }: PageProps) {
   }, [])
 
   return (
-    <div className={`image-gallery @container relative ${className}`}>
+    <div className={`image-gallery-page @container relative ${className}`}>
       <GalleryTopBar
         imageTitle={imageTitle}
         imageLink={imageLink}
@@ -174,35 +174,24 @@ export default function ImageGalleryPage({ className }: PageProps) {
                   grid="~ @[1100px]:cols-6! @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
                   gap="20px"
                 >
-                  {/* /!* Loading placeholder *!/ */}
-                  {/* { */}
-                  {/*  imageInfos === undefined && !loadError && ( */}
-                  {/*    Array.from({ length: 12 }, (_, index) => ( */}
-                  {/*      <Suspense key={index}> */}
-                  {/*        <ImageCard index={index} /> */}
-                  {/*      </Suspense> */}
-                  {/*    ))) */}
-                  {/* } */}
-
-                  {/* /!* Image cards *!/ */}
-                  {/* {imageInfos?.map((imageInfo, index) => ( */}
-                  {/*  <Suspense key={imageInfo.name}> */}
-                  {/*    <ImageCard */}
-                  {/*      index={index} */}
-                  {/*      imageInfo={imageInfo} */}
-                  {/*    /> */}
-                  {/*  </Suspense> */}
-                  {/* ))} */}
-
                   {
-                    Array.from({ length: images?.length ?? 12 }, (_, index) => (
-                      <Suspense key={images?.[index] ?? index}>
-                        <ImageCard
-                          index={index}
-                          imageInfo={imageInfos?.[images?.[index]] ?? undefined}
-                        />
-                      </Suspense>
-                    ))
+                    Array.from({ length: images?.length ?? 12 }, (_, index) => {
+                      const info = imageInfos?.[images?.[index]]
+                      const { name, path, width, height } = info || {}
+
+                      return (
+                        <Suspense key={images?.[index] ?? index}>
+                          <ImageCard
+                            name={name}
+                            path={path}
+                            width={width}
+                            height={height}
+                            index={index}
+                            enablePreview
+                          />
+                        </Suspense>
+                      )
+                    })
                   }
                 </div>
               </PhotoProvider>

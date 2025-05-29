@@ -33,7 +33,7 @@ const VideoTabIcon = bundleIcon(VideoClipFilled, VideoClipRegular)
 
 export function SearchResultTopBar() {
   return (
-    <div className="top-bar" flex="~ row items-center justify-start" gap="10px">
+    <div className="search-result-page__top-bar" flex="~ row items-center justify-start" gap="10px">
       <div
         flex="~ row items-center"
         w="[calc(100%-300px)]"
@@ -46,7 +46,7 @@ export function SearchResultTopBar() {
         transition="all duration-200 ease-in-out"
       >
         <input
-          className="search-input mask-edge"
+          className="search-result-page__search-box mask-edge"
           grow
           min-w="0"
           h="36px"

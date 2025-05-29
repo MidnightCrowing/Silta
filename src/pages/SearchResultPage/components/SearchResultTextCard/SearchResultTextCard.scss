@@ -1,6 +1,8 @@
-.search-result-page .text-card {
-  .result-title strong {
-    color: #dc5454;
-    font-weight: normal;
+.search-result-page {
+  & &__text-card {
+    &__result-title strong {
+      color: #dc5454;
+      font-weight: normal;
+    }
   }
 }

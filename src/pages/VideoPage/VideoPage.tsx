@@ -200,7 +200,9 @@ export default function VideoPage({ className }: PageProps) {
                             )
                           : (
                               <Subtitle1
-                                className={`line-clamp-2! ${isConfigError ? 'color-$colorPaletteRedForeground1' : ''}`}
+                                className={`line-clamp-2! ${
+                                  isConfigError ? 'color-$colorPaletteRedForeground1' : undefined
+                                }`}
                               >
                                 {videoTitle ?? 'Error: 获取标题失败'}
                               </Subtitle1>

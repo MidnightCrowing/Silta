@@ -27,7 +27,7 @@ function PageWrapper() {
   )
 }
 
-export function TabPage({ activeItemId, activeItem, updatePageData }: TabPageProps) {
+export function TabPage({ activeItemId, activeItem, allTabIds, updatePageData }: TabPageProps) {
   const store = useGetTabPageStore(activeItemId)
   const setStore = useSetTabPageStore(activeItemId)
   const deepMergeStore = useDeepMergeTabPageStore(activeItemId)
@@ -85,7 +85,13 @@ export function TabPage({ activeItemId, activeItem, updatePageData }: TabPagePro
   }), [store, setStore, deepMergeStore, clearStore])
 
   return (
-    <div size-full flex="~ col">
+    <div
+      size-full
+      flex="~ col"
+      bg="$colorNeutralBackground1"
+      rounded={`b-5px ${activeItemId === allTabIds[0] ? 'tr-5px' : 't-5px'} `}
+      shadow="xl"
+    >
       <TabToolbar
         activeItemId={activeItemId}
         activeItem={activeItem}

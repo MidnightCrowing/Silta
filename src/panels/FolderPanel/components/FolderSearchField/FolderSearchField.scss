@@ -1,0 +1,13 @@
+.folder-panel {
+  & &__search-box {
+    .fui-ToggleButton {
+      &[aria-pressed="true"] {
+        @apply bg-$colorBrandBackground;
+
+        .fui-Button__icon {
+          @apply color-unset;
+        }
+      }
+    }
+  }
+}

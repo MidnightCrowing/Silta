@@ -75,7 +75,11 @@ export function BackgroundSettings({
         </Button>
 
         <div flex="~ row items-center justify-between">
-          <Text className={!isBackgroundVisible ? 'color-$colorNeutralForegroundDisabled!' : ''}>暗色背景</Text>
+          <Text
+            className={!isBackgroundVisible ? 'color-$colorNeutralForegroundDisabled!' : undefined}
+          >
+            暗色背景
+          </Text>
           <Switch
             checked={backgroundIsDark}
             label={backgroundIsDark ? '是' : '否'}

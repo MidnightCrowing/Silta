@@ -14,6 +14,11 @@ export interface TabPageProps {
   activeItem: TabItemTypes
 
   /**
+   * @description 所有标签页的ID集合
+   */
+  allTabIds: string[]
+
+  /**
    * @description 更新页面数据
    * @param pageId 页面ID
    * @param updater 更新函数

@@ -20,6 +20,16 @@ export interface SortableTabProps extends HTMLAttributes<HTMLDivElement> {
   isSelect: boolean
 
   /**
+   * @description 所有标签页的ID集合
+   */
+  allTabIds?: string[]
+
+  /**
+   * @description 选中标签页回调
+   */
+  onSelect: () => void
+
+  /**
    * @description 添加新标签页
    * @param newItem 新的标签项
    * @param active 是否激活新标签
@@ -32,11 +42,6 @@ export interface SortableTabProps extends HTMLAttributes<HTMLDivElement> {
    * @param updater 用于更新标签集合的函数
    */
   removeItem: (updater: (items: Record<string, TabItemTypes>) => Record<string, TabItemTypes>) => void
-
-  /**
-   * @description 所有标签页的ID集合
-   */
-  allTabIds?: string[]
 
   /**
    * @description 更新页面数据的方法

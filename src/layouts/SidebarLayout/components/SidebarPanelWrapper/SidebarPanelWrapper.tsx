@@ -1,4 +1,5 @@
 import { InlineDrawer } from '@fluentui/react-components'
+import clsx from 'clsx'
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import type { SidebarPosition } from '../../shared/SidebarItem.types.ts'
@@ -123,13 +124,14 @@ export function SidebarPanelWrapper({
 
   return (
     <div className={className} relative {...props}>
-      {/* Left panel resize component */}
+      {/* Right panel resize component */}
       {open && position === 'rightTop' && (
         <SidebarResize
           absolute
           pos="top-0 bottom-0 left-0"
           w="4px"
-          b-l="solid 1px hover:2px $colorNeutralBackground5"
+          b-l="solid 2px transparent hover:(2px $colorBrandBackgroundHover)"
+          m="t-49px b-6px"
           cursor="col-resize"
           onMouseDown={startResizingDrawer}
           isResizing={isResizing}
@@ -142,7 +144,7 @@ export function SidebarPanelWrapper({
           absolute
           pos="top-0 left-0 right-0"
           h="4px"
-          b-t="solid 1px hover:2px $colorNeutralBackground5"
+          b-t="solid 2px transparent hover:(2px $colorBrandBackground)"
           cursor="row-resize"
           onMouseDown={startResizingDrawer}
           isResizing={isResizing}
@@ -152,14 +154,13 @@ export function SidebarPanelWrapper({
       <InlineDrawer
         ref={sidebarRef}
         surfaceMotion={null}
-        className={
-          isBottom
-            ? 'w-full! min-h-50px'
-            : 'h-full! min-w-50px'
-        }
+        className={clsx(
+          'bg-transparent!',
+          isBottom ? 'w-full! min-h-50px' : 'h-full! min-w-50px',
+          isBottom && 'b-t-(solid 2px! $colorNeutralBackground1!)',
+        )}
         open={open}
         position={drawerPosition}
-        separator
         style={
           isBottom
             ? { height: `min(${drawerLength}px, calc(100vh - 43px))` }
@@ -173,13 +174,14 @@ export function SidebarPanelWrapper({
         </SidebarPanelWrapperContext.Provider>
       </InlineDrawer>
 
-      {/* Right panel resize component */}
+      {/* Left panel resize component */}
       {open && position === 'leftTop' && (
         <SidebarResize
           absolute
           pos="top-0 bottom-0 right-0"
           w="4px"
-          b-r="solid 1px hover:2px $colorNeutralBackground5"
+          b-r="solid 2px transparent hover:(2px $colorBrandBackgroundHover)"
+          m="t-45px b-6px"
           cursor="col-resize"
           onMouseDown={startResizingDrawer}
           isResizing={isResizing}

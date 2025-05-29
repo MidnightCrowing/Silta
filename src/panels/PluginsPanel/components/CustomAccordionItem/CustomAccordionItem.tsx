@@ -1,5 +1,3 @@
-import './CustomAccordionItem.scss'
-
 import { AccordionHeader, AccordionItem, AccordionPanel, CounterBadge, List } from '@fluentui/react-components'
 
 import type { CustomAccordionItemProps } from './CustomAccordionItem.types.ts'
@@ -12,7 +10,14 @@ export function CustomAccordionItem({ value, title, count, committedOpenItems, c
       className={`custom-accordion-item flex-(~ col) overflow-hidden ${isOpen ? 'flex-1' : 'flex-0'}`}
       value={value}
     >
-      <AccordionHeader size="small" as="h6">
+      <AccordionHeader
+        className={
+          'bg-$colorNeutralBackground1! hover:bg-$colorNeutralBackground1Hover! '
+          + 'm-3px! rounded-5px! overflow-hidden'
+        }
+        size="small"
+        as="h6"
+      >
         <div grow>{title}</div>
         <CounterBadge count={count} shape="rounded" size="small" />
       </AccordionHeader>

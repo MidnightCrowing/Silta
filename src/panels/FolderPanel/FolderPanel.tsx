@@ -1,4 +1,4 @@
-import { Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
+import { Divider, Tree, TreeItem, TreeItemLayout } from '@fluentui/react-components'
 import { Document20Regular, Folder20Regular, Image20Regular, VideoClip20Regular } from '@fluentui/react-icons'
 import { Collapse } from '@fluentui/react-motion-components-preview'
 import { useCallback } from 'react'
@@ -130,6 +130,7 @@ export default function FolderPanel() {
 
   return (
     <SidebarPanel
+      className="folder-panel"
       title="文件"
       fadeToolbar={<FolderFadeToolbar />}
       customMenu={(
@@ -143,9 +144,14 @@ export default function FolderPanel() {
       toolbarValve={toolbarValve}
       setToolbarValve={handleSetToolbarValve}
     >
-      <Collapse visible={toolbarValve.showSearch.includes('true')} unmountOnExit>
-        <div>
+      <Collapse
+        visible={toolbarValve.showSearch.includes('true')}
+        unmountOnExit
+      >
+        <div m="x-7px y-5px">
           <FolderSearchField searchProps={searchProps} setSearchProps={handleSetSearchProps} />
+
+          <Divider className="m-t-5px" />
         </div>
       </Collapse>
 

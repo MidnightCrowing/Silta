@@ -52,9 +52,11 @@ export function SearchBackground({ showBackground, backgroundUrl: currentBgUrl, 
         {/* 遮罩 */}
         <div absolute inset-0 bg="$homepage-bg-mask" />
         <div
-          className={`absolute inset-0 bg-black transition-(bg duration-300) ${
-            isFocused ? 'bg-opacity-60' : 'bg-opacity-0'
-          }`}
+          className={isFocused ? 'bg-opacity-60' : 'bg-opacity-0'}
+          absolute
+          inset-0
+          bg-black
+          transition="bg duration-300"
         />
       </div>
     </FadeRelaxed>

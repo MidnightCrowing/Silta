@@ -20,10 +20,4 @@ impl GalleryService for ZipGalleryService {
         // 获取原图 info
         Ok(GalleryImageInfo::default())
     }
-
-    fn get_image_thumbnail(&self, path: &Path, max_size: &u32) -> Result<GalleryThumbnailInfo> {
-        println!("path: {:?} ,new:2", path);
-        // 解压缩后做缩略图处理
-        Ok(GalleryThumbnailInfo::default())
-    }
 }

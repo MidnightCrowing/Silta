@@ -1,21 +1,15 @@
-.tab-layout.sortable-tab {
-  .close-button {
+.tab-layout {
+  & &__sortable-tab .fui-Avatar .fui-Avatar__icon {
+    @apply bg-transparent;
+  }
+
+  & &__tab-close-button {
     @container (max-width: 100px) {
       @apply hidden;
 
       &[data-selected="true"] {
         @apply flex!;
       }
-    }
-  }
-
-  .fui-InteractiveTab {
-    &__content {
-      @apply truncate;
-    }
-
-    &__contentAfter {
-      @apply flex items-center;
     }
   }
 }

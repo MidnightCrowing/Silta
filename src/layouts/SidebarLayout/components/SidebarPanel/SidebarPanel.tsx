@@ -48,6 +48,7 @@ function HideButton() {
 
 export function SidebarPanel({
   children,
+  className,
   title,
   staticToolbar,
   fadeToolbar,
@@ -85,7 +86,7 @@ export function SidebarPanel({
         </DrawerHeaderNavigation>
       </DrawerHeader>
 
-      <DrawerBody className="grow p-0!">
+      <DrawerBody className={`grow p-0! ${className}`}>
         {children}
       </DrawerBody>
     </div>

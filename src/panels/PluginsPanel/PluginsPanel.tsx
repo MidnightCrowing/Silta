@@ -1,5 +1,5 @@
 import type { AccordionToggleEventHandler, SelectionItemId } from '@fluentui/react-components'
-import { Accordion, Divider } from '@fluentui/react-components'
+import { Accordion } from '@fluentui/react-components'
 import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -39,6 +39,7 @@ export default function PluginsPanel() {
 
   return (
     <SidebarPanel
+      className="plugins-panel"
       title="插件"
       customMenu={<PluginsCustomMenu visibleItems={visibleItems} setVisibleItems={handleSetVisibleItems} />}
     >
@@ -69,10 +70,6 @@ export default function PluginsPanel() {
           </CustomAccordionItem>
         )}
 
-        {['Enabled', 'Disabled'].every(item => visibleItems.includes(item as AccordionItem)) && (
-          <Divider className="grow-0!" />
-        )}
-
         {visibleItems.includes('Disabled') && (
           <CustomAccordionItem
             value="Disabled"
@@ -89,10 +86,6 @@ export default function PluginsPanel() {
               />
             ))}
           </CustomAccordionItem>
-        )}
-
-        {['Disabled', 'Installed'].every(item => visibleItems.includes(item as AccordionItem)) && (
-          <Divider className="grow-0!" />
         )}
 
         {visibleItems.includes('Installed') && (

@@ -1,7 +1,7 @@
-use crate::models::gallery::{GalleryImageInfo, GalleryThumbnailInfo};
+use crate::models::gallery::GalleryImageInfo;
 use crate::services::gallery::{
-    create_gallery_service, FolderGalleryService, GalleryService, INFO_SEMAPHORE,
-    THUMBNAIL_SEMAPHORE,
+    create_gallery_service, GalleryService, INFO_SEMAPHORE
+    ,
 };
 use anyhow::Result;
 use std::path::{Path, PathBuf};
@@ -47,40 +47,6 @@ pub async fn get_local_gallery_image_info(path: &Path) -> Result<GalleryImageInf
 
     let service = create_gallery_service(path).map_err(|e| e.to_string())?;
     let result = service.get_image_info(path).map_err(|e| e.to_string());
-
-    // 自动释放 permit，当这个函数结束
-    drop(permit);
-
-    result
-}
-
-/// 获取指定本地路径下图片的缩略图信息。
-///
-/// # 参数
-/// - `path`: 图片的路径。
-/// - `max_size`: 缩略图的最大尺寸（可选，默认为 100）。
-///
-/// # 返回
-/// 缩略图信息 `ThumbnailInfo`，或错误信息。
-#[tauri::command]
-pub async fn get_local_gallery_thumbnail(
-    path: &Path,
-    max_size: Option<u32>,
-) -> Result<GalleryThumbnailInfo, String> {
-    let max_size = max_size.unwrap_or(100); // 默认值设为 100
-
-    // 尝试获取一个令牌，超时防止卡住
-    let permit = THUMBNAIL_SEMAPHORE
-        .acquire()
-        .await
-        .map_err(|_| "Semaphore 错误".to_string())?;
-
-    // 获取到了 permit，继续处理缩略图
-    let service: Box<dyn GalleryService> = Box::new(FolderGalleryService);
-
-    let result = service
-        .get_image_thumbnail(path, &max_size)
-        .map_err(|e| e.to_string());
 
     // 自动释放 permit，当这个函数结束
     drop(permit);

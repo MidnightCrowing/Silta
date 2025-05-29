@@ -1,7 +1,8 @@
+import './FolderSearchField.scss'
+
 import type { InputProps, MenuProps } from '@fluentui/react-components'
 import {
   Button,
-  Card,
   CounterBadge,
   Field,
   Input,
@@ -74,79 +75,75 @@ export function FolderSearchField({ searchProps, setSearchProps }: FolderSearchF
     || !scope.every(item => initialScope.includes(item))
 
   return (
-    <div m="x-7px y-5px">
-      <Card size="small">
-        <Field
-          hint={(
-            <div m="y-3px" flex="~ col" gap="3px">
-              <SearchResultActions />
+    <Field
+      hint={(
+        <div m="y-3px" flex="~ col" gap="3px">
+          <SearchResultActions />
+        </div>
+      )}
+    >
+      <div flex="~ row items-center" gap="5px">
+        <Input
+          className="folder-panel__search-box grow w-0"
+          appearance="filled-lighter"
+          contentBefore={<SearchRegular />}
+          contentAfter={(
+            <div flex="~ row items-center" gap="5px">
+              {keyword && (
+                <Button
+                  appearance="transparent"
+                  size="small"
+                  icon={<DismissRegular />}
+                  onClick={clearInput}
+                />
+              )}
+              <ToggleButton
+                appearance="subtle"
+                size="small"
+                icon={<TextCaseTitleRegular />}
+                checked={isCaseSensitive}
+                onClick={setIsCaseSensitive}
+              />
+              <ToggleButton
+                appearance="subtle"
+                size="small"
+                icon={<TextPeriodAsteriskRegular />}
+                checked={isRegex}
+                onClick={setIsRegex}
+              />
             </div>
           )}
-        >
-          <div flex="~ row items-center" gap="5px">
-            <Input
-              className="grow w-0"
-              appearance="filled-darker"
-              contentBefore={<SearchRegular />}
-              contentAfter={(
-                <div flex="~ row items-center" gap="5px">
-                  {keyword && (
-                    <Button
-                      appearance="transparent"
-                      size="small"
-                      icon={<DismissRegular />}
-                      onClick={clearInput}
-                    />
+          id={inputId}
+          value={keyword}
+          onChange={onInputChange}
+        />
+        <Menu hasCheckmarks checkedValues={{ scope }} onCheckedValueChange={onScopeChange}>
+          <MenuTrigger disableButtonEnhancement>
+            <MenuButton
+              appearance="subtle"
+              icon={(
+                <div relative>
+                  <FilterRegular />
+                  {isFilterChange && (
+                    <CounterBadge className="absolute! top-0 right-0 bg-$colorPaletteGreenForeground1!" dot />
                   )}
-                  <ToggleButton
-                    appearance="subtle"
-                    size="small"
-                    icon={<TextCaseTitleRegular />}
-                    checked={isCaseSensitive}
-                    onClick={setIsCaseSensitive}
-                  />
-                  <ToggleButton
-                    appearance="subtle"
-                    size="small"
-                    icon={<TextPeriodAsteriskRegular />}
-                    checked={isRegex}
-                    onClick={setIsRegex}
-                  />
                 </div>
               )}
-              id={inputId}
-              value={keyword}
-              onChange={onInputChange}
             />
-            <Menu hasCheckmarks checkedValues={{ scope }} onCheckedValueChange={onScopeChange}>
-              <MenuTrigger disableButtonEnhancement>
-                <MenuButton
-                  appearance="subtle"
-                  icon={(
-                    <div relative>
-                      <FilterRegular />
-                      {isFilterChange && (
-                        <CounterBadge className="absolute! top-0 right-0 bg-$colorPaletteGreenForeground1!" dot />
-                      )}
-                    </div>
-                  )}
-                />
-              </MenuTrigger>
+          </MenuTrigger>
 
-              <MenuPopover>
-                <MenuList>
-                  <MenuGroup>
-                    <MenuGroupHeader>搜索作用域</MenuGroupHeader>
-                    <MenuItemCheckbox name="scope" value="folder">文件夹</MenuItemCheckbox>
-                    <MenuItemCheckbox name="scope" value="image">图片</MenuItemCheckbox>
-                    <MenuItemCheckbox name="scope" value="video">视频</MenuItemCheckbox>
-                  </MenuGroup>
-                </MenuList>
-              </MenuPopover>
-            </Menu>
-          </div>
-        </Field>
-      </Card>
-    </div>
+          <MenuPopover>
+            <MenuList>
+              <MenuGroup>
+                <MenuGroupHeader>搜索作用域</MenuGroupHeader>
+                <MenuItemCheckbox name="scope" value="folder">文件夹</MenuItemCheckbox>
+                <MenuItemCheckbox name="scope" value="image">图片</MenuItemCheckbox>
+                <MenuItemCheckbox name="scope" value="video">视频</MenuItemCheckbox>
+              </MenuGroup>
+            </MenuList>
+          </MenuPopover>
+        </Menu>
+      </div>
+    </Field>
   )
 }

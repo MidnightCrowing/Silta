@@ -1,29 +1,29 @@
-.image-gallery {
-  &.top-bar {
+.image-gallery-page {
+  &__top-bar {
     &:hover,
-    &:has(.pin-button[aria-pressed="true"]) {
+    &:has(.image-gallery-page__pin[aria-pressed="true"]) {
       @apply max-h-[min(100%,360px)] rounded-b-5px;
 
-      .pin-button {
+      .image-gallery-page__pin {
         @apply block!;
       }
 
-      .chevron-down-wrapper {
+      .image-gallery-page__chevron-wrapper {
         @apply rotate-180 transform-gpu;
       }
     }
-  }
 
-  &.top-bar-effect {
-    @apply bg-$colorNeutralBackground1-60! transform-gpu;
-    @apply backdrop-(blur-20px saturate-180%);
-    @apply light:brightness-120% dark:brightness-120%;
+    &.top-bar-effect {
+      @apply bg-$colorNeutralBackground1-60! transform-gpu;
+      @apply backdrop-(blur-20px saturate-180%);
+      @apply light:brightness-120% dark:brightness-120%;
 
-    box-shadow:
-      0 10px 15px -3px rgb(0 0 0 / 0.2),
-      0 4px 6px -4px rgb(0 0 0 / 0.16),
-      inset 1px 1px 1px -0.5px rgb(255 255 255 / 0.12),
-      inset -1px -1px 1px -0.5px rgb(255 255 255 / 0.04),
-      inset 0 0 10px rgb(255 255 255 / 0.04);
+      box-shadow:
+        0 10px 15px -3px rgb(0 0 0 / 0.2),
+        0 4px 6px -4px rgb(0 0 0 / 0.16),
+        inset 1px 1px 1px -0.5px rgb(255 255 255 / 0.12),
+        inset -1px -1px 1px -0.5px rgb(255 255 255 / 0.04),
+        inset 0 0 10px rgb(255 255 255 / 0.04);
+    }
   }
 }
