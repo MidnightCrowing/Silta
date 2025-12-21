@@ -1,7 +1,6 @@
 import { MessageBar, MessageBarBody, MessageBarTitle } from '@fluentui/react-components'
 import { readTextFile } from '@tauri-apps/plugin-fs'
 import { Suspense, useEffect, useLayoutEffect, useRef } from 'react'
-import { PhotoProvider } from 'react-photo-view'
 
 import { getLocalGalleryConfigPath, getLocalGalleryImageInfo, listLocalGalleryImages } from '~/api/gallery.ts'
 import { ImageCard, ImageCardList } from '~/components/ImageCard'
@@ -152,7 +151,7 @@ export default function ImageGalleryPage({ className }: PageProps) {
       />
 
       <Suspense>
-        <ImageCardList className="absolute size-full">
+        <ImageCardList className="absolute size-full" enablePreview>
           <div
             ref={cardListRef}
             className="size-full overflow-y-auto"
@@ -169,32 +168,29 @@ export default function ImageGalleryPage({ className }: PageProps) {
               )}
 
               {/* Images */}
-              <PhotoProvider maskOpacity={0.85}>
-                <div
-                  grid="~ @[1100px]:cols-6! @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
-                  gap="20px"
-                >
-                  {
-                    Array.from({ length: images?.length ?? 12 }, (_, index) => {
-                      const info = imageInfos?.[images?.[index]]
-                      const { name, path, width, height } = info || {}
+              <div
+                grid="~ @[1100px]:cols-6! @[800px]:cols-5 @[600px]:cols-4 @[400px]:cols-3 @[200px]:cols-2 cols-1"
+                gap="20px"
+              >
+                {
+                  Array.from({ length: images?.length ?? 12 }, (_, index) => {
+                    const info = imageInfos?.[images?.[index]]
+                    const { name, path, width, height } = info || {}
 
-                      return (
-                        <Suspense key={images?.[index] ?? index}>
-                          <ImageCard
-                            name={name}
-                            path={path}
-                            width={width}
-                            height={height}
-                            index={index}
-                            enablePreview
-                          />
-                        </Suspense>
-                      )
-                    })
-                  }
-                </div>
-              </PhotoProvider>
+                    return (
+                      <Suspense key={images?.[index] ?? index}>
+                        <ImageCard
+                          name={name}
+                          path={path}
+                          width={width}
+                          height={height}
+                          index={index}
+                        />
+                      </Suspense>
+                    )
+                  })
+                }
+              </div>
             </div>
           </div>
         </ImageCardList>

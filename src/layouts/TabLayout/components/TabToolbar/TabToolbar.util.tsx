@@ -38,7 +38,7 @@ function parseStringToUrl(urlString: string): {
 }
 
 /**
- * 将url字符串转成带标记的 React 节点
+ * 将url字符串转成HTML
  */
 export function urlToHtmlParts(urlString: string): string {
   const highlightType = ['hostname', 'origin']

@@ -1,11 +1,11 @@
 use super::GalleryService;
-use crate::models::gallery::{GalleryImageInfo, GalleryThumbnailInfo};
+use crate::models::gallery::GalleryImageInfo;
 use anyhow::Result;
 use std::path::{Path, PathBuf};
 
-pub struct ZipGalleryService;
+pub struct TarGalleryService;
 
-impl GalleryService for ZipGalleryService {
+impl GalleryService for TarGalleryService {
     fn list_images(&self, path: &Path) -> Result<Vec<PathBuf>> {
         // 用 zip crate 读取压缩包内容
         Ok(vec![])

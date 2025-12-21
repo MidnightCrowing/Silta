@@ -5,7 +5,8 @@ import { convertFileSrc } from '@tauri-apps/api/core'
 import { useMemo, useState } from 'react'
 import { PhotoView } from 'react-photo-view'
 
-import type { ImageCardProps } from './ImageCard.types'
+import { useImageCardListContextContext } from '../List/ImageCardListContext.ts'
+import type { ImageCardProps } from './ImageCard.types.ts'
 
 export default function ImageCard({
   name,
@@ -14,10 +15,9 @@ export default function ImageCard({
   width,
   height,
   index,
-  showName = false,
-  enablePreview = false,
   ...props
 }: ImageCardProps) {
+  const { showName, enablePreview } = useImageCardListContextContext()
   const [isImageLoading, setIsImageLoading] = useState(true)
 
   const rawImage = useMemo(() => {
@@ -25,13 +25,16 @@ export default function ImageCard({
   }, [src, path])
 
   const aspectRatio = useMemo(() => {
+    if (!isImageLoading && (!width || !height)) {
+      return undefined
+    }
     if (width && height) {
       const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
       const divisor = gcd(width, height)
       return `${width / divisor}/${height / divisor}`
     }
     return '9/16'
-  }, [width, height])
+  }, [isImageLoading, width, height])
 
   const innerImage = (
     <Image

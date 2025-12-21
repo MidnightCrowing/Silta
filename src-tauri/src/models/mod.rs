@@ -1,2 +1,6 @@
 pub mod gallery;
-pub mod page_type;
+mod page_config;
+mod page_type;
+
+pub use page_config::PageConfig;
+pub use page_type::PageType;

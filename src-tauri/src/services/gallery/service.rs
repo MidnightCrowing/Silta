@@ -1,4 +1,4 @@
-use super::{FolderGalleryService, GalleryService, ZipGalleryService};
+use super::{FolderGalleryService, GalleryService, TarGalleryService};
 use anyhow::Result;
 use once_cell::sync::Lazy;
 use std::path::Path;
@@ -18,12 +18,12 @@ pub static INFO_SEMAPHORE: Lazy<Semaphore> = Lazy::new(|| Semaphore::new(25));
 pub fn create_gallery_service(path: &Path) -> Result<Box<dyn GalleryService>> {
     let path_str = path.to_string_lossy();
 
-    if path.is_file() && path_str.ends_with(".zip") {
+    if path.is_file() && path_str.ends_with(".tar") {
         // 如果路径是一个 ZIP 文件
-        Ok(Box::new(ZipGalleryService))
-    } else if path_str.contains(".zip/") {
+        Ok(Box::new(TarGalleryService))
+    } else if path_str.contains(".tar/") {
         // 如果路径在 ZIP 文件内部
-        Ok(Box::new(ZipGalleryService))
+        Ok(Box::new(TarGalleryService))
     } else {
         Ok(Box::new(FolderGalleryService))
     }

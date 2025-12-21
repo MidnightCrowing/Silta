@@ -1,5 +1,5 @@
-pub mod config;
-pub mod image_info;
+mod config;
+mod image_info;
 
-pub use config::ImageGalleryConfig;
+pub use config::{ImageGalleryConfig, ImageGalleryConfigEnum};
 pub use image_info::{GalleryImageInfo, GalleryThumbnailInfo};

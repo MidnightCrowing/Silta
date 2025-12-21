@@ -16,6 +16,6 @@ export const SidebarPanelWrapperContext = createContext<SidebarPanelWrapperConte
 export function useSidebarPanelWrapperContext() {
   const ctx = useContext(SidebarPanelWrapperContext)
   if (!ctx)
-    throw new Error('useSidebarPanelWrapperContext must be used within SidebarPanelWrapperContext.Provider')
+    throw new Error('useSidebarPanelWrapperContext must be used within SidebarPanelWrapper')
   return ctx
 }

@@ -16,7 +16,6 @@ export default antfu({
   ignores: [
     'dist',
     'node_modules',
-    'public',
     'src/libs',
     'src-tauri',
     'src/tauri-types.ts',
